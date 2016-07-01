@@ -20,11 +20,17 @@
                       request:(NSURLRequest *)request
                      response:(NSHTTPURLResponse *)response
                         error:(NSError *)error{
-    
+    if (self = [self init]) {
+        _status = status;
+        _request = request;
+        _responseHeader = response.allHeaderFields;
+//        _responseData = response
+    }
+    return self;
 }
 
 -(instancetype)initWithResponseObject:(id)responseObject{
-    
+    return nil;
 }
 
 @end

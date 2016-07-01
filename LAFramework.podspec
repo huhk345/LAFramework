@@ -27,16 +27,19 @@ Pod::Spec.new do |s|
   s.author           = { '胡恒恺' => 'huhengkai@htsc.com' }
   s.source           = { :git => 'https://github.com/huhk345/LAFramework.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
-
+  s.prefix_header_file = 'LAFramework/Classes/LAPrefix.pch'
   s.ios.deployment_target = '8.0'
 
-  s.source_files = 'LAFramework／Classes/**/*'
+  s.source_files = 'LAFramework/Classes/**/*'
   # s.resource_bundles = {
   #   'LAFramework' => ['LAFramework/LAFramework/Assets/*.png']
   # }
 
   # s.public_header_files = 'Pod/Classes/**/*.h'
   # s.frameworks = 'UIKit', 'MapKit'
+
+
+
   s.dependency 'AFNetworking', '~> 3.1.0'
   s.dependency 'ReactiveCocoa', '~> 4.1.0'
   s.dependency 'CocoaLumberjack', '~>2.3.0'
