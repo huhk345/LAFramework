@@ -22,7 +22,7 @@ pod "LAFramework"
 
 ## Author
 
-胡恒恺, huhengkai@htsc.com
+LakeR,njlaker@gmail.com	
 
 ## License
 
