@@ -1,0 +1,14 @@
+use_frameworks!
+
+target 'LAFramework_Example' do
+  pod 'LAFramework', :path => '../'
+
+  target 'LAFramework_Tests' do
+    inherit! :search_paths
+
+    pod 'Specta'
+  pod 'Expecta'
+  pod 'FBSnapshotTestCase'
+  pod 'Expecta+Snapshots'
+  end
+end
