@@ -9,7 +9,7 @@
 Pod::Spec.new do |s|
   s.name             = 'LAFramework'
   s.version          = '0.1.0'
-  s.summary          = 'A short description of LAFramework.'
+  s.summary          = 'iOS Base Framework.'
 
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
@@ -18,25 +18,56 @@ Pod::Spec.new do |s|
 #   * Finally, don't worry about the indent, CocoaPods strips it!
 
   s.description      = <<-DESC
-TODO: Add long description of the pod here.
+  This is a base framwork that constans Networking,Monitor,Cache,Mediator...
                        DESC
 
-  s.homepage         = 'https://github.com/<GITHUB_USERNAME>/LAFramework'
+  s.homepage         = 'https://github.com/huhk345/LAFramework'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { '胡恒恺' => 'huhengkai@htsc.com' }
-  s.source           = { :git => 'https://github.com/<GITHUB_USERNAME>/LAFramework.git', :tag => s.version.to_s }
+  s.source           = { :git => 'https://github.com/huhk345/LAFramework.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
   s.ios.deployment_target = '8.0'
 
-  s.source_files = 'LAFramework/Classes/**/*'
-  
+  s.source_files = 'LAFramework／Classes/**/*'
   # s.resource_bundles = {
-  #   'LAFramework' => ['LAFramework/Assets/*.png']
+  #   'LAFramework' => ['LAFramework/LAFramework/Assets/*.png']
   # }
 
   # s.public_header_files = 'Pod/Classes/**/*.h'
   # s.frameworks = 'UIKit', 'MapKit'
-  # s.dependency 'AFNetworking', '~> 2.3'
+  s.dependency 'AFNetworking', '~> 3.1.0'
+  s.dependency 'ReactiveCocoa', '~> 4.1.0'
+  s.dependency 'CocoaLumberjack', '~>2.3.0'
+
+
+  s.subspec 'LADataCategory' do |sp|
+    sp.source_files = 'LADataCategory/Classes/**/*'
+    sp.libraries    = 'z'
+  end
+
+
+  s.subspec 'LAJsonKit' do |sp|
+    sp.source_files = 'LAJsonKit/Classes/**/*'
+  end
+
+  s.subspec 'LAMediator' do |sp|
+    sp.source_files = 'LAMediator/Classes/**/*'
+  end
+
+
+  s.subspec 'LACache' do |sp|
+    sp.source_files = 'LACache/Classes/**/*'
+    sp.dependency 'LAFramework/LADataCategory'
+  end
+
+
+  s.subspec 'LANetworking' do |sp|
+    sp.source_files = 'LANetworking/Classes/**/*'
+    sp.dependency 'LAFramework/LADataCategory'
+    sp.dependency 'LAFramework/LACache'
+    sp.dependency 'LAFramework/LAJsonKit'
+  end
+
 end
