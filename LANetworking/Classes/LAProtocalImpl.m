@@ -46,17 +46,16 @@
     // get method description
     NSString* sig = NSStringFromSelector(invocation.selector);
     LAMethodAnnotation* methodAnnotation = self.annotation[sig];
-
-    // construct path
-//    NSError* error = nil;
-//    id<DRConverter> converter = [self.converterFactory converter];
-//    DRParameterizeResult<NSString*>* pathParamResult = [desc parameterizedPathForInvocation:invocation
-//                                                                              withConverter:converter
-//                                                                                      error:&error];
-//    
-//    // get method description
-//    NSString* sig = NSStringFromSelector(invocation.selector);
-//    LAMethodAnnotation* desc = self.annotation[sig];
+    
+    NSParameterAssert(methodAnnotation.httpMethod);
+    NSParameterAssert(methodAnnotation.path);
+    NSError *error = nil;
+    LAParameterResult *path = [methodAnnotation parameterizedString:methodAnnotation.path
+                                                      forInvocation:invocation
+                                                              error:&error];
+    
+    
+    
 //  
 //    // construct path
 //    NSError* error = nil;

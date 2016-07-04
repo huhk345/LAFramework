@@ -2,7 +2,7 @@
 //  LAMediator.swift
 //  Pods
 //
-//  Created by 胡恒恺 on 16/6/27.
+//  Created by LakeR on 16/6/27.
 //
 //
 

@@ -2,8 +2,8 @@
 //  main.m
 //  LAFramework
 //
-//  Created by 胡恒恺 on 07/01/2016.
-//  Copyright (c) 2016 胡恒恺. All rights reserved.
+//  Created by LakeR on 07/01/2016.
+//  Copyright (c) 2016 LakeR. All rights reserved.
 //
 
 @import UIKit;

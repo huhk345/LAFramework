@@ -6,12 +6,27 @@
 //
 //
 
-#import "LANetworkingManager.h"
+#import "LANetworkingBuilder.h"
 #import <ObjC/runtime.h>
 #import "LAProtocalImpl.h"
 #import "LAMethodAnnotation.h"
 
-@implementation LANetworkingManager
+
+
+@implementation LANetworkingBuilder
+
++ (instancetype)initBuilderWithBlock:(void(^)(LANetworkingBuilder* builder))block
+{
+    NSParameterAssert(block);
+    
+    LANetworkingBuilder* builder = [[LANetworkingBuilder alloc] init];
+    builder.cacheTime = 3600 * 24;
+    builder.bodyFormType = LAFormData;
+    block(builder);
+    NSParameterAssert(builder.baseURL);
+    return builder;
+}
+
 
 
 
@@ -21,6 +36,10 @@
     LAProtocalImpl* obj = [[cls alloc] init];
     obj.protocol = protocol;
     obj.annotation = [self methodAnnotationForProtocol:protocol];
+    obj.defaultHeaders = self.header;
+    obj.cacheTime = self.cacheTime;
+    obj.baseURL = self.baseURL;
+    obj.bodyFormType = self.bodyFormType;
     return obj;
 }
 

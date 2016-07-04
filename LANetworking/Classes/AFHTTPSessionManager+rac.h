@@ -2,7 +2,7 @@
 //  AFHTTPSessionManager+rac.h
 //  Pods
 //
-//  Created by 胡恒恺 on 16/7/1.
+//  Created by LakeR on 16/7/1.
 //
 //
 
@@ -12,6 +12,6 @@
 
 @interface AFHTTPSessionManager (rac)
 
--(RACSignal *)sendRequest:(NSURLRequest *)request;
+-(RACSignal *)rac_sendRequest:(NSURLRequest *)request;
 
 @end

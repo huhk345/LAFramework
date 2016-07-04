@@ -11,21 +11,33 @@
 
 
 //RESTful http Method
-#define GET(unused)
-#define POST(unused)	
-#define DELETE(unused)
-#define PUT(unused)
-#define PATCH(unused)
+#define GET(unused)     required
+#define POST(unused)    required
+#define DELETE(unused)  required
+#define PUT(unused)     required
+#define PATCH(unused)   required
+
+//http headers
+#define Headers(...)    required
 
 
-//Body Construct annotation
-#define Body(unused)
-#define Headers(...)
-#define Cache(unused)
+//body type default is formData
+#define FormData        required
+#define FormUrlEncode   required
+#define FormRaw         required
 
-//
+//Cache time example: Cache(1D) Cache(1H)
+#define Cache(unused)   required
+
+//network param like
 #define Part(unused)
-#define Header(unused)
+#define Header(unused)  
+
+
+
+
+
+
 
 
 
