@@ -37,6 +37,7 @@
 
 /* Begin PBXFileReference section */
 		0FE979349F4F3B97F545A415 /* Pods-LAFramework_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LAFramework_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-LAFramework_Example/Pods-LAFramework_Example.release.xcconfig"; sourceTree = "<group>"; };
+		1862E5F11D28C28A0026BC92 /* GitHubService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GitHubService.h; sourceTree = "<group>"; };
 		18EA26ECE64B74432087FA64 /* Pods-LAFramework_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LAFramework_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-LAFramework_Tests/Pods-LAFramework_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		489136EBE0DBDDEE27251EE0 /* Pods_LAFramework_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LAFramework_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5BB0859C26D8FC5AE73340BB /* LAFramework.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LAFramework.podspec; path = ../LAFramework.podspec; sourceTree = "<group>"; };
@@ -135,6 +136,7 @@
 				873B8AEA1B1F5CCA007FD442 /* Main.storyboard */,
 				6003F5A5195388D20070C39A /* LAViewController.h */,
 				6003F5A6195388D20070C39A /* LAViewController.m */,
+				1862E5F11D28C28A0026BC92 /* GitHubService.h */,
 				6003F5A8195388D20070C39A /* Images.xcassets */,
 				6003F594195388D20070C39A /* Supporting Files */,
 			);

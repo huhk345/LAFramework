@@ -7,53 +7,47 @@
 //
 
 #import "AFHTTPSessionManager+rac.h"
-//#import <ReactiveCocoa/ReactiveCocoa.h>
+#import "LAURLResponse.h"
 
 @implementation AFHTTPSessionManager (rac)
 
 
 -(RACSignal *)sendRequest:(NSURLRequest *)request{
+    RACSignal *singal =nil;
+
     
     return [RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
         DDLogDebug(@"\n==================================\n\nRequest Start: \n\n \(request.URL)\n\n==================================");
-        return [RACDisposable disposableWithBlock:^{
+        NSURLSessionDataTask *dataTask;
+        dataTask = [self dataTaskWithRequest:request
+                           completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
+                               NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+                               NSData *responseData = (NSData *)responseObject;
+                               NSString *responseString = nil;
+                               if (responseData.length > 0) {
+                                   responseString = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
+                               }
+                               DLogDebug(@"request \(request.URL)\n code : \(httpResponse?.statusCode)\nresponse:\(responseString)");
+                               if (error) {
+                                   [subscriber sendNext:[[LAURLResponse alloc] initWithRequest:request
+                                                                                      response:httpResponse
+                                                                                  responseData:responseData]];
+                               }
+                               else{
+                                   [subscriber sendNext:[[LAURLResponse alloc] initWithRequest:request
+                                                                                      response:httpResponse
+                                                                                  responseData:responseData
+                                                                                         error:error]];
+                                   [subscriber sendCompleted];
+                               }
             
+        }];
+        [dataTask resume];
+        return [RACDisposable disposableWithBlock:^{
+            [dataTask cancel];
         }];
     }];
     
 }
-
-//public func sendRequest(request : NSURLRequest!) -> RACSignal {
-//    let subject : RACReplaySubject = RACReplaySubject.init(capacity: 5)
-//    DDLogDebug("\n==================================\n\nRequest Start: \n\n \(request.URL)\n\n==================================")
-//    var dataTask : NSURLSessionDataTask
-//    dataTask = self.dataTaskWithRequest(request, completionHandler: { (response, responseObject, error) in
-//        let httpResponse : NSHTTPURLResponse? = response as? NSHTTPURLResponse
-//        let responseData : NSData? = responseObject as? NSData
-//        var responseString : NSString?
-//        
-//        if responseData?.length > 0 {
-//            responseString = NSString(data: responseData!, encoding: NSUTF8StringEncoding)
-//        }
-//        
-//        DDLogDebug("request \(request.URL)\n code : \(httpResponse?.statusCode)\nresponse:\(responseString)")
-//        if error != nil{
-//            subject.sendNext(LAURLResponse(status : httpResponse?.statusCode,
-//                                           request : request,
-//                                           responseData :responseData,
-//                                           error: error))
-//        }
-//        else {
-//            subject.sendNext(LAURLResponse(status : httpResponse?.statusCode,
-//                                           request : request,
-//                                           responseData :responseData))
-//            subject.sendCompleted()
-//        }
-//    })
-//    dataTask.resume()
-//    return subject
-//}
-
-
 
 @end

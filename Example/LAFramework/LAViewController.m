@@ -7,8 +7,11 @@
 //
 
 #import "LAViewController.h"
+#import <LAFramework/PFKeyValueCache.h>
+#import "GitHubService.h"
 
 @interface LAViewController ()
+
 
 @end
 
@@ -18,6 +21,8 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
+    [PFKeyValueCache shareInstance];
+    
 }
 
 - (void)didReceiveMemoryWarning

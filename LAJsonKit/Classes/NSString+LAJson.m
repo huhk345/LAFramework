@@ -18,6 +18,7 @@
     if (!jsonError) {
         return json;
     }
+    DLogError("Convert to  json object error : %@",jsonError);
     return nil;
 }
 

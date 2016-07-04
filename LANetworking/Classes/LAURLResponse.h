@@ -24,17 +24,17 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,readonly,assign) BOOL isCache;
 
 
--(instancetype)initWithStatus:(NSUInteger)status
-                      request:(NSURLRequest *)request
-                     response:(NSHTTPURLResponse *)response;
+-(instancetype)initWithRequest:(NSURLRequest *)request
+                      response:(NSHTTPURLResponse *)response
+                  responseData:(NSData *)responseData;
 
--(instancetype)initWithStatus:(NSUInteger)status
-                      request:(NSURLRequest *)request
-                     response:(NSHTTPURLResponse *)response
-                        error:(NSError *)error;
+-(instancetype)initWithRequest:(NSURLRequest *)request
+                      response:(NSHTTPURLResponse *)response
+                  responseData:(NSData *)responseData
+                         error:(NSError *)error;
 
--(instancetype)initWithResponseObject:(id)responseObject;
-
+-(instancetype)initWithRequest:(NSURLRequest *)request
+                responseObject:(id)responseObject;
 
 @end
 NS_ASSUME_NONNULL_END

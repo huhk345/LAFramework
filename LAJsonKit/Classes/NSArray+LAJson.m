@@ -16,6 +16,7 @@
     if (!error) {
         return [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
     }
+    DLogError("Convert to  json String error : %@",error);
     return nil;
 }
 
