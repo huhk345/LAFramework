@@ -75,8 +75,8 @@ static NSString* const KEY_ANNOTATION_HEADER = @"Headers";
     
 }
 
-#pragma mark - replace annoatation values
-- (LAParameterResult *)parameterizedString:(NSString*)string
+#pragma mark - replace path annoatation values
+- (LAParameterResult<NSString *> *)parameterizedString:(NSString*)string
                     forInvocation:(NSInvocation*)invocation
                             error:(NSError**)error{
     NSMutableSet* consumedParameters = [[NSMutableSet alloc] init];
@@ -117,6 +117,44 @@ static NSString* const KEY_ANNOTATION_HEADER = @"Headers";
 }
 
 
+#pragma mark - replace header annoatation values
+- (LAParameterResult<NSDictionary*>*)parameterizedHeadersForInvocation:(NSInvocation*)invocation
+                                                                 error:(NSError**)error{
+    NSMutableDictionary* result = [[NSMutableDictionary alloc] init];
+    NSMutableSet* consumedParameters = [[NSMutableSet alloc] init];
+    
+    for (NSString* key in self.header) {
+        NSString* headerValue = self.header[key];
+        LAParameterResult<NSString*>* valueResult = [self parameterizedString:headerValue
+                                                                forInvocation:invocation
+                                                                        error:error];
+        result[key] = valueResult.result;
+        [consumedParameters unionSet:valueResult.consumedParameters];
+    }
+    
+    return [[LAParameterResult alloc] initWithResult:result consumedParameters:consumedParameters];
+}
+
+
+#pragma mark - replace body annoatation values
+- (LAParameterResult<NSDictionary*>*)parameterizedBodyForInvocation:(NSInvocation*)invocation
+                                                              error:(NSError**)error{
+    NSMutableDictionary* result = [[NSMutableDictionary alloc] init];
+    NSMutableSet* consumedParameters = [[NSMutableSet alloc] init];
+    
+    for (NSString* key in self.header) {
+        NSString* headerValue = self.header[key];
+        LAParameterResult<NSString*>* valueResult = [self parameterizedString:headerValue
+                                                                forInvocation:invocation
+                                                                        error:error];
+        result[key] = valueResult.result;
+        [consumedParameters unionSet:valueResult.consumedParameters];
+    }
+    
+    return [[LAParameterResult alloc] initWithResult:result consumedParameters:consumedParameters];
+}
+
+
 
 
 - (NSString*)stringValueForParameterAtIndex:(NSUInteger)index
@@ -136,8 +174,38 @@ static NSString* const KEY_ANNOTATION_HEADER = @"Headers";
             paramValue = obj;
         } else if ([obj isKindOfClass:[NSNumber class]]) {
             paramValue = [obj stringValue];
-        } else if ([obj conformsToProtocol:@protocol(LAObjectConvert)]) {
+        } else if ([obj conformsToProtocol:@protocol(LAObjectConvert)] &&
+                   [obj respondsToSelector:@selector(convertToString:)]) {
             paramValue = [obj convertToString:error];
+        } else {
+            NSAssert(NO, @"Could not convert parameter at index: %lu", (unsigned long)index);
+        }
+    } else {
+        paramValue = [invocation stringValueForParameterAtIndex:index];
+    }
+    return paramValue;
+}
+
+
+
+- (NSString*)ObjectValueForParameterAtIndex:(NSUInteger)index
+                             withInvocation:(NSInvocation*)invocation
+                                      error:(NSError**)error{
+    NSString* paramValue = nil;
+    DRTypeEncoding* encoding = [invocation typeEncodingForParameterAtIndex:index];
+    
+    if (encoding.encodingClass == DRObjectTypeEncodingClass) {
+        id obj = [invocation objectValueForParameterAtIndex:index];
+        if (obj == nil) {
+            return [NSNull null];
+        }
+        if ([obj isKindOfClass:[NSString class]]) {
+            paramValue = obj;
+        } else if ([obj isKindOfClass:[NSNumber class]]) {
+            paramValue = [obj stringValue];
+        } else if ([obj conformsToProtocol:@protocol(LAObjectConvert)] &&
+                   [obj respondsToSelector:@selector(convertToDictionary:)]) {
+            paramValue = [obj convertToDictionary:error];
         } else {
             NSAssert(NO, @"Could not convert parameter at index: %lu", (unsigned long)index);
         }

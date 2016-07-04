@@ -9,6 +9,7 @@
 #import "LAProtocalImpl.h"
 #import <ObjC/runtime.h>
 #import "LAMethodAnnotation.h"
+#import "LAParameterResult.h"
 
 @implementation LAProtocalImpl
 
@@ -50,9 +51,17 @@
     NSParameterAssert(methodAnnotation.httpMethod);
     NSParameterAssert(methodAnnotation.path);
     NSError *error = nil;
-    LAParameterResult *path = [methodAnnotation parameterizedString:methodAnnotation.path
-                                                      forInvocation:invocation
-                                                              error:&error];
+    LAParameterResult<NSString *> *pathResult = [methodAnnotation parameterizedString:methodAnnotation.path
+                                                                        forInvocation:invocation
+                                                                                error:&error];
+    
+    LAParameterResult<NSDictionary *> *headerResult = [methodAnnotation parameterizedHeadersForInvocation:invocation
+                                                                                                    error:&error];
+    
+    
+    NSMutableSet *bodyKeys = [[NSMutableSet alloc] initWithArray:methodAnnotation.parameterNames];
+    [bodyKeys minusSet:pathResult.consumedParameters];
+    [bodyKeys minusSet:headerResult.consumedParameters];
     
     
     

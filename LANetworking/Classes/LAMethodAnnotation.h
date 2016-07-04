@@ -30,4 +30,7 @@
                              forInvocation:(NSInvocation*)invocation
                                      error:(NSError**)error;
 
+
+- (LAParameterResult *)parameterizedHeadersForInvocation:(NSInvocation*)invocation
+                                                   error:(NSError**)error;
 @end
