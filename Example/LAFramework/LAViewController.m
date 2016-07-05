@@ -10,7 +10,7 @@
 #import <LAFramework/PFKeyValueCache.h>
 #import "GitHubService.h"
 #import <LAFramework/LANetworkingBuilder.h>
-//#import <ReactiveCocoa/ReactiveCocoa.h>
+#import "ReactiveCocoa.h"
 
 @interface LAViewController ()
 
@@ -19,8 +19,7 @@
 
 @implementation LAViewController
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad{
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     [PFKeyValueCache shareInstance];
@@ -28,12 +27,13 @@
     id<GitHubService> service = [[LANetworkingBuilder initBuilderWithBlock:^(LANetworkingBuilder *builder) {
         builder.baseURL = [NSURL URLWithString:@"https://api.github.com"];
     }] create:@protocol(GitHubService)];
-    [service fetchSomeThing:@"a" test:@"vvv" file:@"b"] ;
+    
+    NSLog(@"%@",[NSNull null]);
+    [service listRepos:@"huhk345"];
     
 }
 
-- (void)didReceiveMemoryWarning
-{
+- (void)didReceiveMemoryWarning{
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }

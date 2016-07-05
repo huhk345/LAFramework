@@ -20,5 +20,6 @@
 @property(nonatomic,assign) NSUInteger bodyFormType;
 @property(nonatomic,assign) NSUInteger cacheTime;
 
+@property(nonatomic,strong) NSURLSessionConfiguration *sessionConfiguration;
 
 @end

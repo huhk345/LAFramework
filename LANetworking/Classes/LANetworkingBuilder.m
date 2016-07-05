@@ -22,6 +22,7 @@
     LANetworkingBuilder* builder = [[LANetworkingBuilder alloc] init];
     builder.cacheTime = 3600 * 24;
     builder.bodyFormType = LAFormData;
+    builder.sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
     block(builder);
     NSParameterAssert(builder.baseURL);
     return builder;

@@ -27,7 +27,9 @@ Pod::Spec.new do |s|
   s.author           = { 'LakeR' => 'njlaker@gmail.com' }
   s.source           = { :git => 'https://github.com/huhk345/LAFramework.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
-  s.prefix_header_file = 'LAFramework/Classes/LAPrefix.pch'
+  s.prefix_header_file =  'LAFramework/Classes/LAPrefix.pch'
+  s.public_header_files = 'Pod/ReactieCocoa/**/*.h'
+  
   s.ios.deployment_target = '8.0'
 
   s.source_files = 'LAFramework/Classes/**/*'
@@ -41,7 +43,7 @@ Pod::Spec.new do |s|
 
 
   s.dependency 'AFNetworking', '~> 3.1.0'
-  s.dependency 'ReactiveCocoa', '~> 4.1.0'
+  s.dependency 'ReactiveCocoa', '~> 4.2.0'
   s.dependency 'CocoaLumberjack', '~>2.3.0'
 
 
@@ -53,6 +55,7 @@ Pod::Spec.new do |s|
 
   s.subspec 'LAJsonKit' do |sp|
     sp.source_files = 'LAJsonKit/Classes/**/*'
+    sp.public_header_files = 'LAJsonKit/Classes/*.h'
   end
 
   s.subspec 'LAMediator' do |sp|

@@ -7,7 +7,7 @@
 //
 
 #import "LAURLResponse.h"
-#import "NSString+LAJson.h"
+#import "LAJsonKit.h"
 
 @implementation LAURLResponse
 

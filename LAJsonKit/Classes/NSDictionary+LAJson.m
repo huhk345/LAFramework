@@ -10,7 +10,7 @@
 
 @implementation NSDictionary (LAJson)
 
-
+//TODO: convert custom Object to Dictionary in NSDictionary
 - (NSString *)jsonString{
     NSError *error = nil;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:self options:NSJSONWritingPrettyPrinted error:&error];

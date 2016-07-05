@@ -7,8 +7,7 @@
 //
 
 #import "LAMethodAnnotation.h"
-#import "DRTypeEncoding.h"
-#import "NSInvocation+DRUtils.h"
+#import "NSInvocation+LAUtils.h"
 #import "LAReformater.h"
 #import "LAParameterResult.h"
 
@@ -138,17 +137,15 @@ static NSString* const KEY_ANNOTATION_HEADER = @"Headers";
 
 #pragma mark - replace body annoatation values
 - (LAParameterResult<NSDictionary*>*)parameterizedBodyForInvocation:(NSInvocation*)invocation
+                                                         withKeySet:(NSSet<NSString *> *)keySet
                                                               error:(NSError**)error{
     NSMutableDictionary* result = [[NSMutableDictionary alloc] init];
     NSMutableSet* consumedParameters = [[NSMutableSet alloc] init];
     
-    for (NSString* key in self.header) {
-        NSString* headerValue = self.header[key];
-        LAParameterResult<NSString*>* valueResult = [self parameterizedString:headerValue
-                                                                forInvocation:invocation
-                                                                        error:error];
-        result[key] = valueResult.result;
-        [consumedParameters unionSet:valueResult.consumedParameters];
+    for (NSString* key in keySet) {
+        result[key] = [self ObjectValueForParameterAtIndex:[self.parameterNames indexOfObject:key]
+                                            withInvocation:invocation
+                                                     error:error];
     }
     
     return [[LAParameterResult alloc] initWithResult:result consumedParameters:consumedParameters];
@@ -159,31 +156,8 @@ static NSString* const KEY_ANNOTATION_HEADER = @"Headers";
 
 - (NSString*)stringValueForParameterAtIndex:(NSUInteger)index
                              withInvocation:(NSInvocation*)invocation
-                                      error:(NSError**)error
-{
-    NSString* paramValue = nil;
-    DRTypeEncoding* encoding = [invocation typeEncodingForParameterAtIndex:index];
-    
-    if (encoding.encodingClass == DRObjectTypeEncodingClass) {
-        id obj = [invocation objectValueForParameterAtIndex:index];
-        if (obj == nil) {
-            return @"";
-        }
-        
-        if ([obj isKindOfClass:[NSString class]]) {
-            paramValue = obj;
-        } else if ([obj isKindOfClass:[NSNumber class]]) {
-            paramValue = [obj stringValue];
-        } else if ([obj conformsToProtocol:@protocol(LAObjectConvert)] &&
-                   [obj respondsToSelector:@selector(convertToString:)]) {
-            paramValue = [obj convertToString:error];
-        } else {
-            NSAssert(NO, @"Could not convert parameter at index: %lu", (unsigned long)index);
-        }
-    } else {
-        paramValue = [invocation stringValueForParameterAtIndex:index];
-    }
-    return paramValue;
+                                      error:(NSError**)error{
+    return [invocation stringValueForParameterAtIndex:index error:&error];
 }
 
 
@@ -191,28 +165,7 @@ static NSString* const KEY_ANNOTATION_HEADER = @"Headers";
 - (NSString*)ObjectValueForParameterAtIndex:(NSUInteger)index
                              withInvocation:(NSInvocation*)invocation
                                       error:(NSError**)error{
-    NSString* paramValue = nil;
-    DRTypeEncoding* encoding = [invocation typeEncodingForParameterAtIndex:index];
-    
-    if (encoding.encodingClass == DRObjectTypeEncodingClass) {
-        id obj = [invocation objectValueForParameterAtIndex:index];
-        if (obj == nil) {
-            return [NSNull null];
-        }
-        if ([obj isKindOfClass:[NSString class]]) {
-            paramValue = obj;
-        } else if ([obj isKindOfClass:[NSNumber class]]) {
-            paramValue = [obj stringValue];
-        } else if ([obj conformsToProtocol:@protocol(LAObjectConvert)] &&
-                   [obj respondsToSelector:@selector(convertToDictionary:)]) {
-            paramValue = [obj convertToDictionary:error];
-        } else {
-            NSAssert(NO, @"Could not convert parameter at index: %lu", (unsigned long)index);
-        }
-    } else {
-        paramValue = [invocation stringValueForParameterAtIndex:index];
-    }
-    return paramValue;
+    return [invocation objectValueForParameterAtIndex:index error:&error];
 }
 
 

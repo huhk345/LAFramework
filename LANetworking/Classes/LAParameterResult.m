@@ -2,7 +2,7 @@
 //  LAParameterResult.m
 //  Pods
 //
-//  Created by 胡恒恺 on 16/7/4.
+//  Created by LakeR on 16/7/4.
 //  Copyright © 2016年 LakeR inc. All rights reserved.
 //
 

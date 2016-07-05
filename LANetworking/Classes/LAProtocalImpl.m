@@ -10,11 +10,16 @@
 #import <ObjC/runtime.h>
 #import "LAMethodAnnotation.h"
 #import "LAParameterResult.h"
+#import "AFNetworking.h"
+#import "LASessionManagerFactory.h"
+#import "LANetworkingBuilder.h"
+#import "AFHTTPSessionManager+rac.h"
+#import "LAJsonKit.h"
 
 @implementation LAProtocalImpl
 
 
-
+#pragma mark - invocatin hooking methods
 - (void)forwardInvocation:(NSInvocation *)anInvocation {
     struct objc_method_description desc = protocol_getMethodDescription(self.protocol, anInvocation.selector, YES, YES);
     
@@ -35,11 +40,7 @@
     }
 }
 
-///*
-// * This big ugly method really needs to be refactored.
-// */
-- (void)handleInvocation:( NSInvocation*)invocation
-{
+- (void)handleInvocation:( NSInvocation*)invocation{
     [invocation retainArguments];
     
     // track which parameters have been used
@@ -62,224 +63,177 @@
     NSMutableSet *bodyKeys = [[NSMutableSet alloc] initWithArray:methodAnnotation.parameterNames];
     [bodyKeys minusSet:pathResult.consumedParameters];
     [bodyKeys minusSet:headerResult.consumedParameters];
+    LAParameterResult<NSDictionary *> *parameterResult = [methodAnnotation parameterizedBodyForInvocation:invocation
+                                                                                               withKeySet:bodyKeys
+                                                                                                    error:&error];
+    
+    if(error){
+        DLogError(@"construct http request failed : %@",error);
+        [invocation setReturnValue:NULL];
+        return;
+    }
     
     
-    
-//  
-//    // construct path
-//    NSError* error = nil;
-//    id<DRConverter> converter = [self.converterFactory converter];
-//    DRParameterizeResult<NSString*>* pathParamResult = [desc parameterizedPathForInvocation:invocation
-//                                                                              withConverter:converter
-//                                                                                      error:&error];
-//    
-//    if (error) {
-//        [self cleanupInvocation:invocation callingError:error callback:callback];
-//        return;
-//    }
-//    
-//    NSURL* fullPath = [self.endPoint URLByAppendingPathComponent:pathParamResult.result];
-//    [consumedParameters unionSet:pathParamResult.consumedParameters];
-//    
-//    NSLog(@"full path: %@", fullPath);
-//    
-//    // construct request
-//    NSMutableURLRequest* request = [[NSMutableURLRequest alloc] initWithURL:fullPath];
-//    request.HTTPMethod = [desc httpMethod];
-//    
-//    // get body
-//    DRParameterizeResult* bodyParamResult = [desc bodyForInvocation:invocation withConverter:converter error:&error];
-//    
-//    if (error) {
-//        [self cleanupInvocation:invocation callingError:error callback:callback];
-//        return;
-//    }
-//    
-//    id bodyObj = bodyParamResult.result;
-//    [consumedParameters unionSet:bodyParamResult.consumedParameters];
-//    
-//    // set headers
-//    DRParameterizeResult<NSDictionary*>* headerParamResult = [desc parameterizedHeadersForInvocation:invocation
-//                                                                                       withConverter:converter
-//                                                                                               error:&error];
-//    
-//    if (error) {
-//        [self cleanupInvocation:invocation callingError:error callback:callback];
-//        return;
-//    }
-//    
-//    for (NSString* key in headerParamResult.result) {
-//        [request setValue:headerParamResult.result[key] forHTTPHeaderField:key];
-//    }
-//    
-//    [consumedParameters unionSet:headerParamResult.consumedParameters];
-//    
-//    // finally, leftover parameters go in the query (or form-url-encoded body)
-//    NSMutableSet* queryParams = [NSMutableSet setWithArray:desc.parameterNames];
-//    [queryParams minusSet:consumedParameters];
-//    
-//    if ([desc isFormURLEncoded]) {
-//        
-//        NSAssert(bodyObj == nil, @"FormURLEncoding and an explicit Body object are mutually exclusive");
-//        
-//        // for FormURLEncoding, put extra params in body instead of URL query
-//        
-//        // I guess don't override this if the user set it explicitly
-//        if (![request valueForHTTPHeaderField:@"Content-Type"]) {
-//            [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-//        }
-//        
-//        // compose the form body
-//        NSArray* formItems = [self queryItemsForParameters:queryParams
-//                                         methodDescription:desc
-//                                                invocation:invocation
-//                                                 converter:converter
-//                                                     error:&error];
-//        
-//        if (error) {
-//            [self cleanupInvocation:invocation callingError:error callback:callback];
-//            return;
-//        } else {
-//            // let's slightly abuse this to construct the url encoded body
-//            NSURLComponents* urlComps = [NSURLComponents componentsWithString:@"http://example.com"];
-//            urlComps.queryItems = formItems;
-//            NSURL* url = urlComps.URL;
-//            NSString* bodyString = url.query;
-//            bodyObj = [bodyString dataUsingEncoding:NSUTF8StringEncoding];
-//        }
-//        
-//    } else if (queryParams.count > 0) {
-//        NSURLComponents* urlComps = [NSURLComponents componentsWithURL:request.URL resolvingAgainstBaseURL:NO];
-//        NSMutableArray* queryItems = urlComps.queryItems.mutableCopy;
-//        
-//        NSArray* otherQueryItems = [self queryItemsForParameters:queryParams
-//                                               methodDescription:desc
-//                                                      invocation:invocation
-//                                                       converter:converter
-//                                                           error:&error];
-//        
-//        if (error) {
-//            [self cleanupInvocation:invocation callingError:error callback:callback];
-//            return;
-//        } else if (otherQueryItems) {
-//            if (queryItems) {
-//                [queryItems addObjectsFromArray:otherQueryItems];
-//            } else {
-//                queryItems = otherQueryItems.mutableCopy;
-//            }
-//        }
-//        
-//        urlComps.queryItems = queryItems;
-//        request.URL = urlComps.URL;
-//    }
-//    
-//    // we'll set this here in case it's not an upload task
-//    if ([bodyObj isKindOfClass:[NSData class]]) {
-//        request.HTTPBody = bodyObj;
-//    } else if ([bodyObj isKindOfClass:[NSInputStream class]]) {
-//        request.HTTPBodyStream = bodyObj;
-//    }
-//    
-//    Class taskClass = [desc taskClass];
-//    NSAssert(taskClass != nil, @"could not determine session task type");
-//    NSURLSessionTask* task = nil;
-//    
-//    // somewhat complicated construction of correct task and setting of body
-//    if (taskClass == [NSURLSessionDownloadTask class]) {
-//        // if they provided a URL for the body, assume it is a local file and make a stream
-//        if ([bodyObj isKindOfClass:[NSURL class]]) {
-//            request.HTTPBodyStream = [NSInputStream inputStreamWithURL:bodyObj];
-//        }
-//        
-//        task = [self.urlSession downloadTaskWithRequest:request completionHandler:callback];
-//    } else {
-//        void (^completionHandler)(NSData *data, NSURLResponse *response, NSError *error) =
-//        ^(NSData *data, NSURLResponse *response, NSError *error) {
-//            id result = nil;
-//            
-//            if (!error) {
-//                NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
-//                
-//                if (httpResponse.statusCode < 200 || httpResponse.statusCode >= 300) {
-//                    
-//                    if ([converter respondsToSelector:@selector(convertErrorData:forResponse:)]) {
-//                        error = [converter convertErrorData:data forResponse:httpResponse];
-//                    }
-//                    
-//                    if (!error) {
-//                        NSDictionary* userInfo = nil;
-//                        
-//                        if (data) {
-//                            NSString* errorMessage = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-//                            
-//                            if (errorMessage) {
-//                                userInfo = @{ NSLocalizedDescriptionKey : errorMessage };
-//                            }
-//                        }
-//                        
-//                        error = [NSError errorWithDomain:DRHTTPErrorDomain code:httpResponse.statusCode userInfo:userInfo];
-//                    }
-//                }
-//            }
-//            
-//            if (!error) {
-//                Class type = [desc resultConversionClass];
-//                result = [converter convertData:data toObjectOfClass:type error:&error];
-//            }
-//            
-//            callback(result, response, error);
-//        };
-//        
-//        if (taskClass == [NSURLSessionDataTask class]) {
-//            // if they provided a URL for the body, assume it is a local file and make a stream
-//            if ([bodyObj isKindOfClass:[NSURL class]]) {
-//                request.HTTPBodyStream = [NSInputStream inputStreamWithURL:bodyObj];
-//            }
-//            
-//            task = [self.urlSession dataTaskWithRequest:request
-//                                      completionHandler:completionHandler];
-//        } else {
-//            if ([bodyObj isKindOfClass:[NSData class]]) {
-//                task = [self.urlSession uploadTaskWithRequest:request
-//                                                     fromData:bodyObj
-//                                            completionHandler:completionHandler];
-//            } else if ([bodyObj isKindOfClass:[NSURL class]]) {
-//                task = [self.urlSession uploadTaskWithRequest:request
-//                                                     fromFile:bodyObj
-//                                            completionHandler:completionHandler];
-//            }
-//        }
-//    }
-//    
-//    [invocation setReturnValue:&task];
+    AFHTTPSessionManager *manager = [LASessionManagerFactory managerWithService:[[self class] description]
+                                                                        baseURL:self.baseURL
+                                                           sessionConfiguration:self.sessionConfiguration];
+    [self.defaultHeaders enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+        [manager.requestSerializer setValue:obj forHTTPHeaderField:key];
+    }];
+    NSMutableURLRequest *request = [self generateRequest:manager.requestSerializer
+                                                    path:pathResult.result
+                                                  header:headerResult.result
+                                              parameters:parameterResult.result
+                                              annotation:methodAnnotation
+                                                   error:&error];
+    RACSignal *signal = [manager rac_sendRequest:request];
+    [invocation setReturnValue:&signal];
 }
-//
-//- (NSArray*)queryItemsForParameters:(NSSet*)queryParameters
-//                  methodDescription:(DRMethodDescription*)methodDescription
-//                         invocation:(NSInvocation*)invocation
-//                          converter:(id<DRConverter>)converter
-//                              error:(NSError**)error
-//{
-//    NSMutableArray* queryItems = [[NSMutableArray alloc] init];
-//    
-//    
-//    for (NSString* paramName in queryParameters) {
-//        
-//        NSUInteger paramIdx = [methodDescription.parameterNames indexOfObject:paramName];
-//        NSString* value = [methodDescription stringValueForParameterAtIndex:paramIdx
-//                                                             withInvocation:invocation
-//                                                                  converter:converter
-//                                                                      error:error];
-//        
-//        if (error && *error) {
-//            return nil;
-//        }
-//        
-//        [queryItems addObject:[[NSURLQueryItem alloc] initWithName:paramName value:value]];
-//    }
-//    
-//    return queryItems;
-//}
+
+#pragma mark - request generate methods
+//TODO: download file and backgournd upload file
+-(NSMutableURLRequest *)generateRequest:(AFHTTPRequestSerializer *)requestSerializer
+                                   path:(NSString *)path
+                                 header:(NSDictionary *)header
+                             parameters:(NSDictionary *)parameters
+                             annotation:(LAMethodAnnotation *)methodAnnotation
+                                  error:(NSError **)error{
+    
+#define WRAP_HEAD_TO_REQUEST(flag)  if(*error){ \
+                                        DLogError(@"generate http request failed : %@",*error); \
+                                        return nil;\
+                                    }\
+                                    [header enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {\
+                                        if (![key isEqualToString:@"Content-Type"] || flag) {\
+                                            [request setValue:obj forHTTPHeaderField:key];\
+                                        }\
+                                    }]
+    
+    
+    NSMutableURLRequest *request;
+    if ([methodAnnotation.httpMethod isEqualToString:@"GET"] ||
+        [methodAnnotation.httpMethod isEqualToString:@"DELETE"] ||
+        [methodAnnotation.httpMethod isEqualToString:@"HEAD"]) {
+        request = [requestSerializer requestWithMethod:methodAnnotation.httpMethod
+                                             URLString:[[NSURL URLWithString:path relativeToURL:self.baseURL] absoluteString]
+                                            parameters:parameters
+                                                 error:error];
+        WRAP_HEAD_TO_REQUEST(NO);
+    }
+    else {
+        switch (methodAnnotation.bodyFormType ? [methodAnnotation.bodyFormType integerValue] : self.bodyFormType) {
+            case LAFormData:{
+                request = [self generateFormDataRequest:requestSerializer
+                                                   path:path
+                                             parameters:parameters
+                                             annotation:methodAnnotation
+                                                  error:error];
+                WRAP_HEAD_TO_REQUEST(NO);
+                break;
+            }
+            case LAFormUrlencode:{
+                request = [requestSerializer requestWithMethod:methodAnnotation.httpMethod
+                                                     URLString:[[NSURL URLWithString:path relativeToURL:self.baseURL] absoluteString]
+                                                    parameters:parameters
+                                                         error:&error];
+                WRAP_HEAD_TO_REQUEST(NO);
+                break;
+            }
+            case LAFormRaw:{
+                request = [self generateRawDataRequest:requestSerializer
+                                                  path:path
+                                            parameters:parameters
+                                            annotation:methodAnnotation
+                                                 error:error];
+                WRAP_HEAD_TO_REQUEST(YES);
+                break;
+            }
+            default:
+                break;
+        }
+    }
+    return request;
+    
+    
+}
+
+
+-(NSMutableURLRequest *)generateRawDataRequest:(AFHTTPRequestSerializer *)requestSerializer
+                                           path:(NSString *)path
+                                     parameters:(NSDictionary *)parameters
+                                     annotation:(LAMethodAnnotation *)methodAnnotation
+                                          error:(NSError **)error{
+    NSMutableURLRequest *mutableRequest = [requestSerializer requestWithMethod:methodAnnotation.httpMethod
+                                                                     URLString:[[NSURL URLWithString:path relativeToURL:self.baseURL] absoluteString]
+                                                                    parameters:nil
+                                                                         error:error];
+    mutableRequest.HTTPBody = [[parameters jsonString] dataUsingEncoding:NSUTF8StringEncoding];
+    return mutableRequest;
+}
+
+
+
+
+-(NSMutableURLRequest *)generateFormDataRequest:(AFHTTPRequestSerializer *)requestSerializer
+                                           path:(NSString *)path
+                                     parameters:(NSDictionary *)parameters
+                                     annotation:(LAMethodAnnotation *)methodAnnotation
+                                          error:(NSError **)error{
+    return [requestSerializer multipartFormRequestWithMethod:methodAnnotation.httpMethod
+                                                   URLString:[[NSURL URLWithString:path relativeToURL:self.baseURL] absoluteString]
+                                                  parameters:nil
+                                   constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
+                                       for(NSString *key in [parameters allKeys]){
+                                           if([parameters[key] isKindOfClass:[NSString class]]){
+                                               [formData appendPartWithFormData:[parameters[key] dataUsingEncoding:NSUTF8StringEncoding]
+                                                                           name:key];
+                                           }else if([parameters[key] isKindOfClass:[NSNull class]]){
+                                               [formData appendPartWithFormData:[NSData data]
+                                                                           name:key];
+                                           }else if([parameters[key] isKindOfClass:[NSURL class]]){
+                                               NSURL *url = parameters[key];
+                                               if([url isFileURL] && [[NSFileManager defaultManager] isExecutableFileAtPath:[url path]]){
+                                                   [formData appendPartWithFileURL:url
+                                                                              name:key
+                                                                          fileName:[[url path] lastPathComponent]
+                                                                          mimeType:[[self class] mimeTypeForFileAtPath:[url path]]
+                                                                             error:error];
+                                               }else{
+                                                   [formData appendPartWithFormData:[[url absoluteString]dataUsingEncoding:NSUTF8StringEncoding]
+                                                                               name:key];
+                                               }
+                                           }else if([parameters[key] isKindOfClass:[NSArray class]] ||
+                                                    [parameters[key] isKindOfClass:[NSDictionary class]] ||
+                                                    [parameters[key] isKindOfClass:[NSSet class]]){
+                                               [formData appendPartWithFormData:[[parameters[key] jsonString] dataUsingEncoding:NSUTF8StringEncoding]
+                                                                           name:key];
+                                           }
+                                           
+                                       }
+                                       
+                                   }
+                                                       error:error];
+}
+
+
+
+
+
+#pragma mark - help functions
++ (NSString*) mimeTypeForFileAtPath: (NSString *) path {
+    if (![[NSFileManager defaultManager] fileExistsAtPath:path]) {
+        return nil;
+    }
+    // Borrowed from http://stackoverflow.com/questions/5996797/determine-mime-type-of-nsdata-loaded-from-a-file
+    // itself, derived from  http://stackoverflow.com/questions/2439020/wheres-the-iphone-mime-type-database
+    CFStringRef UTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (__bridge CFStringRef)[path pathExtension], NULL);
+    CFStringRef mimeType = UTTypeCopyPreferredTagWithClass (UTI, kUTTagClassMIMEType);
+    CFRelease(UTI);
+    if (!mimeType) {
+        return @"application/octet-stream";
+    }
+    return (__bridge_transfer NSString *)mimeType;
+}
 
 
 @end

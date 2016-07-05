@@ -26,6 +26,8 @@ typedef enum {
 
 @property(nonatomic,assign) LAHttpBodyFormType bodyFormType;
 
+@property(nonatomic,strong) NSURLSessionConfiguration *sessionConfiguration;
+
 + (instancetype)initBuilderWithBlock:(void(^)(LANetworkingBuilder* builder))block;
 
 - (id)create:(Protocol *)protocol;

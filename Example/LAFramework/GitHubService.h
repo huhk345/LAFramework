@@ -12,13 +12,10 @@
 @protocol GitHubService <LAWebService>
 
 
-@GET("/path/{:file}/something")
-@FormData
-@Headers({"Accept": "someThing", "User-Agent": "Sample-App"})
+
+@GET("/users/{:user}/repos")
 @Cache("1D")
-- (LANSignal(NSString))fetchSomeThing:(Part("aaa") NSString *)aa
-                                 test:(NSArray *)file
-                                 file:(Part("bbb") NSString *)bb;
+- (LANSignal(NSObject) *)listRepos:(NSString*)user;
 
 
 @end

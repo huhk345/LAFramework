@@ -16,6 +16,7 @@
 #define DELETE(unused)  required
 #define PUT(unused)     required
 #define PATCH(unused)   required
+#define HEAD(unused)    required
 
 //http headers
 #define Headers(...)    required

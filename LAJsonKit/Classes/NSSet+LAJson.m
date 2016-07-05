@@ -1,16 +1,16 @@
 //
-//  NSArray+LAJson.m
+//  NSSet+LAJson.m
 //  Pods
 //
-//  Created by LakeR on 16/6/29.
+//  Created by LakeR on 16/7/5.
 //
 //
 
-#import "NSArray+LAJson.h"
+#import "NSSet+LAJson.h"
 
-@implementation NSArray (LAJson)
+@implementation NSSet (LAJson)
 
-//TODO: convert custom Object to Dictionary in NSArray
+//TODO: convert custom Object to Dictionary in NSSet
 - (NSString *)jsonString{
     NSError *error = nil;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:self options:NSJSONWritingPrettyPrinted error:&error];
@@ -20,6 +20,5 @@
     DLogError("Convert to  json String error : %@",error);
     return nil;
 }
-
 
 @end
