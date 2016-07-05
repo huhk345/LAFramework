@@ -11,6 +11,7 @@
 #import "GitHubService.h"
 #import <LAFramework/LANetworkingBuilder.h>
 #import "ReactiveCocoa.h"
+#import "LAURLResponse.h"
 
 @interface LAViewController ()
 
@@ -29,7 +30,9 @@
     }] create:@protocol(GitHubService)];
     
     NSLog(@"%@",[NSNull null]);
-    [service listRepos:@"huhk345"];
+    [[service listRepos:@"huhk345"] subscribeNext:^(LAURLResponse *response) {
+        NSLog(@"reponse %@",response.responseObject);
+    }];
     
 }
 
