@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@protocol LAReformater <NSObject>
+@protocol LAReformatter <NSObject>
 
 -(id)convertToObject:(NSDictionary *)dictionary;
 

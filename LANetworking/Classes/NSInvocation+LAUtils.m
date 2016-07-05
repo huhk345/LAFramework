@@ -9,7 +9,7 @@
 #import "NSInvocation+LAUtils.h"
 #import "NSArray+LAJson.h"
 #import "NSDate+ISO8601.h"
-#import "LAReformater.h"
+#import "LAReformatter.h"
 
 @implementation NSInvocation (LAUtils)
 

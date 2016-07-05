@@ -28,8 +28,8 @@
     id<GitHubService> service = [[LANetworkingBuilder initBuilderWithBlock:^(LANetworkingBuilder *builder) {
         builder.baseURL = [NSURL URLWithString:@"https://api.github.com"];
     }] create:@protocol(GitHubService)];
+
     
-    NSLog(@"%@",[NSNull null]);
     [[service listRepos:@"huhk345"] subscribeNext:^(LAURLResponse *response) {
         NSLog(@"reponse %@",response.responseObject);
     }];

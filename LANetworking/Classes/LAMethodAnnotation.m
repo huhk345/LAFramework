@@ -8,7 +8,7 @@
 
 #import "LAMethodAnnotation.h"
 #import "NSInvocation+LAUtils.h"
-#import "LAReformater.h"
+#import "LAReformatter.h"
 #import "LAParameterResult.h"
 
 static NSString* const KEY_PARAMETERS = @"parameterNames";
