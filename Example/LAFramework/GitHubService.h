@@ -18,4 +18,8 @@
 - (LANSignal(GithubRepo))listRepos:(NSString*)user;
 
 
+@GET("/repos/{:owner}/{:repo}")
+@Headers({"Token":"AABB-CCDD-EE"})
+- (LANSignal(void))listRepository:(NSString *)owner repo:(Part("repo") NSString *)arg;
+
 @end

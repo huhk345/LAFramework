@@ -116,7 +116,6 @@
         @strongify(self)
         if(!value.error){
             //cache response if need
-            
             if(!value.isCache &&
                [value.request.HTTPMethod isEqualToString:@"GET"] &&
                [self methodCacheTime:methodAnnotation] > 0){

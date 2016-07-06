@@ -24,7 +24,6 @@
 - (void)viewDidLoad{
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
-    [PFKeyValueCache shareInstance];
     
     id<GitHubService> service = [[LANetworkingBuilder initBuilderWithBlock:^(LANetworkingBuilder *builder) {
         builder.baseURL = [NSURL URLWithString:@"https://api.github.com"];
@@ -32,6 +31,11 @@
 
     
     [[service listRepos:@"huhk345"] subscribeNext:^(LAURLResponse *response) {
+        NSLog(@"reponse %@",response.responseObject);
+    }];
+    
+    
+    [[service listRepository:@"huhk345" repo:@"LAFramework"] subscribeNext:^(LAURLResponse *response) {
         NSLog(@"reponse %@",response.responseObject);
     }];
 }

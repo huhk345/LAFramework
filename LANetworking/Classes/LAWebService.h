@@ -32,7 +32,6 @@
 
 //network param like
 #define Part(unused)
-#define Header(unused)  
 
 
 
@@ -42,7 +41,7 @@
 
 
 
-#define LANSignal(unused) RACSignal*
+#define LANSignal(unused)   RACSignal*
 
 @protocol LAWebService <NSObject>
 
