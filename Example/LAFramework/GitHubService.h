@@ -22,4 +22,10 @@
 @Headers({"Token":"AABB-CCDD-EE"})
 - (LANSignal(void))listRepository:(NSString *)owner repo:(Part("repo") NSString *)arg;
 
+
+@GET("/users/{:user}/repos")
+@Headers({"Token":"{:token}"})
+@Cache("1D")
+- (LANSignal(GithubRepo))listRepos:(NSString*)user token:(NSString *)token;
+
 @end

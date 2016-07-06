@@ -2,10 +2,9 @@ use_frameworks!
 
 target 'LAFramework_Example' do
   pod 'LAFramework', :path => '../'
-  #pod 'ReactiveCocoa', '~> 4.2.1'
   target 'LAFramework_Tests' do
     inherit! :search_paths
-
+    pod 'Aspects'
     pod 'Specta'
     pod 'Expecta'
     pod 'FBSnapshotTestCase'

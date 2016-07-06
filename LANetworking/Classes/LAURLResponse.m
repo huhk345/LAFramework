@@ -38,6 +38,7 @@
     if (self = [self init]) {
         _request = request;
         _responseData = responseData;
+        _responseObject = [[[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding] toObject];
         _isCache = YES;
     }
     return self;

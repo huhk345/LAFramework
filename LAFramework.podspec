@@ -28,11 +28,12 @@ Pod::Spec.new do |s|
   s.source           = { :git => 'https://github.com/huhk345/LAFramework.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
   s.prefix_header_file =  'LAFramework/Classes/LAPrefix.pch'
-  s.public_header_files = 'Pod/ReactieCocoa/**/*.h'
+
   
   s.ios.deployment_target = '8.0'
 
   s.source_files = 'LAFramework/Classes/**/*'
+  s.exclude_files = 'LAFramework/Classes/LAPrefix.pch'
   # s.resource_bundles = {
   #   'LAFramework' => ['LAFramework/LAFramework/Assets/*.png']
   # }

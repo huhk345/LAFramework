@@ -157,15 +157,15 @@ static NSString* const KEY_ANNOTATION_HEADER = @"Headers";
 - (NSString*)stringValueForParameterAtIndex:(NSUInteger)index
                              withInvocation:(NSInvocation*)invocation
                                       error:(NSError**)error{
-    return [invocation stringValueForParameterAtIndex:index error:&error];
+    return [invocation stringValueForParameterAtIndex:index error:error];
 }
 
 
 
-- (NSString*)ObjectValueForParameterAtIndex:(NSUInteger)index
+- (NSObject*)ObjectValueForParameterAtIndex:(NSUInteger)index
                              withInvocation:(NSInvocation*)invocation
                                       error:(NSError**)error{
-    return [invocation objectValueForParameterAtIndex:index error:&error];
+    return [invocation objectValueForParameterAtIndex:index error:error];
 }
 
 

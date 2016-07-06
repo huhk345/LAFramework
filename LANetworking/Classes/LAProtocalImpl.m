@@ -46,8 +46,6 @@
 - (void)handleInvocation:( NSInvocation*)invocation{
     [invocation retainArguments];
     
-    // track which parameters have been used
-    NSMutableSet* consumedParameters = [[NSMutableSet alloc] init];
     // get method description
     NSString* sig = NSStringFromSelector(invocation.selector);
     LAMethodAnnotation* methodAnnotation = self.annotation[sig];
@@ -74,7 +72,8 @@
     
     if(error){
         DLogError(@"construct http request failed : %@",error);
-        [invocation setReturnValue:NULL];
+        id result = nil;
+        [invocation setReturnValue:&result];
         return;
     }
     
@@ -94,9 +93,15 @@
                                                    error:&error];
     if(error){
         DLogError(@"bulid http request failed :%@",error);
-        [invocation setReturnValue:NULL];
+        id result = nil;
+        [invocation setReturnValue:&result];
         return;
     }
+    
+//#if LATEST
+    self.request = request;
+//#endif
+    
     RACSignal *requestSignal = nil;
     if([request.HTTPMethod isEqualToString:@"GET"] && [self methodCacheTime:methodAnnotation] > 0){
         id cachedData = [[PFKeyValueCache shareInstance] objectForKey:[request.URL absoluteString]
@@ -179,7 +184,7 @@
                 request = [requestSerializer requestWithMethod:methodAnnotation.httpMethod
                                                      URLString:[[NSURL URLWithString:path relativeToURL:self.baseURL] absoluteString]
                                                     parameters:parameters
-                                                         error:&error];
+                                                         error:error];
                 SET_HEAD_TO_REQUEST(NO);
                 break;
             }

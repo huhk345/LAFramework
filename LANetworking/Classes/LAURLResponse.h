@@ -34,7 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(instancetype)initWithRequest:(NSURLRequest *)request
                       response:(NSHTTPURLResponse *)response
                   responseData:(NSData *)responseData
-                         error:(NSError *)error;
+                         error:(nullable NSError *)error;
 
 -(instancetype)initWithRequest:(NSURLRequest *)request
                   responseData:(id)responseData;

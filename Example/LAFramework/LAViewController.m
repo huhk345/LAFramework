@@ -16,6 +16,7 @@
 
 @interface LAViewController ()
 
+@property (nonatomic,strong) id<GitHubService> service;
 
 @end
 
@@ -23,21 +24,6 @@
 
 - (void)viewDidLoad{
     [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
-    
-    id<GitHubService> service = [[LANetworkingBuilder initBuilderWithBlock:^(LANetworkingBuilder *builder) {
-        builder.baseURL = [NSURL URLWithString:@"https://api.github.com"];
-    }] create:@protocol(GitHubService)];
-
-    
-    [[service listRepos:@"huhk345"] subscribeNext:^(LAURLResponse *response) {
-        NSLog(@"reponse %@",response.responseObject);
-    }];
-    
-    
-    [[service listRepository:@"huhk345" repo:@"LAFramework"] subscribeNext:^(LAURLResponse *response) {
-        NSLog(@"reponse %@",response.responseObject);
-    }];
 }
 
 - (void)didReceiveMemoryWarning{

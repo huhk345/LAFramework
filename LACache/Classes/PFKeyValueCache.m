@@ -96,6 +96,11 @@ static NSString *const PFKeyValueCacheDiskCachePathKey = @"path";
     _maxDiskCacheBytes = PFKeyValueCacheDefaultDiskCacheSize;
     _maxDiskCacheRecords = PFKeyValueCacheDefaultDiskCacheRecords;
     _maxMemoryCacheBytesPerRecord = PFKeyValueCacheDefaultMemoryCacheRecordSize;
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(didReceiveMemoryWarning:)
+                                                 name:UIApplicationDidReceiveMemoryWarningNotification
+                                               object:nil];
 
     return self;
 }
@@ -221,6 +226,12 @@ static NSString *const PFKeyValueCacheDiskCachePathKey = @"path";
 
 - (NSDate *)_modificationDateOfCacheEntryAtURL:(NSURL *)url {
     return [self.fileManager attributesOfItemAtPath:url.path error:NULL][NSFileModificationDate];
+}
+
+
+
+-(void)didReceiveMemoryWarning:(NSNotification *)sender{
+    [self.memoryCache removeAllObjects];
 }
 
 ///--------------------------------------

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1C57AAC692E3CCD7ECA9574D /* Pods_LAFramework_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 489136EBE0DBDDEE27251EE0 /* Pods_LAFramework_Example.framework */; };
+		300D32321D2CE142007A56AD /* LANetworkTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 300D32311D2CE142007A56AD /* LANetworkTest.m */; };
 		30A21C841D2C980A00228471 /* GithubRepo.m in Sources */ = {isa = PBXBuildFile; fileRef = 30A21C831D2C980A00228471 /* GithubRepo.m */; };
 		4655DB568336334EA41E9943 /* Pods_LAFramework_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 849B98A18F073E3919A4C2EF /* Pods_LAFramework_Tests.framework */; };
 		6003F58E195388D20070C39A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58D195388D20070C39A /* Foundation.framework */; };
@@ -22,7 +23,6 @@
 		6003F5B1195388D20070C39A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58D195388D20070C39A /* Foundation.framework */; };
 		6003F5B2195388D20070C39A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F591195388D20070C39A /* UIKit.framework */; };
 		6003F5BA195388D20070C39A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6003F5B8195388D20070C39A /* InfoPlist.strings */; };
-		6003F5BC195388D20070C39A /* Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6003F5BB195388D20070C39A /* Tests.m */; };
 		873B8AEB1B1F5CCA007FD442 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 873B8AEA1B1F5CCA007FD442 /* Main.storyboard */; };
 /* End PBXBuildFile section */
 
@@ -40,6 +40,7 @@
 		0FE979349F4F3B97F545A415 /* Pods-LAFramework_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LAFramework_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-LAFramework_Example/Pods-LAFramework_Example.release.xcconfig"; sourceTree = "<group>"; };
 		1862E5F11D28C28A0026BC92 /* GitHubService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GitHubService.h; sourceTree = "<group>"; };
 		18EA26ECE64B74432087FA64 /* Pods-LAFramework_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LAFramework_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-LAFramework_Tests/Pods-LAFramework_Tests.release.xcconfig"; sourceTree = "<group>"; };
+		300D32311D2CE142007A56AD /* LANetworkTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LANetworkTest.m; sourceTree = "<group>"; };
 		30A21C821D2C980A00228471 /* GithubRepo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GithubRepo.h; sourceTree = "<group>"; };
 		30A21C831D2C980A00228471 /* GithubRepo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GithubRepo.m; sourceTree = "<group>"; };
 		489136EBE0DBDDEE27251EE0 /* Pods_LAFramework_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LAFramework_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -61,7 +62,6 @@
 		6003F5AF195388D20070C39A /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		6003F5B7195388D20070C39A /* Tests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Tests-Info.plist"; sourceTree = "<group>"; };
 		6003F5B9195388D20070C39A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		6003F5BB195388D20070C39A /* Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Tests.m; sourceTree = "<group>"; };
 		606FC2411953D9B200FFA9A0 /* Tests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Tests-Prefix.pch"; sourceTree = "<group>"; };
 		849B98A18F073E3919A4C2EF /* Pods_LAFramework_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LAFramework_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		873B8AEA1B1F5CCA007FD442 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
@@ -163,8 +163,8 @@
 		6003F5B5195388D20070C39A /* Tests */ = {
 			isa = PBXGroup;
 			children = (
-				6003F5BB195388D20070C39A /* Tests.m */,
 				6003F5B6195388D20070C39A /* Supporting Files */,
+				300D32311D2CE142007A56AD /* LANetworkTest.m */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -422,7 +422,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6003F5BC195388D20070C39A /* Tests.m in Sources */,
+				300D32321D2CE142007A56AD /* LANetworkTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -537,6 +537,10 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LAFramework/LAFramework-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"COCOAPODS=1",
+				);
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "LAFramework/LAFramework-Info.plist";
 				MODULE_NAME = ExampleApp;
@@ -580,6 +584,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
+					"LATEST=1",
 				);
 				INFOPLIST_FILE = "Tests/Tests-Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.${PRODUCT_NAME:rfc1034identifier}";
