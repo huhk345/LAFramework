@@ -8,6 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
+
+@protocol LAReformatter;
+
 NS_ASSUME_NONNULL_BEGIN
 @interface LAURLResponse : NSObject
 
@@ -34,7 +37,11 @@ NS_ASSUME_NONNULL_BEGIN
                          error:(NSError *)error;
 
 -(instancetype)initWithRequest:(NSURLRequest *)request
-                responseObject:(id)responseObject;
+                  responseData:(id)responseData;
+
+
+-(void)reformatterObject:(Class)reformatter;
+
 
 @end
 NS_ASSUME_NONNULL_END

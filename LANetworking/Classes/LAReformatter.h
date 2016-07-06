@@ -10,7 +10,8 @@
 
 @protocol LAReformatter <NSObject>
 
--(id)convertToObject:(NSDictionary *)dictionary;
+@required
+-(void)convertToObject:(NSDictionary *)dictionary;
 
 @end
 

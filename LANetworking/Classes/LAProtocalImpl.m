@@ -15,6 +15,9 @@
 #import "LANetworkingBuilder.h"
 #import "AFHTTPSessionManager+rac.h"
 #import "LAJsonKit.h"
+#import "LAURLResponse.h"
+#import "LAReformatter.h"
+#import "LACache.h"
 
 @implementation LAProtocalImpl
 
@@ -51,6 +54,7 @@
     
     NSParameterAssert(methodAnnotation.httpMethod);
     NSParameterAssert(methodAnnotation.path);
+    //parse annotations
     NSError *error = nil;
     LAParameterResult<NSString *> *pathResult = [methodAnnotation parameterizedString:methodAnnotation.path
                                                                         forInvocation:invocation
@@ -63,9 +67,10 @@
     NSMutableSet *bodyKeys = [[NSMutableSet alloc] initWithArray:methodAnnotation.parameterNames];
     [bodyKeys minusSet:pathResult.consumedParameters];
     [bodyKeys minusSet:headerResult.consumedParameters];
-    LAParameterResult<NSDictionary *> *parameterResult = [methodAnnotation parameterizedBodyForInvocation:invocation
-                                                                                               withKeySet:bodyKeys
-                                                                                                    error:&error];
+    LAParameterResult<NSDictionary *> *parameterResult =
+                                                [methodAnnotation parameterizedBodyForInvocation:invocation
+                                                                                      withKeySet:bodyKeys
+                                                                                           error:&error];
     
     if(error){
         DLogError(@"construct http request failed : %@",error);
@@ -74,7 +79,8 @@
     }
     
     
-    AFHTTPSessionManager *manager = [LASessionManagerFactory managerWithService:[[self class] description]
+    
+    AFHTTPSessionManager *manager = [LASessionManagerFactory managerWithService:NSStringFromClass([self class])
                                                                         baseURL:self.baseURL
                                                            sessionConfiguration:self.sessionConfiguration];
     [self.defaultHeaders enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
@@ -86,7 +92,46 @@
                                               parameters:parameterResult.result
                                               annotation:methodAnnotation
                                                    error:&error];
-    RACSignal *signal = [manager rac_sendRequest:request];
+    if(error){
+        DLogError(@"bulid http request failed :%@",error);
+        [invocation setReturnValue:NULL];
+        return;
+    }
+    RACSignal *requestSignal = nil;
+    if([request.HTTPMethod isEqualToString:@"GET"] && [self methodCacheTime:methodAnnotation] > 0){
+        id cachedData = [[PFKeyValueCache shareInstance] objectForKey:[request.URL absoluteString]
+                                                               maxAge:[self methodCacheTime:methodAnnotation]];
+        if (cachedData) {
+            requestSignal = [RACSignal return:[[LAURLResponse alloc]
+                                               initWithRequest:request responseData:cachedData]];
+        }
+    }
+    
+    if(!requestSignal){
+        requestSignal = [manager rac_sendRequest:request];
+    }
+    
+    @weakify(self)
+    RACSignal *signal = [requestSignal doNext:^(LAURLResponse *value) {
+        @strongify(self)
+        if(!value.error){
+            //cache response if need
+            
+            if(!value.isCache &&
+               [value.request.HTTPMethod isEqualToString:@"GET"] &&
+               [self methodCacheTime:methodAnnotation] > 0){
+                [[PFKeyValueCache shareInstance] setObject:value.responseData
+                                                    forKey:[value.request.URL absoluteString]];
+            }
+            //reformatter object
+            if([methodAnnotation.reformatterName length] > 0 ){
+                Class reformatter = NSClassFromString(methodAnnotation.reformatterName);
+                if(reformatter && [reformatter conformsToProtocol:@protocol(LAReformatter)]){
+                    [value reformatterObject:reformatter];
+                }
+            }
+        }
+    }];
     [invocation setReturnValue:&signal];
 }
 
@@ -99,7 +144,7 @@
                              annotation:(LAMethodAnnotation *)methodAnnotation
                                   error:(NSError **)error{
     
-#define WRAP_HEAD_TO_REQUEST(flag)  if(*error){ \
+#define SET_HEAD_TO_REQUEST(flag)  if(*error){ \
                                         DLogError(@"generate http request failed : %@",*error); \
                                         return nil;\
                                     }\
@@ -118,7 +163,7 @@
                                              URLString:[[NSURL URLWithString:path relativeToURL:self.baseURL] absoluteString]
                                             parameters:parameters
                                                  error:error];
-        WRAP_HEAD_TO_REQUEST(NO);
+        SET_HEAD_TO_REQUEST(NO);
     }
     else {
         switch (methodAnnotation.bodyFormType ? [methodAnnotation.bodyFormType integerValue] : self.bodyFormType) {
@@ -128,7 +173,7 @@
                                              parameters:parameters
                                              annotation:methodAnnotation
                                                   error:error];
-                WRAP_HEAD_TO_REQUEST(NO);
+                SET_HEAD_TO_REQUEST(NO);
                 break;
             }
             case LAFormUrlencode:{
@@ -136,7 +181,7 @@
                                                      URLString:[[NSURL URLWithString:path relativeToURL:self.baseURL] absoluteString]
                                                     parameters:parameters
                                                          error:&error];
-                WRAP_HEAD_TO_REQUEST(NO);
+                SET_HEAD_TO_REQUEST(NO);
                 break;
             }
             case LAFormRaw:{
@@ -145,7 +190,7 @@
                                             parameters:parameters
                                             annotation:methodAnnotation
                                                  error:error];
-                WRAP_HEAD_TO_REQUEST(YES);
+                SET_HEAD_TO_REQUEST(YES);
                 break;
             }
             default:
@@ -235,5 +280,13 @@
     return (__bridge_transfer NSString *)mimeType;
 }
 
+
+-(NSUInteger)methodCacheTime:(LAMethodAnnotation *)methodAnnotation{
+    NSUInteger cacheTime = self.cacheTime;
+    if (methodAnnotation.cacheTime) {
+        cacheTime = [methodAnnotation.cacheTime integerValue];
+    }
+    return cacheTime;
+}
 
 @end

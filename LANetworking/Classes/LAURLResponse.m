@@ -8,6 +8,7 @@
 
 #import "LAURLResponse.h"
 #import "LAJsonKit.h"
+#import "LAReformatter.h"
 
 @implementation LAURLResponse
 
@@ -33,13 +34,29 @@
 }
 
 -(instancetype)initWithRequest:(NSURLRequest *)request
-                responseObject:(id)responseObject{
+                responseData:(id)responseData{
     if (self = [self init]) {
         _request = request;
-        _responseObject = responseObject;
+        _responseData = responseData;
         _isCache = YES;
     }
     return self;
+}
+
+-(void)reformatterObject:(Class)reformatter{
+    if([_responseObject isKindOfClass:[NSArray class]]){
+        NSMutableArray *result = [NSMutableArray array];
+        for (id item in _responseObject) {
+            id reformatterItem = [reformatter new];
+            [reformatterItem convertToObject:item];
+            [result addObject:reformatterItem];
+        }
+        _responseObject = result;
+    }
+    else if([_responseObject isKindOfClass:[NSDictionary class]]){
+        _responseObject = [reformatter new];
+        [_responseObject convertToObject:self.responseObject];
+    }
 }
 
 @end

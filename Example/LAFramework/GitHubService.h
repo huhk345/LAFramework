@@ -15,7 +15,7 @@
 
 @GET("/users/{:user}/repos")
 @Cache("1D")
-- (LANSignal(NSObject))listRepos:(NSString*)user;
+- (LANSignal(GithubRepo))listRepos:(NSString*)user;
 
 
 @end

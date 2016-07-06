@@ -28,17 +28,15 @@
                                    responseString = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
                                }
                                DLogDebug(@"request \(request.URL)\n code : \(httpResponse?.statusCode)\nresponse:\(responseString)");
-                               if (error) {
+                               if (!error) {
                                    [subscriber sendNext:[[LAURLResponse alloc] initWithRequest:request
                                                                                       response:httpResponse
                                                                                   responseData:responseData]];
+                                   [subscriber sendCompleted];
                                }
                                else{
-                                   [subscriber sendNext:[[LAURLResponse alloc] initWithRequest:request
-                                                                                      response:httpResponse
-                                                                                  responseData:responseData
-                                                                                         error:error]];
-                                   [subscriber sendCompleted];
+                                   [subscriber sendError:error];
+                                   
                                }
             
         }];

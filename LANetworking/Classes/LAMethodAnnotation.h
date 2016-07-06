@@ -38,4 +38,5 @@
 - (LAParameterResult *)parameterizedBodyForInvocation:(NSInvocation*)invocation
                                            withKeySet:(NSSet<NSString *> *)keySet
                                                 error:(NSError**)error;
+
 @end

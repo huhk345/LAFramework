@@ -13,6 +13,7 @@
 #import "ReactiveCocoa.h"
 #import "LAURLResponse.h"
 
+
 @interface LAViewController ()
 
 
@@ -33,7 +34,6 @@
     [[service listRepos:@"huhk345"] subscribeNext:^(LAURLResponse *response) {
         NSLog(@"reponse %@",response.responseObject);
     }];
-    
 }
 
 - (void)didReceiveMemoryWarning{
