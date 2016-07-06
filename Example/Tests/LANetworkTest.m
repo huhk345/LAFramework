@@ -41,8 +41,8 @@
     //check cache annotation
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wundeclared-selector"
-    id result = [service performSelector:@selector(methodCacheTime:) withObject:[[service valueForKey:@"annotation"] valueForKey:@"listRepos:"]];
-    assert([result intValue] == 3600 * 24);
+    NSInteger result = (NSInteger)[service performSelector:@selector(methodCacheTime:) withObject:[[service valueForKey:@"annotation"] valueForKey:@"listRepos:"]];
+    assert(result == 3600 * 24);
 #pragma clang diagnostic pop
 
 }
