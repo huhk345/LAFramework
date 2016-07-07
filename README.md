@@ -1,6 +1,6 @@
 # LAFramework
 
-[![CI Status](http://img.shields.io/travis/LakeR/LAFramework.svg?style=flat)](https://travis-ci.org/LakeR/LAFramework)
+[![CI Status](http://img.shields.io/travis/LakeR/LAFramework.svg?style=flat)](https://travis-ci.org/huhk345/LAFramework)
 [![Version](https://img.shields.io/cocoapods/v/LAFramework.svg?style=flat)](http://cocoapods.org/pods/LAFramework)
 [![License](https://img.shields.io/cocoapods/l/LAFramework.svg?style=flat)](http://cocoapods.org/pods/LAFramework)
 [![Platform](https://img.shields.io/cocoapods/p/LAFramework.svg?style=flat)](http://cocoapods.org/pods/LAFramework)
@@ -22,8 +22,8 @@ pod "LAFramework"
 ```
 
 ## Introduction
-[LANetworking]
 
+---LANetworking
 Just define a protocol that inherits from `LAWebService`.
 
 ```objective-c
