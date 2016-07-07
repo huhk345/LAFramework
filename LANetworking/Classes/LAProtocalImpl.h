@@ -22,8 +22,8 @@
 
 @property(nonatomic,strong) NSURLSessionConfiguration *sessionConfiguration;
 
-//#if LATEST
+
 @property(nonatomic,strong) NSURLRequest *request;
-//#endif
+
 
 @end

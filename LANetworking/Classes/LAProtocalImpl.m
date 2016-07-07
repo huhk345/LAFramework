@@ -98,9 +98,6 @@
         return;
     }
     
-//#if LATEST
-    self.request = request;
-//#endif
     
     RACSignal *requestSignal = nil;
     if([request.HTTPMethod isEqualToString:@"GET"] && [self methodCacheTime:methodAnnotation] > 0){

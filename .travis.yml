@@ -26,11 +26,11 @@ matrix:
 #      env: FASTLANE_ENV=ios90_xcode7	  
 before_install:
   - gem install cocoapods --no-rdoc --no-ri --no-document --quiet
-  - pod repo update
+  - pod repo update --slient
   - pod install --project-directory=Example
 script:
   - set -o pipefail && xcodebuild test -workspace Example/LAFramework.xcworkspace -scheme LAFramework-Example -sdk iphonesimulator9.3 ONLY_ACTIVE_ARCH=NO | xcpretty
-  - pod lib lint --allow-warnings
+#  - pod lib lint --allow-warnings
 after_success:
   - if [ "$FASTLANE_LANE" == "code_coverage" ]; then
      bash <(curl -s https://codecov.io/bash);

@@ -14,7 +14,6 @@ PODS:
   - AFNetworking/Serialization (3.1.0)
   - AFNetworking/UIKit (3.1.0):
     - AFNetworking/NSURLSession
-  - Aspects (1.4.1)
   - CocoaLumberjack (2.3.0):
     - CocoaLumberjack/Default (= 2.3.0)
     - CocoaLumberjack/Extensions (= 2.3.0)
@@ -23,16 +22,6 @@ PODS:
     - CocoaLumberjack/Core
   - CocoaLumberjack/Extensions (2.3.0):
     - CocoaLumberjack/Default
-  - Expecta (1.0.5)
-  - Expecta+Snapshots (3.0.0):
-    - Expecta (~> 1.0)
-    - FBSnapshotTestCase/Core (~> 2.0)
-    - Specta (~> 1.0)
-  - FBSnapshotTestCase (2.1.1):
-    - FBSnapshotTestCase/SwiftSupport (= 2.1.1)
-  - FBSnapshotTestCase/Core (2.1.1)
-  - FBSnapshotTestCase/SwiftSupport (2.1.1):
-    - FBSnapshotTestCase/Core
   - LAFramework (0.1.0):
     - AFNetworking (~> 3.1.0)
     - CocoaLumberjack (~> 2.3.0)
@@ -69,15 +58,9 @@ PODS:
   - ReactiveCocoa (4.2.1):
     - Result (~> 2.0)
   - Result (2.1.1)
-  - Specta (1.0.5)
 
 DEPENDENCIES:
-  - Aspects
-  - Expecta
-  - Expecta+Snapshots
-  - FBSnapshotTestCase
   - LAFramework (from `../`)
-  - Specta
 
 EXTERNAL SOURCES:
   LAFramework:
@@ -85,16 +68,11 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AFNetworking: 5e0e199f73d8626b11e79750991f5d173d1f8b67
-  Aspects: 7595ba96a6727a58ebcbfc954497fc5d2fdde546
   CocoaLumberjack: 97fab7ee5f507fe54445cca7ea80f926729cfd15
-  Expecta: e1c022fcd33910b6be89c291d2775b3fe27a89fe
-  Expecta+Snapshots: c343f410c7a6392f3e22e78f94c44b6c0749a516
-  FBSnapshotTestCase: 432afd8d059ccef7f207225894840a03fbcf7474
   LAFramework: 88f74bac1fb2c4a9bc47f7687ed026461b1567dd
   ReactiveCocoa: 5a42745f11ea236f405bb9ce5e97c5e3b23562dd
   Result: 822c879f145943320cc80a9a8372378e3d699fe4
-  Specta: ac94d110b865115fe60ff2c6d7281053c6f8e8a2
 
-PODFILE CHECKSUM: 5830f586fd936f877bf800c037129edd91c3dcca
+PODFILE CHECKSUM: d00562aa668106e0017e953df8dac7688b4410cb
 
 COCOAPODS: 1.0.1
