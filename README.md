@@ -1,9 +1,6 @@
 # LAFramework
 
-[![CI Status](https://img.shields.io/travis/huhk345/LAFramework.svg?branch=master&style=flat)]
-[![Version](https://img.shields.io/cocoapods/v/LAFramework.svg?style=flat)](http://cocoapods.org/pods/LAFramework)
-[![License](https://img.shields.io/cocoapods/l/LAFramework.svg?style=flat)](http://cocoapods.org/pods/LAFramework)
-[![Platform](https://img.shields.io/cocoapods/p/LAFramework.svg?style=flat)](http://cocoapods.org/pods/LAFramework)
+![CI Status](https://img.shields.io/travis/huhk345/LAFramework.svg?branch=master&style=flat)
 
 
 Base framework for iOS, inspired by Retrofit、Restless、JSPatch、Weex ...
