@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		18FEDC821D2E68C2007FEC16 /* repos.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 18FEDC801D2E59E2007FEC16 /* repos.geojson */; };
+		18FEDC831D2E68C2007FEC16 /* repoDetail.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 18FEDC811D2E5A44007FEC16 /* repoDetail.geojson */; };
 		1C57AAC692E3CCD7ECA9574D /* Pods_LAFramework_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 489136EBE0DBDDEE27251EE0 /* Pods_LAFramework_Example.framework */; };
 		300D32321D2CE142007A56AD /* LANetworkTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 300D32311D2CE142007A56AD /* LANetworkTest.m */; };
 		30A21C841D2C980A00228471 /* GithubRepo.m in Sources */ = {isa = PBXBuildFile; fileRef = 30A21C831D2C980A00228471 /* GithubRepo.m */; };
@@ -40,6 +42,8 @@
 		0FE979349F4F3B97F545A415 /* Pods-LAFramework_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LAFramework_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-LAFramework_Example/Pods-LAFramework_Example.release.xcconfig"; sourceTree = "<group>"; };
 		1862E5F11D28C28A0026BC92 /* GitHubService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GitHubService.h; sourceTree = "<group>"; };
 		18EA26ECE64B74432087FA64 /* Pods-LAFramework_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LAFramework_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-LAFramework_Tests/Pods-LAFramework_Tests.release.xcconfig"; sourceTree = "<group>"; };
+		18FEDC801D2E59E2007FEC16 /* repos.geojson */ = {isa = PBXFileReference; lastKnownFileType = text; path = repos.geojson; sourceTree = "<group>"; };
+		18FEDC811D2E5A44007FEC16 /* repoDetail.geojson */ = {isa = PBXFileReference; lastKnownFileType = text; path = repoDetail.geojson; sourceTree = "<group>"; };
 		300D32311D2CE142007A56AD /* LANetworkTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LANetworkTest.m; sourceTree = "<group>"; };
 		30A21C821D2C980A00228471 /* GithubRepo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GithubRepo.h; sourceTree = "<group>"; };
 		30A21C831D2C980A00228471 /* GithubRepo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GithubRepo.m; sourceTree = "<group>"; };
@@ -165,6 +169,8 @@
 			children = (
 				6003F5B6195388D20070C39A /* Supporting Files */,
 				300D32311D2CE142007A56AD /* LANetworkTest.m */,
+				18FEDC801D2E59E2007FEC16 /* repos.geojson */,
+				18FEDC811D2E5A44007FEC16 /* repoDetail.geojson */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -294,6 +300,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				18FEDC821D2E68C2007FEC16 /* repos.geojson in Resources */,
+				18FEDC831D2E68C2007FEC16 /* repoDetail.geojson in Resources */,
 				6003F5BA195388D20070C39A /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -575,7 +583,6 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 				);
@@ -600,7 +607,6 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 				);

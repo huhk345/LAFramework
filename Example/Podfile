@@ -4,5 +4,6 @@ target 'LAFramework_Example' do
   pod 'LAFramework', :path => '../'
   target 'LAFramework_Tests' do
     inherit! :search_paths
+    pod 'OHHTTPStubs'
   end
 end

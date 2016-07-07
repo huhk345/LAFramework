@@ -103,7 +103,7 @@
     if([request.HTTPMethod isEqualToString:@"GET"] && [self methodCacheTime:methodAnnotation] > 0){
         id cachedData = [[PFKeyValueCache shareInstance] objectForKey:[request.URL absoluteString]
                                                                maxAge:[self methodCacheTime:methodAnnotation]];
-        if (cachedData) {
+        if ([cachedData length] > 0) {
             requestSignal = [RACSignal return:[[LAURLResponse alloc]
                                                initWithRequest:request responseData:cachedData]];
         }

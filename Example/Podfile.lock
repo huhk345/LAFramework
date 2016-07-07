@@ -55,12 +55,26 @@ PODS:
     - LAFramework/LADataCategory
     - LAFramework/LAJsonKit
     - ReactiveCocoa (~> 4.2.0)
+  - OHHTTPStubs (5.1.0):
+    - OHHTTPStubs/Default (= 5.1.0)
+  - OHHTTPStubs/Core (5.1.0)
+  - OHHTTPStubs/Default (5.1.0):
+    - OHHTTPStubs/Core
+    - OHHTTPStubs/JSON
+    - OHHTTPStubs/NSURLSession
+    - OHHTTPStubs/OHPathHelpers
+  - OHHTTPStubs/JSON (5.1.0):
+    - OHHTTPStubs/Core
+  - OHHTTPStubs/NSURLSession (5.1.0):
+    - OHHTTPStubs/Core
+  - OHHTTPStubs/OHPathHelpers (5.1.0)
   - ReactiveCocoa (4.2.1):
     - Result (~> 2.0)
   - Result (2.1.1)
 
 DEPENDENCIES:
   - LAFramework (from `../`)
+  - OHHTTPStubs
 
 EXTERNAL SOURCES:
   LAFramework:
@@ -70,9 +84,10 @@ SPEC CHECKSUMS:
   AFNetworking: 5e0e199f73d8626b11e79750991f5d173d1f8b67
   CocoaLumberjack: 97fab7ee5f507fe54445cca7ea80f926729cfd15
   LAFramework: 88f74bac1fb2c4a9bc47f7687ed026461b1567dd
+  OHHTTPStubs: 592f74439d2d72615115cf99a954237a3fbe26e5
   ReactiveCocoa: 5a42745f11ea236f405bb9ce5e97c5e3b23562dd
   Result: 822c879f145943320cc80a9a8372378e3d699fe4
 
-PODFILE CHECKSUM: d00562aa668106e0017e953df8dac7688b4410cb
+PODFILE CHECKSUM: 0ebd1e7530b96b94ecf114f7c6987ea35454abc0
 
 COCOAPODS: 1.0.1

@@ -15,6 +15,9 @@
 #import "LAProtocalImpl.h"
 #import "GithubRepo.h"
 #import "LACache.h"
+//#import <OHHTTPStubs/OHHTTPStubs.h>
+#import "OHHTTPStubs.h"
+#import "OHPathHelpers.h"
 
 @interface LANetworkTest : XCTestCase
 
@@ -26,6 +29,26 @@
     [super setUp];
     // Put setup code here. This method is called before the invocation of each test method in the class.
 //    [[PFKeyValueCache shareInstance] removeAllObjects];
+    [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+        return [request.URL.host isEqualToString:@"api.github.com"];
+    } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+        if ([request.URL.path isEqualToString:@"/users/huhk345/repos"]) {
+            NSString* fixture = OHPathForFile(@"repos.geojson", self.class);
+            return [OHHTTPStubsResponse responseWithFileAtPath:fixture
+                                                    statusCode:200
+                                                       headers:@{@"Content-Type":@"application/json"}];
+        } else if([request.URL.path isEqualToString:@"/repos/huhk345/LAFramework"]){
+            NSString* fixture = OHPathForFile(@"repoDetail.geojson", self.class);
+            return [OHHTTPStubsResponse responseWithFileAtPath:fixture
+                                                    statusCode:200
+                                                       headers:@{@"Content-Type":@"application/json"}];
+        }
+        else {
+            NSError* error = [NSError errorWithDomain:NSURLErrorDomain code:kCFURLErrorBadURL userInfo:nil];
+            return [OHHTTPStubsResponse responseWithError:error];
+        }
+        
+    }];
 }
 
 - (void)tearDown {
