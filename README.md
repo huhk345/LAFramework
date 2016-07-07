@@ -1,7 +1,7 @@
 # LAFramework
 
 ![CI Status](https://img.shields.io/travis/huhk345/LAFramework.svg?branch=master&style=flat)
-
+![codecov.io](https://codecov.io/github/huhk345/LAFramework/branch/master/graphs/badge.svg)
 
 Base framework for iOS, inspired by Retrofit、Restless、JSPatch、Weex ...
 
@@ -20,7 +20,8 @@ pod "LAFramework"
 
 ## Introduction
 
----LANetworking
+-LANetworking-
+===================
 Just define a protocol that inherits from `LAWebService`.
 
 ```objective-c
