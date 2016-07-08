@@ -10,7 +10,7 @@
 #define LADataCategory_h
 
 #import "NSData+Compression.h"
-#import "NSDate+ISO8601"
+#import "NSDate+ISO8601.h"
 #import "NSString+LAMD5.h"
 
 
