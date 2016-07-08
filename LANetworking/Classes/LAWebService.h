@@ -9,6 +9,12 @@
 #import <Foundation/Foundation.h>
 @class RACSignal;
 
+#pragma mark - Class Annotation
+
+#define BASEURL(unused) class ___Annotations___;
+
+
+#pragma mark - Method Annotation
 
 //RESTful http Method
 #define GET(unused)     required
