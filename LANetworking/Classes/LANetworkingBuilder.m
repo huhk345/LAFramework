@@ -15,8 +15,7 @@
 
 @implementation LANetworkingBuilder
 
-+ (instancetype)initBuilderWithBlock:(void(^)(LANetworkingBuilder* builder))block
-{
++ (instancetype)initBuilderWithBlock:(void(^)(LANetworkingBuilder* builder))block{
     NSParameterAssert(block);
     
     LANetworkingBuilder* builder = [[LANetworkingBuilder alloc] init];
@@ -46,8 +45,7 @@
 
 
 
-- (Class)classImplForProtocol:(Protocol*)protocol
-{
+- (Class)classImplForProtocol:(Protocol*)protocol{
     NSString* protocolName = NSStringFromProtocol(protocol);
     NSString* className = [protocolName stringByAppendingString:@"_Impl"];
     Class cls = nil;

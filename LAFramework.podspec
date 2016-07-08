@@ -70,6 +70,16 @@ Pod::Spec.new do |s|
   end
 
 
+  s.subspec 'LAWebViewBridge' do |sp|
+    sp.source_files = 'LAWebViewBridge/Classes/**/*'
+  end
+
+
+  s.subspec 'LASystemInfo' do |sp|
+    sp.source_files = 'LASystemInfo/Classes/**/*'
+  end
+
+
   s.subspec 'LANetworking' do |sp|
     sp.source_files = 'LANetworking/Classes/**/*'
     sp.dependency 'LAFramework/LADataCategory'

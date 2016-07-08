@@ -18,8 +18,7 @@
 @implementation LANetworkingManager
 
 #pragma mark - life cycle
-+ (instancetype)sharedInstance
-{
++ (instancetype)sharedInstance{
     static dispatch_once_t onceToken;
     static LANetworkingManager *sharedInstance = nil;
     dispatch_once(&onceToken, ^{
@@ -36,8 +35,7 @@
 
 
 #pragma mark - getters and setters
-- (AFHTTPSessionManager *)sessionManager
-{
+- (AFHTTPSessionManager *)sessionManager{
     @synchronized (self.class) {
         if (_sessionManager == nil) {
             _sessionManager = [[AFHTTPSessionManager alloc] initWithBaseURL:self.baseURL

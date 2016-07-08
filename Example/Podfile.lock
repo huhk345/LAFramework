@@ -30,6 +30,8 @@ PODS:
     - LAFramework/LAJsonKit (= 0.1.0)
     - LAFramework/LAMediator (= 0.1.0)
     - LAFramework/LANetworking (= 0.1.0)
+    - LAFramework/LASystemInfo (= 0.1.0)
+    - LAFramework/LAWebViewBridge (= 0.1.0)
     - ReactiveCocoa (~> 4.2.0)
   - LAFramework/LACache (0.1.0):
     - AFNetworking (~> 3.1.0)
@@ -54,6 +56,14 @@ PODS:
     - LAFramework/LACache
     - LAFramework/LADataCategory
     - LAFramework/LAJsonKit
+    - ReactiveCocoa (~> 4.2.0)
+  - LAFramework/LASystemInfo (0.1.0):
+    - AFNetworking (~> 3.1.0)
+    - CocoaLumberjack (~> 2.3.0)
+    - ReactiveCocoa (~> 4.2.0)
+  - LAFramework/LAWebViewBridge (0.1.0):
+    - AFNetworking (~> 3.1.0)
+    - CocoaLumberjack (~> 2.3.0)
     - ReactiveCocoa (~> 4.2.0)
   - OHHTTPStubs (5.1.0):
     - OHHTTPStubs/Default (= 5.1.0)
@@ -83,7 +93,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   AFNetworking: 5e0e199f73d8626b11e79750991f5d173d1f8b67
   CocoaLumberjack: 97fab7ee5f507fe54445cca7ea80f926729cfd15
-  LAFramework: 88f74bac1fb2c4a9bc47f7687ed026461b1567dd
+  LAFramework: 2a627cafdd755468c8f569e1ad8282ec4fc243e0
   OHHTTPStubs: 592f74439d2d72615115cf99a954237a3fbe26e5
   ReactiveCocoa: 5a42745f11ea236f405bb9ce5e97c5e3b23562dd
   Result: 822c879f145943320cc80a9a8372378e3d699fe4

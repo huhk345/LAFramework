@@ -9,13 +9,12 @@
 #import <XCTest/XCTest.h>
 #import <LAFramework/LANetworkingBuilder.h>
 #import "GitHubService.h"
-#import "LAURLResponse.h"
+#import <LAFramework/LAURLResponse.h>
 #import "ReactiveCocoa.h"
 #import "AFHTTPSessionManager+rac.h"
 #import "LAProtocalImpl.h"
 #import "GithubRepo.h"
 #import "LACache.h"
-//#import <OHHTTPStubs/OHHTTPStubs.h>
 #import "OHHTTPStubs.h"
 #import "OHPathHelpers.h"
 
