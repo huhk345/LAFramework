@@ -16,6 +16,11 @@
 
     
     nativeLog(1,'test log');
+    var v = getProperty('button');
+    dispatch_async_main(function(){
+                    callInstanceMethod(v,'setTitle:forState:',['abba',0]);
+                 });
+
 
 <!--    function setupWebViewJavascriptBridge(callback) {-->
 <!--        if (window.WebViewJavascriptBridge) { return callback(WebViewJavascriptBridge); }-->

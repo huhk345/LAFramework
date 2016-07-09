@@ -8,21 +8,16 @@
 
 #import <Foundation/Foundation.h>
 
-
-
-
 @class JSContext;
-
-
 
 #define LAJS_EXPORT(JS_name) __attribute__((used, section("__DATA,LAJSExport" \
 ))) static const char *__rct_export_entry__[] = { __func__, #JS_name }
 
 @protocol LAJSCoreBridgeDelegate <NSObject>
 
+@optional
 -(id)getProperty:(NSString *)properyName;
-
--(id)setProperty:(id)propertyValue;
+-(void)setProperty:(NSString *)propertyName  value:(id)propertyValue;
 
 @end
 
@@ -32,6 +27,6 @@
 
 -(instancetype)initWithWebview:(UIWebView *)webView;
 
--(instancetype)initWithWebview:(UIWebView *)webView ;
+-(instancetype)initWithWebview:(UIWebView *)webView delegate:(id<LAJSCoreBridgeDelegate>)delegate;
 
 @end

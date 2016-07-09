@@ -14,10 +14,11 @@
 #import "LAURLResponse.h"
 #import "LAJSCoreBridge.h"
 
-@interface LAViewController ()
+@interface LAViewController ()<LAJSCoreBridgeDelegate>
 
 @property (nonatomic,weak) UIWebView *webView;
 @property (nonatomic,strong) LAJSCoreBridge *bridge;
+@property (nonatomic,strong) UIButton *button;
 
 @end
 
@@ -28,7 +29,7 @@
     UIWebView *webView = [[UIWebView alloc] initWithFrame:self.view.bounds];
     [self.view addSubview:webView];
     self.webView = webView;
-    self.bridge = [[LAJSCoreBridge alloc] initWithWebview:webView];
+    self.bridge = [[LAJSCoreBridge alloc] initWithWebview:webView delegate:self];
     
     NSString* htmlPath = [[NSBundle mainBundle] pathForResource:@"ExampleApp" ofType:@"html"];
     NSString* appHtml = [NSString stringWithContentsOfFile:htmlPath encoding:NSUTF8StringEncoding error:nil];
@@ -36,6 +37,10 @@
     [webView loadHTMLString:appHtml baseURL:baseURL];
     
     
+    self.button = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
+    [self.view addSubview:self.button];
+    self.button.backgroundColor = [UIColor redColor];
+//    [self.button setTitle:@"aa" forState:UIControlStateNormal];
 }
 
 - (void)didReceiveMemoryWarning{
