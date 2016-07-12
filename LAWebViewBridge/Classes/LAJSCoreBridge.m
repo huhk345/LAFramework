@@ -119,25 +119,27 @@
 }
 
 
-
-
-
-
-
-
 #pragma mark - help methods
 static id callSelector(JSValue *instance, NSString *className, NSString *selectorName, JSValue *jsArguments){
+    NSMethodSignature *methodSignature;
+    NSInvocation *invocation;
+    NSString *selectorString = [selectorName stringByReplacingOccurrencesOfString:@"_" withString:@":"];
     if(instance && !className) {
-       
-        NSString *selectorString = [selectorName stringByReplacingOccurrencesOfString:@"_" withString:@":"];
-        NSMethodSignature *methodSignature = [[formatJSToOC(instance) class] instanceMethodSignatureForSelector:NSSelectorFromString(selectorString)];
-        NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:methodSignature];
+        methodSignature = [[formatJSToOC(instance) class] instanceMethodSignatureForSelector:NSSelectorFromString(selectorString)];
+        invocation = [NSInvocation invocationWithMethodSignature:methodSignature];
         [invocation setTarget:[instance toObject]];
-        [invocation setSelector:NSSelectorFromString(selectorString)];
-        NSArray *arguments = [jsArguments toArray];
-        for(int i = 0;i < [arguments count]; i++){
-            const char *encode = [methodSignature getArgumentTypeAtIndex:i+2];
-            switch (encode[0]) {
+    }
+    else if(!instance && className){
+        Class cls = NSClassFromString(className);
+        methodSignature = [cls methodSignatureForSelector:NSSelectorFromString(selectorString)];
+        [invocation setTarget:cls];
+    }
+    
+    [invocation setSelector:NSSelectorFromString(selectorString)];
+    NSArray *arguments = [jsArguments toArray];
+    for(int i = 0;i < [arguments count]; i++){
+        const char *encode = [methodSignature getArgumentTypeAtIndex:i+2];
+        switch (encode[0]) {
                 #define LA_TYPEENCODE_CASE(_typeString, _type)              \
                     case _typeString: {                                     \
                     _type tempValue;                                        \
@@ -151,8 +153,7 @@ static id callSelector(JSValue *instance, NSString *className, NSString *selecto
                     }                                                       \
                     break;                                                  \
                 }
-                    
-                    
+                
                 LA_TYPEENCODE_CASE('s', short)
                 LA_TYPEENCODE_CASE('S', unsigned short)
                 LA_TYPEENCODE_CASE('i', int)
@@ -164,47 +165,87 @@ static id callSelector(JSValue *instance, NSString *className, NSString *selecto
                 LA_TYPEENCODE_CASE('f', float)
                 LA_TYPEENCODE_CASE('d', double)
                 LA_TYPEENCODE_CASE('B', BOOL)
-                case '*':{
-                    NSString *value = arguments[i];
-                    char *tempResultValue = [value UTF8String];
-                    [invocation setArgument:&tempResultValue atIndex:i+2];
-                    break;
+            case '*':{
+                NSString *value = arguments[i];
+                char *tempResultValue = [value UTF8String];
+                [invocation setArgument:&tempResultValue atIndex:i+2];
+                break;
+            }
+            case 'c':
+            case 'C':{
+                NSString *value = arguments[i];
+                char *tempResultValue = [value UTF8String];
+                [invocation setArgument:&tempResultValue[0] atIndex:i+2];
+                break;
+            }
+            case '@':{
+                id tempReulstValue = arguments[i];
+                if([tempReulstValue isKindOfClass:[NSNull class]]){
+                    tempReulstValue = nil;
                 }
-                case 'c':
-                case 'C':{
-                    NSString *value = arguments[i];
-                    char *tempResultValue = [value UTF8String];
-                    [invocation setArgument:&tempResultValue[0] atIndex:i+2];
-                    break;
-                }
-                case '@':{
-                    id tempReulstValue = arguments[i];
-                    if([tempReulstValue isKindOfClass:[NSNull class]]){
-                        tempReulstValue = nil;
-                    }
-                    [invocation setArgument:&tempReulstValue atIndex:i+2];
-                    break;
-                }
-                default:{
-                    DLogError(@"unsupport value type");
-                }
+                [invocation setArgument:&tempReulstValue atIndex:i+2];
+                break;
+            }
+            default:{
+                DLogError(@"unsupport value type");
             }
         }
-        [invocation invoke];
     }
-    else if(!instance && className){
-        
+    [invocation invoke];
+//process return value;
+    const char *returnEncode = methodSignature.methodReturnType;
+    switch (returnEncode[0]) {
+    #define LA_TYPEENCODE_CASE(_typeString, _type)              \
+        case _typeString: {                                     \
+            _type tempValue;                                    \
+            [invocation getReturnValue:&tempValue];             \
+            NSNumber *value = @(tempValue);                     \
+            return value;                                       \
+        }
+            
+            LA_TYPEENCODE_CASE('s', short)
+            LA_TYPEENCODE_CASE('S', unsigned short)
+            LA_TYPEENCODE_CASE('i', int)
+            LA_TYPEENCODE_CASE('I', unsigned int)
+            LA_TYPEENCODE_CASE('l', long)
+            LA_TYPEENCODE_CASE('L', unsigned long)
+            LA_TYPEENCODE_CASE('q', long long)
+            LA_TYPEENCODE_CASE('Q', unsigned long long)
+            LA_TYPEENCODE_CASE('f', float)
+            LA_TYPEENCODE_CASE('d', double)
+            LA_TYPEENCODE_CASE('B', BOOL)
+        case '*':{
+            char *tempResultValue = malloc(sizeof(char) * methodSignature.methodReturnLength);
+            [invocation getReturnValue:&tempResultValue];
+            NSString *value = [[NSString alloc] initWithBytes:tempResultValue
+                                                       length:methodSignature.methodReturnLength
+                                                     encoding:NSUTF8StringEncoding];
+            return value;
+        }
+        case 'c':
+        case 'C':{
+            char tempResultValue;
+            [invocation getReturnValue:&tempResultValue];
+            NSString *value = [NSString stringWithFormat:@"%c",tempResultValue];
+            return value;
+        }
+        case '@':{
+            id value;
+            [invocation getReturnValue:&value];
+            return value;
+        }
+        case 'v':{
+            return nil;
+        }
+        default:{
+            DLogError(@"unsupport return value type");
+            return nil;
+        }
     }
-    return nil;
+
     
     
 }
-
-
-
-
-
-
 
 
 static id formatJSToOC(JSValue *jsval){

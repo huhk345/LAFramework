@@ -40,7 +40,8 @@
     self.button = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
     [self.view addSubview:self.button];
     self.button.backgroundColor = [UIColor redColor];
-//    [self.button setTitle:@"aa" forState:UIControlStateNormal];
+    [self.button setTitle:@"aa" forState:UIControlStateNormal];
+//    [self.button titleForState:UIControlStateNormal];
 }
 
 - (void)didReceiveMemoryWarning{
