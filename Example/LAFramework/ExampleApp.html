@@ -17,10 +17,9 @@
     
     nativeLog(1,'test log');
     var v = getProperty('button');
-<!--    dispatch_async_main(function(){-->
-<!--                        callInstanceMethod(v,'setTitle:forState:',['dd',0]);-->
-<!--    });-->
-    alert(callInstanceMethod(v,'titleForState:',[0]))
+    dispatch_async_main(function(){
+                        v.oc_setTitle_forState('dd',0);
+    });
 
 
     </script>

@@ -14,11 +14,12 @@
 #import "LAURLResponse.h"
 #import "LAJSCoreBridge.h"
 
-@interface LAViewController ()<LAJSCoreBridgeDelegate>
+@interface LAViewController ()<LAJSCoreBridgeDelegate,UIWebViewDelegate>
 
 @property (nonatomic,weak) UIWebView *webView;
 @property (nonatomic,strong) LAJSCoreBridge *bridge;
 @property (nonatomic,strong) UIButton *button;
+@property (nonatomic,strong) NSDate* date;
 
 @end
 
@@ -34,14 +35,26 @@
     NSString* htmlPath = [[NSBundle mainBundle] pathForResource:@"ExampleApp" ofType:@"html"];
     NSString* appHtml = [NSString stringWithContentsOfFile:htmlPath encoding:NSUTF8StringEncoding error:nil];
     NSURL *baseURL = [NSURL fileURLWithPath:htmlPath];
-    [webView loadHTMLString:appHtml baseURL:baseURL];
-    
-    
+//    [webView loadHTMLString:appHtml baseURL:baseURL];
+    [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://www.sina.com.cn"]]];
+    webView.delegate = self;
     self.button = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
     [self.view addSubview:self.button];
     self.button.backgroundColor = [UIColor redColor];
     [self.button setTitle:@"aa" forState:UIControlStateNormal];
+    NSLog(@"%@",self.button.titleLabel.text);
 //    [self.button titleForState:UIControlStateNormal];
+    
+    self.date = [NSDate date];
+    
+    
+    
+    
+}
+
+
+- (void)webViewDidFinishLoad:(UIWebView *)webView{
+    NSLog(@"%f",[[NSDate date] timeIntervalSinceDate:self.date]);
 }
 
 - (void)didReceiveMemoryWarning{

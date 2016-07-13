@@ -14,6 +14,7 @@
 {
     // Override point for customization after application launch.
     [DDLog addLogger:[DDTTYLogger sharedInstance]];
+//    [NSURLProtocol registerClass:<#(nonnull Class)#>]
     return YES;
 }
 

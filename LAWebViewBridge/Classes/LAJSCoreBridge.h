@@ -29,4 +29,6 @@
 
 -(instancetype)initWithWebview:(UIWebView *)webView delegate:(id<LAJSCoreBridgeDelegate>)delegate;
 
+-(id)evaluateScript:(NSString *)script;
+
 @end

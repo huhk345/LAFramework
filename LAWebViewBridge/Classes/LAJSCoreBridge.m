@@ -20,6 +20,9 @@
 
 @implementation LAJSCoreBridge
 
+
+
+
 -(instancetype) initWithWebview:(UIWebView *)webView{
     return [self initWithWebview:webView delegate:nil];
 }
@@ -116,6 +119,11 @@
     _jsContext.exceptionHandler = ^(JSContext *con, JSValue *exception) {
         DLogError(@"[JS] %@",exception);
     };
+}
+
+
+-(id)evaluateScript:(NSString *)script{
+    [_jsContext evaluateScript:script];
 }
 
 
