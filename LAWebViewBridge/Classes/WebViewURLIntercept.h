@@ -13,15 +13,6 @@
 
 @optional
 
-/*! Called by an CustomHTTPProtocol instance to ask the delegate whether it's prepared to handle
- *  a particular authentication challenge.  Can be called on any thread.
- *  \param protocol The protocol instance itself; will not be nil.
- *  \param protectionSpace The protection space for the authentication challenge; will not be nil.
- *  \returns Return YES if you want the -customHTTPProtocol:didReceiveAuthenticationChallenge: delegate
- *  callback, or NO for the challenge to be handled in the default way.
- */
-
-- (BOOL)WebViewURLProtocol:(WebViewURLIntercept *)protocol canAuthenticateAgainstProtectionSpace:(NSURLProtectionSpace *)protectionSpace;
 
 /*! Called by an CustomHTTPProtocol instance to request that the delegate process on authentication
  *  challenge. Will be called on the main thread. Unless the challenge is cancelled (see below)
@@ -30,7 +21,7 @@
  *  \param challenge The authentication challenge; will not be nil.
  */
 
-- (void)WebViewURLProtocol:(WebViewURLIntercept *)protocol didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge;
+- (BOOL)WebViewURLProtocol:(WebViewURLIntercept *)protocol didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge;
 
 /*! Called by an CustomHTTPProtocol instance to cancel an issued authentication challenge.
  *  Will be called on the main thread.

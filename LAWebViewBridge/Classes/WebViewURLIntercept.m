@@ -35,7 +35,8 @@ static id<WebViewURLProtocolDelegate> sDelegate;
 @property (atomic, strong, readwrite) NSURLAuthenticationChallenge *    pendingChallenge;
 @property (atomic, copy,   readwrite) ChallengeCompletionHandler        pendingChallengeCompletionHandler;  ///< The completion handler that matches pendingChallenge; main thread only.
 
-
+@property (atomic, assign, readwrite) BOOL                              needProcess;
+@property (atomic, strong, readwrite) NSMutableData *                   mutableData;
 @end
 
 
@@ -45,8 +46,7 @@ static id<WebViewURLProtocolDelegate> sDelegate;
     [NSURLProtocol registerClass:self];
 }
 
-+ (id<WebViewURLProtocolDelegate>)delegate
-{
++ (id<WebViewURLProtocolDelegate>)delegate{
     id<WebViewURLProtocolDelegate> result;
     
     @synchronized (self) {
@@ -55,15 +55,13 @@ static id<WebViewURLProtocolDelegate> sDelegate;
     return result;
 }
 
-+ (void)setDelegate:(id<WebViewURLProtocolDelegate>)newValue
-{
++ (void)setDelegate:(id<WebViewURLProtocolDelegate>)newValue{
     @synchronized (self) {
         sDelegate = newValue;
     }
 }
 
-+ (QNSURLSessionDemux *)sharedDemux
-{
++ (QNSURLSessionDemux *)sharedDemux{
     static dispatch_once_t      sOnceToken;
     static QNSURLSessionDemux * sDemux;
     dispatch_once(&sOnceToken, ^{
@@ -145,6 +143,8 @@ static id<WebViewURLProtocolDelegate> sDelegate;
     // Latch the thread we were called on, primarily for debugging purposes.
     
     self.clientThread = [NSThread currentThread];
+    
+    self.mutableData = [NSMutableData data];
     
     // Once everything is ready to go, create a data task with the new request.
     
@@ -248,10 +248,7 @@ static id<WebViewURLProtocolDelegate> sDelegate;
 
 /*! The main thread side of authentication challenge processing.
  *  \details If there's already a pending challenge, something has gone wrong and
- *  the routine simply cancels the new challenge.  If our delegate doesn't implement
- *  the -customHTTPProtocol:canAuthenticateAgainstProtectionSpace: delegate callback,
- *  we also cancel the challenge.  OTOH, if all goes well we simply call our delegate
- *  with the challenge.
+ *  the routine simply cancels the new challenge.
  *  \param challenge The authentication challenge to process; must not be nil.
  *  \param completionHandler The associated completion handler; must not be nil.
  */
@@ -276,27 +273,39 @@ static id<WebViewURLProtocolDelegate> sDelegate;
         
         strongDelegate = [[self class] delegate];
         
-        // Tell the delegate about it.  It would be weird if the delegate didn't support this
-        // selector (it did return YES from -customHTTPProtocol:canAuthenticateAgainstProtectionSpace:
-        // after all), but if it doesn't then we just cancel the challenge ourselves (or the client
-        // thread, of course).
+        // Remember that this challenge is in progress.
         
-        if ( ! [strongDelegate respondsToSelector:@selector(WebViewURLProtocol:canAuthenticateAgainstProtectionSpace:)] ) {
-            DLogError(@"protocol %p challenge %@ cancelled; no delegate method", self, [[challenge protectionSpace] authenticationMethod]);
-            [self clientThreadCancelAuthenticationChallenge:challenge completionHandler:completionHandler];
-        } else {
-            
-            // Remember that this challenge is in progress.
-            
-            self.pendingChallenge = challenge;
-            self.pendingChallengeCompletionHandler = completionHandler;
-            
-            // Pass the challenge to the delegate.
+        self.pendingChallenge = challenge;
+        self.pendingChallengeCompletionHandler = completionHandler;
+        
+        // Pass the challenge to the delegate.
+        BOOL result = YES;
+        if ([strongDelegate respondsToSelector:@selector(WebViewURLProtocol:didReceiveAuthenticationChallenge:)]) {
             DLogDebug(@"protocol %p challenge %@ passed to delegate", self , [[challenge protectionSpace] authenticationMethod]);
-            [strongDelegate WebViewURLProtocol:self didReceiveAuthenticationChallenge:self.pendingChallenge];
+            result = [strongDelegate WebViewURLProtocol:self didReceiveAuthenticationChallenge:self.pendingChallenge];
         }
+        NSURLSessionAuthChallengeDisposition disposition = NSURLSessionAuthChallengePerformDefaultHandling;
+        NSURLCredential *credential = nil;
+        if (result) {
+            credential = [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];
+            if (credential) {
+                disposition = NSURLSessionAuthChallengeUseCredential;
+            } else {
+                disposition = NSURLSessionAuthChallengePerformDefaultHandling;
+            }
+        } else {
+            disposition = NSURLSessionAuthChallengeCancelAuthenticationChallenge;
+        }
+        
+        
+        if (completionHandler) {
+            completionHandler(disposition, credential);
+        }
+
+        
     }
 }
+
 
 /*! Cancels an authentication challenge that hasn't made it to the pending challenge state.
  *  \details This routine is called as part of various error cases in the challenge handling
@@ -356,9 +365,6 @@ static id<WebViewURLProtocolDelegate> sDelegate;
                 [strongeDelegate WebViewURLProtocol:self didCancelAuthenticationChallenge:challenge];
             } else {
                 DLogError(@"protocol %p challenge %@ cancellation failed; no delegate method", self ,[[challenge protectionSpace] authenticationMethod]);
-                // If we managed to send a challenge to the client but can't cancel it, that's bad.
-                // There's nothing we can do at this point except log the problem.
-                assert(NO);
             }
         }
     }];
@@ -459,11 +465,8 @@ static id<WebViewURLProtocolDelegate> sDelegate;
     
     strongeDelegate = [[self class] delegate];
     
-    result = NO;
-    if ([strongeDelegate respondsToSelector:@selector(WebViewURLProtocol:canAuthenticateAgainstProtectionSpace:)]) {
-        result = [strongeDelegate WebViewURLProtocol:self canAuthenticateAgainstProtectionSpace:[challenge protectionSpace]];
-    }
-    
+    result = [[[challenge protectionSpace] authenticationMethod] isEqual:NSURLAuthenticationMethodServerTrust];
+
     // If the client wants the challenge, kick off that process.  If not, resolve it by doing the default thing.
     
     if (result) {
@@ -501,6 +504,13 @@ static id<WebViewURLProtocolDelegate> sDelegate;
     }
     
     DLogDebug(@"protocol %p received response %zd / %@ with cache storage policy %zu", self , (ssize_t) statusCode, [response URL], (size_t) cacheStoragePolicy);
+    if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
+        NSString *contentType = [((NSHTTPURLResponse *)response) allHeaderFields][@"Content-Type"];
+        if ([contentType containsString:@"javascript"] || [contentType containsString:@"html"]) {
+            self.needProcess = YES;
+        }
+        
+    }
     [[self client] URLProtocol:self didReceiveResponse:response cacheStoragePolicy:cacheStoragePolicy];
     
     completionHandler(NSURLSessionResponseAllow);
@@ -515,9 +525,11 @@ static id<WebViewURLProtocolDelegate> sDelegate;
     assert([NSThread currentThread] == self.clientThread);
     
     // Just pass the call on to our client.
-    
-    DLogDebug(@"protocol %p received %zu bytes of data", self , (size_t) [data length]);
-    [[self client] URLProtocol:self didLoadData:data];
+    if(self.needProcess){
+        [self.mutableData appendData:data];
+    }else{
+        [[self client] URLProtocol:self didLoadData:data];
+    }
 }
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error
@@ -532,6 +544,9 @@ static id<WebViewURLProtocolDelegate> sDelegate;
     
     if (error == nil) {
         DLogDebug(@"protocol %p success",self);
+        if(self.needProcess){
+            [self.client URLProtocol:self didLoadData:self.mutableData];
+        }
         
         [[self client] URLProtocolDidFinishLoading:self];
     } else if ( [[error domain] isEqual:NSURLErrorDomain] && ([error code] == NSURLErrorCancelled) ) {

@@ -36,7 +36,7 @@
     NSString* appHtml = [NSString stringWithContentsOfFile:htmlPath encoding:NSUTF8StringEncoding error:nil];
     NSURL *baseURL = [NSURL fileURLWithPath:htmlPath];
 //    [webView loadHTMLString:appHtml baseURL:baseURL];
-    [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://www.sina.com.cn"]]];
+    [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://www.12306.cn"]]];
     webView.delegate = self;
     self.button = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
     [self.view addSubview:self.button];
