@@ -36,5 +36,13 @@
 
 @interface WebViewURLIntercept : NSURLProtocol
 
++ (void)setFileNameFilter:(NSArray *)files;
 
++ (NSArray<NSString *> *)fileNameFilter;
+
++ (void)setDelegate:(id<WebViewURLProtocolDelegate>)newValue;
+
++ (NSData *)replaceData:(NSData *)data;
+
++ (NSString *)replaceString:(NSString *)string;
 @end

@@ -9,12 +9,18 @@
 #import "QNSURLSessionDemux.h"
 #import "CacheStoragePolicy.h"
 #import "WebViewURLIntercept.h"
+#import <MobileCoreServices/MobileCoreServices.h>
 
 static NSString * kRecursiveRequestFlagProperty = @"com.laker.webviewURLProtocal";
+static NSString * RegexString = @"(\\w+)\\s*.jb_(\\w+)\\(";
+static NSString * ReplaceString = @"callNative($1,'$2',";
+
 
 typedef void (^ChallengeCompletionHandler)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential * credential);
 
 static id<WebViewURLProtocolDelegate> sDelegate;
+
+static NSArray<NSString *> * fileNameFilter;
 
 @interface WebViewURLIntercept()
 
@@ -61,6 +67,12 @@ static id<WebViewURLProtocolDelegate> sDelegate;
     }
 }
 
++ (void)setFileNameFilter:(NSArray *)files{
+    @synchronized (self) {
+        fileNameFilter = files;
+    }
+}
+
 + (QNSURLSessionDemux *)sharedDemux{
     static dispatch_once_t      sOnceToken;
     static QNSURLSessionDemux * sDemux;
@@ -82,8 +94,8 @@ static id<WebViewURLProtocolDelegate> sDelegate;
 + (BOOL)canInitWithRequest:(NSURLRequest *)request{
     NSString* userAgent = request.allHTTPHeaderFields[@"User-Agent"];
     if (userAgent && [[self getWebViewUserAgentTest] evaluateWithObject:userAgent] &&
-        [[self propertyForKey:kRecursiveRequestFlagProperty inRequest:request] boolValue] != YES &&
-        [[request.HTTPMethod lowercaseString] isEqualToString:@"get"]) {
+        ![[self propertyForKey:kRecursiveRequestFlagProperty inRequest:request] boolValue] &&
+        [[request.HTTPMethod lowercaseString] isEqualToString:@"get"] ) {
         return YES;
     }else{
         return NO;
@@ -129,10 +141,8 @@ static id<WebViewURLProtocolDelegate> sDelegate;
     }
     self.modes = calculatedModes;
     assert([self.modes count] > 0);
-    
     // Create new request that's a clone of the request we were initialised with,
     // except that it has our 'recursive request flag' property set on it.
-    
     recursiveRequest = [[self request] mutableCopy];
     assert(recursiveRequest != nil);
     
@@ -143,7 +153,6 @@ static id<WebViewURLProtocolDelegate> sDelegate;
     // Latch the thread we were called on, primarily for debugging purposes.
     
     self.clientThread = [NSThread currentThread];
-    
     self.mutableData = [NSMutableData data];
     
     // Once everything is ready to go, create a data task with the new request.
@@ -152,12 +161,13 @@ static id<WebViewURLProtocolDelegate> sDelegate;
     assert(self.task != nil);
     
     [self.task resume];
+    
 }
 
 - (void)stopLoading{
     // The implementation just cancels the current load (if it's still running).
     
-    DLogDebug(@"protocol %p stop (elapsed %.1f)",self, [NSDate timeIntervalSinceReferenceDate] - self.startTime);
+    DLogDebug(@"request %@ stop (elapsed %.1f)",self.request.URL, [NSDate timeIntervalSinceReferenceDate] - self.startTime);
     assert(self.clientThread != nil);           // someone must have called -startLoading
     
     // Check that we're being stopped on the same thread that we were started
@@ -418,7 +428,7 @@ static id<WebViewURLProtocolDelegate> sDelegate;
     assert(completionHandler != nil);
     assert([NSThread currentThread] == self.clientThread);
     
-    DLogDebug(@"protocol %p will redirect from %@ to %@",self, [response URL], [newRequest URL]);
+    DDLogVerbose(@"protocol %p will redirect from %@ to %@",self, [response URL], [newRequest URL]);
     
     // The new request was copied from our old request, so it has our magic property.  We actually
     // have to remove that so that, when the client starts the new request, we see it.  If we
@@ -503,7 +513,7 @@ static id<WebViewURLProtocolDelegate> sDelegate;
         statusCode = 42;
     }
     
-    DLogDebug(@"protocol %p received response %zd / %@ with cache storage policy %zu", self , (ssize_t) statusCode, [response URL], (size_t) cacheStoragePolicy);
+    DLogVerbose(@"protocol %p received response %zd / %@ with cache storage policy %zu", self , (ssize_t) statusCode, [response URL], (size_t) cacheStoragePolicy);
     if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
         NSString *contentType = [((NSHTTPURLResponse *)response) allHeaderFields][@"Content-Type"];
         if ([contentType containsString:@"javascript"] || [contentType containsString:@"html"]) {
@@ -543,11 +553,15 @@ static id<WebViewURLProtocolDelegate> sDelegate;
     // Just log and then, in most cases, pass the call on to our client.
     
     if (error == nil) {
-        DLogDebug(@"protocol %p success",self);
+        DLogVerbose(@"protocol %p success",self);
         if(self.needProcess){
-            [self.client URLProtocol:self didLoadData:self.mutableData];
+            NSData *data = self.mutableData;
+            if (fileNameFilter.count == 0 || [fileNameFilter containsObject:[self.request.URL lastPathComponent]]) {
+                data = [[self class] replaceData:data];
+            }
+            [self.client URLProtocol:self didLoadData:data];
+            
         }
-        
         [[self client] URLProtocolDidFinishLoading:self];
     } else if ( [[error domain] isEqual:NSURLErrorDomain] && ([error code] == NSURLErrorCancelled) ) {
         // Do nothing.  This happens in two cases:
@@ -558,7 +572,7 @@ static id<WebViewURLProtocolDelegate> sDelegate;
         // o if the request is cancelled by a call to -stopLoading, in which case the client doesn't
         //   want to know about the failure
     } else {
-        DLogDebug(@"protocal %p error %@ / %d",self, [error domain], (int) [error code]);
+        DLogError(@"protocal %p error %@ / %d",self, [error domain], (int) [error code]);
         [[self client] URLProtocol:self didFailWithError:error];
     }
     
@@ -566,6 +580,7 @@ static id<WebViewURLProtocolDelegate> sDelegate;
     // -stopLoading to do that.
 }
 
+#pragma mark - help functions
 
 + (NSPredicate *)getWebViewUserAgentTest{
     static dispatch_once_t once;
@@ -574,6 +589,41 @@ static id<WebViewURLProtocolDelegate> sDelegate;
         predicate = [NSComparisonPredicate predicateWithFormat:@"self MATCHES '^Mozilla.*Mac OS X.*AppleWebKit.*'"];
     });
     return predicate;
+}
+
+
++ (NSString*) mimeTypeForFileAtPath: (NSURL *) url {
+    NSString *path = [url path];
+    if (![[NSFileManager defaultManager] fileExistsAtPath:path]) {
+        return nil;
+    }
+    // Borrowed from http://stackoverflow.com/questions/5996797/determine-mime-type-of-nsdata-loaded-from-a-file
+    // itself, derived from  http://stackoverflow.com/questions/2439020/wheres-the-iphone-mime-type-database
+    CFStringRef UTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (__bridge CFStringRef)[path pathExtension], NULL);
+    CFStringRef mimeType = UTTypeCopyPreferredTagWithClass (UTI, kUTTagClassMIMEType);
+    CFRelease(UTI);
+    if (!mimeType) {
+        return @"application/octet-stream";
+    }
+    return (__bridge_transfer NSString *)(mimeType);
+}
+
+
++ (NSData *)replaceData:(NSData *)data{
+    NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    string = [self replaceString:string];
+    return [string dataUsingEncoding:NSUTF8StringEncoding];
+    
+}
+
++ (NSString *)replaceString:(NSString *)string{
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:RegexString options:0 error:nil];
+    NSString *jsString =[regex stringByReplacingMatchesInString:string
+                                                        options:0
+                                                          range:NSMakeRange(0, string.length)
+                                                   withTemplate:ReplaceString];
+    DLogDebug(@"replace string is %@",jsString);
+    return jsString;    
 }
 
 @end

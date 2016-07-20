@@ -72,6 +72,7 @@ Pod::Spec.new do |s|
 
   s.subspec 'LAWebViewBridge' do |sp|
     sp.source_files = 'LAWebViewBridge/Classes/**/*'
+    sp.dependency 'LAFramework/LACache'
   end
 
 

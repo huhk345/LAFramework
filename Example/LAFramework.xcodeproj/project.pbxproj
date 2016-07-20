@@ -7,6 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		18E006681D38788100AD8330 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 18E006671D38788100AD8330 /* Launch Screen.storyboard */; };
+		18E0066A1D387CD600AD8330 /* LAWebviewBridgeTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 18E006691D387CD600AD8330 /* LAWebviewBridgeTest.m */; };
+		18E006731D387E1500AD8330 /* 6b85815986686bb0610449fe324d52ea in Resources */ = {isa = PBXBuildFile; fileRef = 18E0066C1D387E1500AD8330 /* 6b85815986686bb0610449fe324d52ea */; };
+		18E006741D387E1500AD8330 /* 70cd77126d24d716f1601d9aedeeff3a in Resources */ = {isa = PBXBuildFile; fileRef = 18E0066D1D387E1500AD8330 /* 70cd77126d24d716f1601d9aedeeff3a */; };
+		18E006751D387E1500AD8330 /* 670c58a526d82358d5f2172ba095b38d in Resources */ = {isa = PBXBuildFile; fileRef = 18E0066E1D387E1500AD8330 /* 670c58a526d82358d5f2172ba095b38d */; };
+		18E006761D387E1500AD8330 /* 307809d97335b4c1b947a4ffb61526fa in Resources */ = {isa = PBXBuildFile; fileRef = 18E0066F1D387E1500AD8330 /* 307809d97335b4c1b947a4ffb61526fa */; };
+		18E006771D387E1500AD8330 /* d086fe9f6f04863e0dbf29710feabac2 in Resources */ = {isa = PBXBuildFile; fileRef = 18E006701D387E1500AD8330 /* d086fe9f6f04863e0dbf29710feabac2 */; };
+		18E006781D387E1500AD8330 /* e6c999098acb3010064ec00f1f9d10e6 in Resources */ = {isa = PBXBuildFile; fileRef = 18E006711D387E1500AD8330 /* e6c999098acb3010064ec00f1f9d10e6 */; };
+		18E006791D387E1500AD8330 /* f61b95cc3da5eba49338fca5a4bcb866 in Resources */ = {isa = PBXBuildFile; fileRef = 18E006721D387E1500AD8330 /* f61b95cc3da5eba49338fca5a4bcb866 */; };
 		18FEDC821D2E68C2007FEC16 /* repos.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 18FEDC801D2E59E2007FEC16 /* repos.geojson */; };
 		18FEDC831D2E68C2007FEC16 /* repoDetail.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 18FEDC811D2E5A44007FEC16 /* repoDetail.geojson */; };
 		1C57AAC692E3CCD7ECA9574D /* Pods_LAFramework_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 489136EBE0DBDDEE27251EE0 /* Pods_LAFramework_Example.framework */; };
@@ -42,6 +51,15 @@
 /* Begin PBXFileReference section */
 		0FE979349F4F3B97F545A415 /* Pods-LAFramework_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LAFramework_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-LAFramework_Example/Pods-LAFramework_Example.release.xcconfig"; sourceTree = "<group>"; };
 		1862E5F11D28C28A0026BC92 /* GitHubService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GitHubService.h; sourceTree = "<group>"; };
+		18E006671D38788100AD8330 /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = "Launch Screen.storyboard"; path = "LAFramework/Launch Screen.storyboard"; sourceTree = "<group>"; };
+		18E006691D387CD600AD8330 /* LAWebviewBridgeTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LAWebviewBridgeTest.m; sourceTree = "<group>"; };
+		18E0066C1D387E1500AD8330 /* 6b85815986686bb0610449fe324d52ea */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = 6b85815986686bb0610449fe324d52ea; sourceTree = "<group>"; };
+		18E0066D1D387E1500AD8330 /* 70cd77126d24d716f1601d9aedeeff3a */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = 70cd77126d24d716f1601d9aedeeff3a; sourceTree = "<group>"; };
+		18E0066E1D387E1500AD8330 /* 670c58a526d82358d5f2172ba095b38d */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = 670c58a526d82358d5f2172ba095b38d; sourceTree = "<group>"; };
+		18E0066F1D387E1500AD8330 /* 307809d97335b4c1b947a4ffb61526fa */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = 307809d97335b4c1b947a4ffb61526fa; sourceTree = "<group>"; };
+		18E006701D387E1500AD8330 /* d086fe9f6f04863e0dbf29710feabac2 */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = d086fe9f6f04863e0dbf29710feabac2; sourceTree = "<group>"; };
+		18E006711D387E1500AD8330 /* e6c999098acb3010064ec00f1f9d10e6 */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = e6c999098acb3010064ec00f1f9d10e6; sourceTree = "<group>"; };
+		18E006721D387E1500AD8330 /* f61b95cc3da5eba49338fca5a4bcb866 */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = f61b95cc3da5eba49338fca5a4bcb866; sourceTree = "<group>"; };
 		18EA26ECE64B74432087FA64 /* Pods-LAFramework_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LAFramework_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-LAFramework_Tests/Pods-LAFramework_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		18FEDC801D2E59E2007FEC16 /* repos.geojson */ = {isa = PBXFileReference; lastKnownFileType = text; path = repos.geojson; sourceTree = "<group>"; };
 		18FEDC811D2E5A44007FEC16 /* repoDetail.geojson */ = {isa = PBXFileReference; lastKnownFileType = text; path = repoDetail.geojson; sourceTree = "<group>"; };
@@ -103,9 +121,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		18E0066B1D387E0B00AD8330 /* Resource */ = {
+			isa = PBXGroup;
+			children = (
+				18E0066C1D387E1500AD8330 /* 6b85815986686bb0610449fe324d52ea */,
+				18E0066D1D387E1500AD8330 /* 70cd77126d24d716f1601d9aedeeff3a */,
+				18E0066E1D387E1500AD8330 /* 670c58a526d82358d5f2172ba095b38d */,
+				18E0066F1D387E1500AD8330 /* 307809d97335b4c1b947a4ffb61526fa */,
+				18E006701D387E1500AD8330 /* d086fe9f6f04863e0dbf29710feabac2 */,
+				18E006711D387E1500AD8330 /* e6c999098acb3010064ec00f1f9d10e6 */,
+				18E006721D387E1500AD8330 /* f61b95cc3da5eba49338fca5a4bcb866 */,
+			);
+			path = Resource;
+			sourceTree = "<group>";
+		};
 		6003F581195388D10070C39A = {
 			isa = PBXGroup;
 			children = (
+				18E006671D38788100AD8330 /* Launch Screen.storyboard */,
 				60FF7A9C1954A5C5007DD14C /* Podspec Metadata */,
 				6003F593195388D20070C39A /* Example for LAFramework */,
 				6003F5B5195388D20070C39A /* Tests */,
@@ -170,8 +203,10 @@
 		6003F5B5195388D20070C39A /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				18E0066B1D387E0B00AD8330 /* Resource */,
 				6003F5B6195388D20070C39A /* Supporting Files */,
 				300D32311D2CE142007A56AD /* LANetworkTest.m */,
+				18E006691D387CD600AD8330 /* LAWebviewBridgeTest.m */,
 				18FEDC801D2E59E2007FEC16 /* repos.geojson */,
 				18FEDC811D2E5A44007FEC16 /* repoDetail.geojson */,
 			);
@@ -296,6 +331,7 @@
 				873B8AEB1B1F5CCA007FD442 /* Main.storyboard in Resources */,
 				6003F5A9195388D20070C39A /* Images.xcassets in Resources */,
 				6003F598195388D20070C39A /* InfoPlist.strings in Resources */,
+				18E006681D38788100AD8330 /* Launch Screen.storyboard in Resources */,
 				3046F3231D2F8F570001C849 /* ExampleApp.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -306,6 +342,13 @@
 			files = (
 				18FEDC821D2E68C2007FEC16 /* repos.geojson in Resources */,
 				18FEDC831D2E68C2007FEC16 /* repoDetail.geojson in Resources */,
+				18E006771D387E1500AD8330 /* d086fe9f6f04863e0dbf29710feabac2 in Resources */,
+				18E006731D387E1500AD8330 /* 6b85815986686bb0610449fe324d52ea in Resources */,
+				18E006761D387E1500AD8330 /* 307809d97335b4c1b947a4ffb61526fa in Resources */,
+				18E006741D387E1500AD8330 /* 70cd77126d24d716f1601d9aedeeff3a in Resources */,
+				18E006751D387E1500AD8330 /* 670c58a526d82358d5f2172ba095b38d in Resources */,
+				18E006781D387E1500AD8330 /* e6c999098acb3010064ec00f1f9d10e6 in Resources */,
+				18E006791D387E1500AD8330 /* f61b95cc3da5eba49338fca5a4bcb866 in Resources */,
 				6003F5BA195388D20070C39A /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -435,6 +478,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				300D32321D2CE142007A56AD /* LANetworkTest.m in Sources */,
+				18E0066A1D387CD600AD8330 /* LAWebviewBridgeTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -545,8 +589,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = ED6481E96B5B432FD1DC65F3 /* Pods-LAFramework_Example.debug.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LAFramework/LAFramework-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -567,8 +609,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 0FE979349F4F3B97F545A415 /* Pods-LAFramework_Example.release.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LAFramework/LAFramework-Prefix.pch";
 				HEADER_SEARCH_PATHS = "";
