@@ -161,7 +161,7 @@ static NSString * patchString = @"          "
 
 
 -(id)evaluateScript:(NSString *)script{
-    [_jsContext evaluateScript:script];
+    return [_jsContext evaluateScript:script];
 }
 
 
@@ -222,7 +222,13 @@ static id callSelector(JSValue *instance, NSString *className, NSString *selecto
             case 'C':{
                 NSString *value = arguments[i];
                 char *tempResultValue = [value UTF8String];
-                [invocation setArgument:&tempResultValue[0] atIndex:i+2];
+                if (tempResultValue != nil && strlen(tempResultValue) > 0) {
+                    [invocation setArgument:&(tempResultValue[0]) atIndex:i+2];
+                }
+                else{
+                    char emptyChar = "";
+                    [invocation setArgument:&emptyChar atIndex:i+2];
+                }
                 break;
             }
             case '@':{
@@ -242,7 +248,7 @@ static id callSelector(JSValue *instance, NSString *className, NSString *selecto
 //process return value;
     const char *returnEncode = methodSignature.methodReturnType;
     switch (returnEncode[0]) {
-    #define LA_TYPEENCODE_CASE(_typeString, _type)              \
+    #define LA_RETURN_ENCODE_CASE(_typeString, _type)              \
         case _typeString: {                                     \
             _type tempValue;                                    \
             [invocation getReturnValue:&tempValue];             \
@@ -250,17 +256,17 @@ static id callSelector(JSValue *instance, NSString *className, NSString *selecto
             return value;                                       \
         }
             
-            LA_TYPEENCODE_CASE('s', short)
-            LA_TYPEENCODE_CASE('S', unsigned short)
-            LA_TYPEENCODE_CASE('i', int)
-            LA_TYPEENCODE_CASE('I', unsigned int)
-            LA_TYPEENCODE_CASE('l', long)
-            LA_TYPEENCODE_CASE('L', unsigned long)
-            LA_TYPEENCODE_CASE('q', long long)
-            LA_TYPEENCODE_CASE('Q', unsigned long long)
-            LA_TYPEENCODE_CASE('f', float)
-            LA_TYPEENCODE_CASE('d', double)
-            LA_TYPEENCODE_CASE('B', BOOL)
+            LA_RETURN_ENCODE_CASE('s', short)
+            LA_RETURN_ENCODE_CASE('S', unsigned short)
+            LA_RETURN_ENCODE_CASE('i', int)
+            LA_RETURN_ENCODE_CASE('I', unsigned int)
+            LA_RETURN_ENCODE_CASE('l', long)
+            LA_RETURN_ENCODE_CASE('L', unsigned long)
+            LA_RETURN_ENCODE_CASE('q', long long)
+            LA_RETURN_ENCODE_CASE('Q', unsigned long long)
+            LA_RETURN_ENCODE_CASE('f', float)
+            LA_RETURN_ENCODE_CASE('d', double)
+            LA_RETURN_ENCODE_CASE('B', BOOL)
         case '*':{
             char *tempResultValue = malloc(sizeof(char) * methodSignature.methodReturnLength);
             [invocation getReturnValue:&tempResultValue];

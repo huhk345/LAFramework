@@ -22,7 +22,7 @@ static id<WebViewURLProtocolDelegate> sDelegate;
 
 static NSArray<NSString *> * fileNameFilter;
 
-@interface WebViewURLIntercept()
+@interface WebViewURLIntercept()<NSURLSessionDataDelegate>
 
 @property (atomic, strong, readwrite) NSThread *                        clientThread;       ///< The thread on which we should call the client.
 
@@ -72,6 +72,13 @@ static NSArray<NSString *> * fileNameFilter;
         fileNameFilter = files;
     }
 }
+
++ (NSArray<NSString *> *)fileNameFilter{
+    @synchronized (self) {
+        return fileNameFilter;
+    }
+}
+
 
 + (QNSURLSessionDemux *)sharedDemux{
     static dispatch_once_t      sOnceToken;
@@ -370,7 +377,7 @@ static NSArray<NSString *> * fileNameFilter;
             self.pendingChallenge = nil;
             self.pendingChallengeCompletionHandler = nil;
             
-            if ([strongeDelegate respondsToSelector:@selector(customHTTPProtocol:didCancelAuthenticationChallenge:)]) {
+            if ([strongeDelegate respondsToSelector:@selector(WebViewURLProtocol:didCancelAuthenticationChallenge:)]) {
                 DLogDebug(@"protocol %p challenge %@ cancellation passed to delegate", self , [[challenge protectionSpace] authenticationMethod]);
                 [strongeDelegate WebViewURLProtocol:self didCancelAuthenticationChallenge:challenge];
             } else {
