@@ -8,8 +8,11 @@
 
 #import <XCTest/XCTest.h>
 #import "LACache.h"
+#import "LAWebViewBridge.h"
 
-@interface LAWebviewBridgeTest : XCTestCase
+@interface LAWebviewBridgeTest : XCTestCase<LAJSCoreBridgeDelegate>
+
+@property (nonatomic,strong) UIButton *button;
 
 @end
 
@@ -18,6 +21,8 @@
 - (void)setUp {
     [super setUp];
     // Put setup code here. This method is called before the invocation of each test method in the class.
+    self.button = [[UIButton alloc] initWithFrame:CGRectZero];
+    [self.button setTitle:@"test1" forState:UIControlStateNormal];
 }
 
 - (void)tearDown {
@@ -25,11 +30,30 @@
     [super tearDown];
 }
 
-- (void)testExample {
-    // This is an example of a functional test case.
-    // Use XCTAssert and related functions to verify your tests produce the correct results.
+- (void)testJSCoreBridgeCreate {
+    UIWebView *webView = [[UIWebView alloc] initWithFrame:CGRectZero];
+    LAJSCoreBridge *bridge = [[LAJSCoreBridge alloc] initWithWebview:webView];
+    XCTAssertTrue(bridge != nil);
 }
 
+- (void)testJSStringReplace{
+    UIWebView *webView = [[UIWebView alloc] initWithFrame:CGRectZero];
+    LAJSCoreBridge *bridge = [[LAJSCoreBridge alloc] initWithWebview:webView delegate:self];
+    XCTAssertTrue(bridge != nil);
+    NSString* htmlPath = [[NSBundle mainBundle] pathForResource:@"ExampleApp" ofType:@"html"];
+    NSString* appHtml = [NSString stringWithContentsOfFile:htmlPath encoding:NSUTF8StringEncoding error:nil];
+    [webView loadHTMLString:appHtml baseURL:nil];
+    XCTestExpectation *callBackExpectation = [self expectationWithDescription:@"callback"];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [callBackExpectation fulfill];
+    });
+    
+    [self waitForExpectationsWithTimeout:1 handler:^(NSError * _Nullable error) {
+        XCTAssertTrue([[self.button titleForState:UIControlStateNormal] isEqualToString:@"jsButton"]);
+    }];
+
+
+}
 
 - (void)testPerformanceExample {
     // This is an example of a performance test case.

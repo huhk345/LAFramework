@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		180A71A91D4067EE00DDA5BC /* ExampleApp.html in Resources */ = {isa = PBXBuildFile; fileRef = 180A71A81D4067EE00DDA5BC /* ExampleApp.html */; };
 		18E006681D38788100AD8330 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 18E006671D38788100AD8330 /* Launch Screen.storyboard */; };
 		18E0066A1D387CD600AD8330 /* LAWebviewBridgeTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 18E006691D387CD600AD8330 /* LAWebviewBridgeTest.m */; };
 		18E006731D387E1500AD8330 /* 6b85815986686bb0610449fe324d52ea in Resources */ = {isa = PBXBuildFile; fileRef = 18E0066C1D387E1500AD8330 /* 6b85815986686bb0610449fe324d52ea */; };
@@ -20,7 +21,6 @@
 		18FEDC831D2E68C2007FEC16 /* repoDetail.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 18FEDC811D2E5A44007FEC16 /* repoDetail.geojson */; };
 		1C57AAC692E3CCD7ECA9574D /* Pods_LAFramework_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 489136EBE0DBDDEE27251EE0 /* Pods_LAFramework_Example.framework */; };
 		300D32321D2CE142007A56AD /* LANetworkTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 300D32311D2CE142007A56AD /* LANetworkTest.m */; };
-		3046F3231D2F8F570001C849 /* ExampleApp.html in Resources */ = {isa = PBXBuildFile; fileRef = 3046F3221D2F8F570001C849 /* ExampleApp.html */; };
 		30A21C841D2C980A00228471 /* GithubRepo.m in Sources */ = {isa = PBXBuildFile; fileRef = 30A21C831D2C980A00228471 /* GithubRepo.m */; };
 		4655DB568336334EA41E9943 /* Pods_LAFramework_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 849B98A18F073E3919A4C2EF /* Pods_LAFramework_Tests.framework */; };
 		6003F58E195388D20070C39A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58D195388D20070C39A /* Foundation.framework */; };
@@ -50,6 +50,7 @@
 
 /* Begin PBXFileReference section */
 		0FE979349F4F3B97F545A415 /* Pods-LAFramework_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LAFramework_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-LAFramework_Example/Pods-LAFramework_Example.release.xcconfig"; sourceTree = "<group>"; };
+		180A71A81D4067EE00DDA5BC /* ExampleApp.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = ExampleApp.html; sourceTree = "<group>"; };
 		1862E5F11D28C28A0026BC92 /* GitHubService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GitHubService.h; sourceTree = "<group>"; };
 		18E006671D38788100AD8330 /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = "Launch Screen.storyboard"; path = "LAFramework/Launch Screen.storyboard"; sourceTree = "<group>"; };
 		18E006691D387CD600AD8330 /* LAWebviewBridgeTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LAWebviewBridgeTest.m; sourceTree = "<group>"; };
@@ -64,7 +65,6 @@
 		18FEDC801D2E59E2007FEC16 /* repos.geojson */ = {isa = PBXFileReference; lastKnownFileType = text; path = repos.geojson; sourceTree = "<group>"; };
 		18FEDC811D2E5A44007FEC16 /* repoDetail.geojson */ = {isa = PBXFileReference; lastKnownFileType = text; path = repoDetail.geojson; sourceTree = "<group>"; };
 		300D32311D2CE142007A56AD /* LANetworkTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LANetworkTest.m; sourceTree = "<group>"; };
-		3046F3221D2F8F570001C849 /* ExampleApp.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = ExampleApp.html; sourceTree = "<group>"; };
 		30A21C821D2C980A00228471 /* GithubRepo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GithubRepo.h; sourceTree = "<group>"; };
 		30A21C831D2C980A00228471 /* GithubRepo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GithubRepo.m; sourceTree = "<group>"; };
 		489136EBE0DBDDEE27251EE0 /* Pods_LAFramework_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LAFramework_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -124,6 +124,7 @@
 		18E0066B1D387E0B00AD8330 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				180A71A81D4067EE00DDA5BC /* ExampleApp.html */,
 				18E0066C1D387E1500AD8330 /* 6b85815986686bb0610449fe324d52ea */,
 				18E0066D1D387E1500AD8330 /* 70cd77126d24d716f1601d9aedeeff3a */,
 				18E0066E1D387E1500AD8330 /* 670c58a526d82358d5f2172ba095b38d */,
@@ -173,7 +174,6 @@
 		6003F593195388D20070C39A /* Example for LAFramework */ = {
 			isa = PBXGroup;
 			children = (
-				3046F3221D2F8F570001C849 /* ExampleApp.html */,
 				6003F59C195388D20070C39A /* LAAppDelegate.h */,
 				6003F59D195388D20070C39A /* LAAppDelegate.m */,
 				873B8AEA1B1F5CCA007FD442 /* Main.storyboard */,
@@ -328,11 +328,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				180A71A91D4067EE00DDA5BC /* ExampleApp.html in Resources */,
 				873B8AEB1B1F5CCA007FD442 /* Main.storyboard in Resources */,
 				6003F5A9195388D20070C39A /* Images.xcassets in Resources */,
 				6003F598195388D20070C39A /* InfoPlist.strings in Resources */,
 				18E006681D38788100AD8330 /* Launch Screen.storyboard in Resources */,
-				3046F3231D2F8F570001C849 /* ExampleApp.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

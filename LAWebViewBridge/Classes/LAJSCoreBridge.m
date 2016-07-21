@@ -18,20 +18,28 @@ static NSString * patchString = @"          "
 "               tempObject['OCClass'] = true;"
 "               return tempObject;"
 "           };"
-"           var __callNative = function(instance,methodName) {"
-"               var args = Array.prototype.slice.call(arguments);"
-"               var selectorName = methodName;"
-"               methodName = methodName.replace(/__/g, \"-\");"
-"               selectorName = methodName.replace(/_/g, \":\").replace(/-/g, \"_\");"
-"               var marchArr = selectorName.match(/:/g);"
-"               var numOfArgs = marchArr ? marchArr.length : 0;"
-"               if (args.length - 2 > numOfArgs) {"
-"                   selectorName += \":\";"
+"           var _customMethods = {"
+"               __callNative : function(methodName) {"
+"                   var instance = this;"
+"                   var args = Array.prototype.slice.call(arguments);"
+"                   var selectorName = methodName;"
+"                   methodName = methodName.replace(/__/g, \"-\");"
+"                   selectorName = methodName.replace(/_/g, \":\").replace(/-/g, \"_\");"
+"                   var marchArr = selectorName.match(/:/g);"
+"                   var numOfArgs = marchArr ? marchArr.length : 0;"
+"                   if (args.length - 1 > numOfArgs) {"
+"                       selectorName += \":\";"
+"                   }"
+"                   if(instance.OCClass === undefined || instance.OCClass == false){"
+"                       return callInstanceMethod(instance,selectorName,args.splice(1));"
+"                   }else{"
+"                       return callClassMethod(instance.OCObject,selectorName,args.splice(1));"
+"                   }"
 "               }"
-"               if(instance.OCClass === undefined || instance.OCClass == false){"
-"                   return callInstanceMethod(instance,selectorName,args.splice(2));"
-"               }else{"
-"                   return callClassMethod(instance.OCObject,selectorName,args.splice(2));"
+"           };"
+"           for (var method in _customMethods) {"
+"               if (_customMethods.hasOwnProperty(method)) {"
+"                   Object.defineProperty(Object.prototype, method, {value: _customMethods[method], configurable:false, enumerable: false});"
 "               }"
 "           }";
 
@@ -124,6 +132,9 @@ static NSString * patchString = @"          "
     @weakify(self)
     _jsContext[@"getProperty"] = ^id(NSString *propertyName){
         @strongify(self)
+        if ([propertyName isEqualToString:@"self"]) {
+            return self;
+        }
         if([self.delegate respondsToSelector:@selector(getProperty:)]){
             return [self.delegate getProperty:propertyName];
         }else{
