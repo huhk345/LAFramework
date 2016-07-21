@@ -13,7 +13,7 @@
 
 static NSString * kRecursiveRequestFlagProperty = @"com.laker.webviewURLProtocal";
 static NSString * RegexString = @"\\s*.\\s*jb_(\\w+)\\(";
-static NSString * ReplaceString = @".__callNative('$1',";
+static NSString * ReplaceString = @".__callNative(\"$1\")(";
 
 
 typedef void (^ChallengeCompletionHandler)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential * credential);

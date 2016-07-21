@@ -21,19 +21,21 @@ static NSString * patchString = @"          "
 "           var _customMethods = {"
 "               __callNative : function(methodName) {"
 "                   var instance = this;"
-"                   var args = Array.prototype.slice.call(arguments);"
 "                   var selectorName = methodName;"
 "                   methodName = methodName.replace(/__/g, \"-\");"
 "                   selectorName = methodName.replace(/_/g, \":\").replace(/-/g, \"_\");"
 "                   var marchArr = selectorName.match(/:/g);"
-"                   var numOfArgs = marchArr ? marchArr.length : 0;"
-"                   if (args.length - 1 > numOfArgs) {"
-"                       selectorName += \":\";"
-"                   }"
-"                   if(instance.OCClass === undefined || instance.OCClass == false){"
-"                       return callInstanceMethod(instance,selectorName,args.splice(1));"
-"                   }else{"
-"                       return callClassMethod(instance.OCObject,selectorName,args.splice(1));"
+"                   return function(){"
+"                       var args = Array.prototype.slice.call(arguments);"
+"                       var numOfArgs = marchArr ? marchArr.length : 0;"
+"                       if (args.length > numOfArgs) {"
+"                           selectorName += \":\";"
+"                       }"
+"                       if(instance.OCClass === undefined || instance.OCClass == false){"
+"                           return callInstanceMethod(instance,selectorName,args);"
+"                       }else{"
+"                           return callClassMethod(instance.OCObject,selectorName,args);"
+"                       }"
 "                   }"
 "               }"
 "           };"
@@ -283,9 +285,14 @@ static id callSelector(JSValue *instance, NSString *className, NSString *selecto
             return value;
         }
         case '@':{
-            id value;
+            void *value;
             [invocation getReturnValue:&value];
-            return value;
+            if ([selectorName isEqualToString:@"alloc"] || [selectorName isEqualToString:@"new"] ||
+                [selectorName isEqualToString:@"copy"] || [selectorName isEqualToString:@"mutableCopy"]) {
+                return (__bridge_transfer id)value;
+            } else {
+                return (__bridge id)value;
+            }
         }
         case 'v':{
             return nil;

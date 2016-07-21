@@ -40,7 +40,7 @@
     UIWebView *webView = [[UIWebView alloc] initWithFrame:CGRectZero];
     LAJSCoreBridge *bridge = [[LAJSCoreBridge alloc] initWithWebview:webView delegate:self];
     XCTAssertTrue(bridge != nil);
-    NSString* htmlPath = [[NSBundle mainBundle] pathForResource:@"ExampleApp" ofType:@"html"];
+    NSString* htmlPath = [[NSBundle bundleForClass:self.class] pathForResource:@"ExampleApp" ofType:@"html"];
     NSString* appHtml = [NSString stringWithContentsOfFile:htmlPath encoding:NSUTF8StringEncoding error:nil];
     [webView loadHTMLString:appHtml baseURL:nil];
     XCTestExpectation *callBackExpectation = [self expectationWithDescription:@"callback"];
@@ -51,8 +51,25 @@
     [self waitForExpectationsWithTimeout:1 handler:^(NSError * _Nullable error) {
         XCTAssertTrue([[self.button titleForState:UIControlStateNormal] isEqualToString:@"jsButton"]);
     }];
+}
 
 
+- (void)testSetProperty{
+    self.button = nil;
+    UIWebView *webView = [[UIWebView alloc] initWithFrame:CGRectZero];
+    LAJSCoreBridge *bridge = [[LAJSCoreBridge alloc] initWithWebview:webView delegate:self];
+    XCTAssertTrue(bridge != nil);
+    NSString* htmlPath = [[NSBundle bundleForClass:self.class] pathForResource:@"SetpropertyTest" ofType:@"html"];
+    NSString* appHtml = [NSString stringWithContentsOfFile:htmlPath encoding:NSUTF8StringEncoding error:nil];
+    [webView loadHTMLString:appHtml baseURL:nil];
+    XCTestExpectation *callBackExpectation = [self expectationWithDescription:@"callback"];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [callBackExpectation fulfill];
+    });
+    
+    [self waitForExpectationsWithTimeout:1 handler:^(NSError * _Nullable error) {
+        XCTAssertTrue(self.button != nil);
+    }];
 }
 
 - (void)testPerformanceExample {
