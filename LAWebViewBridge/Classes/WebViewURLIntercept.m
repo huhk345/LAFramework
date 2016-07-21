@@ -12,8 +12,8 @@
 #import <MobileCoreServices/MobileCoreServices.h>
 
 static NSString * kRecursiveRequestFlagProperty = @"com.laker.webviewURLProtocal";
-static NSString * RegexString = @"(\\w+)\\s*.jb_(\\w+)\\(";
-static NSString * ReplaceString = @"callNative($1,'$2',";
+static NSString * RegexString = @"(\\w+)\\s*.\\s*jb_(\\w+)\\(";
+static NSString * ReplaceString = @"__callNative($1,'$2',";
 
 
 typedef void (^ChallengeCompletionHandler)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential * credential);
@@ -622,7 +622,7 @@ static NSArray<NSString *> * fileNameFilter;
                                                         options:0
                                                           range:NSMakeRange(0, string.length)
                                                    withTemplate:ReplaceString];
-    DLogDebug(@"replace string is %@",jsString);
+    DLogDebug(@"replaced string is %@",jsString);
     return jsString;    
 }
 
