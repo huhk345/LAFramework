@@ -44,7 +44,7 @@
 }
 
 + (BOOL)devicePluggedIntoPower {
-    if ([self device].batteryState == UIDeviceBatteryStateUnplugged) {
+    if ([self device].batteryState == UIDeviceBatteryStateUnplugged || [self device].batteryState == UIDeviceBatteryStateUnknown) {
         return NO;
     } else {
         return YES;
