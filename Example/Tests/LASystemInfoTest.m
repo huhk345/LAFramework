@@ -11,6 +11,8 @@
 #import "LACarrier.h"
 #import "LADisk.h"
 #import "LAMemory.h"
+#import "UIDevice+Hardware.h"
+#import "LAProcessor.h"
 
 @interface LASystemInfoTest : XCTestCase
 
@@ -131,6 +133,83 @@
     XCTAssertTrue([LAMemory inactiveMemory] > 0);
 }
 
+#pragma mark - Device Test
 
+- (void)testPlatform{
+#if TARGET_IPHONE_SIMULATOR
+    XCTAssertTrue([[[UIDevice currentDevice] platform] containsString:@"x86"]);
+#else
+    XCTAssertTrue( [[UIDevice currentDevice] platform] != nil && ![[[UIDevice currentDevice] platform] containsString:@"x86"]);
+#endif
+}
+
+- (void)testModel{
+   XCTAssertTrue([[UIDevice currentDevice] hwmodel] != nil);
+}
+
+
+- (void)testPlatformType{
+#if TARGET_IPHONE_SIMULATOR
+    XCTAssertTrue([[UIDevice currentDevice] platformType] == UIDeviceSimulatoriPhone);
+#else
+    XCTAssertTrue([[UIDevice currentDevice] platformType] >=  UIDevice1GiPhone && [[UIDevice currentDevice] platformType] < UIDeviceUnknowniPhone);
+#endif
+}
+
+
+- (void)testPlatformTypeString{
+#if TARGET_IPHONE_SIMULATOR
+    XCTAssertTrue([[[UIDevice currentDevice] platformString] isEqualToString:@"iPhone Simulator"]);
+#else
+    XCTAssertTrue(![[[UIDevice currentDevice] platformString] isEqualToString:@"iPhone Simulator"] &&
+                  ![[[UIDevice currentDevice] platformString] isEqualToString:IOS_FAMILY_UNKNOWN_DEVICE]);
+#endif
+}
+
+
+- (void)testMacAddress{
+    XCTAssertTrue([[UIDevice currentDevice] macaddress] != nil);
+}
+
+
+- (void)testHasRetinaDisplay{
+    XCTAssertTrue([[UIDevice currentDevice] hasRetinaDisplay]);
+}
+
+
+- (void)testDeviceFamily{
+#if TARGET_IPHONE_SIMULATOR
+    XCTAssertTrue([[UIDevice currentDevice] deviceFamily] == UIDeviceFamilyUnknown);
+#else
+    XCTAssertTrue([[UIDevice currentDevice] deviceFamily] == UIDeviceFamilyiPhone);
+#endif
+}
+
+- (void)testDeviceId{
+    XCTAssertTrue([[[UIDevice currentDevice] deviceId] length] != 0);
+}
+
+#pragma mark - Processor
+
+- (void)testProcessorNumber{
+    XCTAssertTrue([LAProcessor processorsNumber] > 0);
+}
+
+
+- (void)testActiveProcessorsNumber{
+    XCTAssertTrue([LAProcessor activeProcessorsNumber] > 0);
+}
+
+- (void)testCpuUsageForApp{
+    XCTAssertTrue([LAProcessor cpuUsageForApp] > 0);
+}
+
+- (void)testActiveProcesses{
+    XCTAssertTrue([[LAProcessor activeProcesses] count] > 0);
+}
+
+- (void)testNumberOfActiveProcesses{
+    XCTAssertTrue([LAProcessor numberOfActiveProcesses] > 0);
+}
 
 @end

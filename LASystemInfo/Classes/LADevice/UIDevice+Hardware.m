@@ -97,58 +97,6 @@
   return (NSUInteger) results;
 }
 
-- (NSUInteger) cpuFrequency
-{
-  return [self getSysInfo:HW_CPU_FREQ];
-}
-
-- (NSUInteger) busFrequency
-{
-  return [self getSysInfo:HW_BUS_FREQ];
-}
-
-- (NSUInteger) cpuCount
-{
-  return [self getSysInfo:HW_NCPU];
-}
-
-- (NSUInteger) totalMemory
-{
-  return [self getSysInfo:HW_PHYSMEM];
-}
-
-- (NSUInteger) userMemory
-{
-  return [self getSysInfo:HW_USERMEM];
-}
-
-- (NSUInteger) maxSocketBufferSize
-{
-  return [self getSysInfo:KIPC_MAXSOCKBUF];
-}
-
-#pragma mark file system -- Thanks Joachim Bean!
-
-/*
- extern NSString *NSFileSystemSize;
- extern NSString *NSFileSystemFreeSize;
- extern NSString *NSFileSystemNodes;
- extern NSString *NSFileSystemFreeNodes;
- extern NSString *NSFileSystemNumber;
- */
-
-- (NSNumber *) totalDiskSpace
-{
-  NSDictionary *fattributes = [[NSFileManager defaultManager] attributesOfFileSystemForPath:NSHomeDirectory() error:nil];
-  return [fattributes objectForKey:NSFileSystemSize];
-}
-
-- (NSNumber *) freeDiskSpace
-{
-  NSDictionary *fattributes = [[NSFileManager defaultManager] attributesOfFileSystemForPath:NSHomeDirectory() error:nil];
-  return [fattributes objectForKey:NSFileSystemFreeSize];
-}
-
 #pragma mark platform type and name utils
 - (NSUInteger) platformType
 {
@@ -328,15 +276,4 @@
 #endif
     return ifa;
 }
-
-// Illicit Bluetooth check -- cannot be used in App Store
-/*
- Class  btclass = NSClassFromString(@"GKBluetoothSupport");
- if ([btclass respondsToSelector:@selector(bluetoothStatus)])
- {
- printf("BTStatus %d\n", ((int)[btclass performSelector:@selector(bluetoothStatus)] & 1) != 0);
- bluetooth = ((int)[btclass performSelector:@selector(bluetoothStatus)] & 1) != 0;
- printf("Bluetooth %s enabled\n", bluetooth ? "is" : "isn't");
- }
- */
 @end
