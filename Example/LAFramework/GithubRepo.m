@@ -10,7 +10,7 @@
 
 @implementation GithubRepo
 
--(void)convertToObject:(NSDictionary *)dictionary{
+-(void)convertFromDictionary:(NSDictionary *)dictionary{
     self.archive_url = dictionary[@"archive_url"];
     self.assignees_url = dictionary[@"assignees_url"];
 }

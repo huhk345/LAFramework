@@ -20,6 +20,7 @@
 		18E98EF81D4118A90056848D /* ExampleApp.html in Resources */ = {isa = PBXBuildFile; fileRef = 18E98EF71D4118A90056848D /* ExampleApp.html */; };
 		18E98EFA1D41BAB40056848D /* LASystemInfoTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 18E98EF91D41BAB40056848D /* LASystemInfoTest.m */; };
 		18E98EFC1D4607240056848D /* LADataZipTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 18E98EFB1D4607240056848D /* LADataZipTest.m */; };
+		18E98F0C1D48F7140056848D /* LAJsonTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 18E98F0B1D48F7140056848D /* LAJsonTest.m */; };
 		18FEDC821D2E68C2007FEC16 /* repos.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 18FEDC801D2E59E2007FEC16 /* repos.geojson */; };
 		18FEDC831D2E68C2007FEC16 /* repoDetail.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 18FEDC811D2E5A44007FEC16 /* repoDetail.geojson */; };
 		1C57AAC692E3CCD7ECA9574D /* Pods_LAFramework_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 489136EBE0DBDDEE27251EE0 /* Pods_LAFramework_Example.framework */; };
@@ -67,6 +68,7 @@
 		18E98EF71D4118A90056848D /* ExampleApp.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = ExampleApp.html; sourceTree = "<group>"; };
 		18E98EF91D41BAB40056848D /* LASystemInfoTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LASystemInfoTest.m; sourceTree = "<group>"; };
 		18E98EFB1D4607240056848D /* LADataZipTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LADataZipTest.m; sourceTree = "<group>"; };
+		18E98F0B1D48F7140056848D /* LAJsonTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LAJsonTest.m; sourceTree = "<group>"; };
 		18EA26ECE64B74432087FA64 /* Pods-LAFramework_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LAFramework_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-LAFramework_Tests/Pods-LAFramework_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		18FEDC801D2E59E2007FEC16 /* repos.geojson */ = {isa = PBXFileReference; lastKnownFileType = text; name = repos.geojson; path = ../repos.geojson; sourceTree = "<group>"; };
 		18FEDC811D2E5A44007FEC16 /* repoDetail.geojson */ = {isa = PBXFileReference; lastKnownFileType = text; name = repoDetail.geojson; path = ../repoDetail.geojson; sourceTree = "<group>"; };
@@ -218,6 +220,7 @@
 				18E006691D387CD600AD8330 /* LAWebviewBridgeTest.m */,
 				18E98EF91D41BAB40056848D /* LASystemInfoTest.m */,
 				18E98EFB1D4607240056848D /* LADataZipTest.m */,
+				18E98F0B1D48F7140056848D /* LAJsonTest.m */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -488,6 +491,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				18E98EFC1D4607240056848D /* LADataZipTest.m in Sources */,
+				18E98F0C1D48F7140056848D /* LAJsonTest.m in Sources */,
 				300D32321D2CE142007A56AD /* LANetworkTest.m in Sources */,
 				18E98EFA1D41BAB40056848D /* LASystemInfoTest.m in Sources */,
 				18E0066A1D387CD600AD8330 /* LAWebviewBridgeTest.m in Sources */,

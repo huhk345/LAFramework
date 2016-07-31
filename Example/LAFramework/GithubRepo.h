@@ -7,12 +7,34 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "LAReformatter.h"
+#import "LAJsonObject.h"
 
-@interface GithubRepo : NSObject<LAReformatter>
 
+
+#undef  __CLASS__
+#define __CLASS__ GithubRepo
+
+@JsonIncludeNonNull
+@interface GithubRepo : LAJsonObject{
+    
+
+    NSUInteger aInteger;
+}
+
+@JsonMap("atest")
+@JsonFormat("yyyy-mm-dd")
 @property (nonatomic,copy) NSString *archive_url;
-@property (nonatomic,copy) NSString *assignees_url;
 
 
+@JsonMap("bbb")
+@property (nonatomic,copy) NSString<NSObject> *assignees_url;
+
+
+@property (nonatomic,copy) int (^IntBlock)();
+
+@JsonIgnore
+@property (nonatomic,assign) NSInteger integerValue;
+
+
+@property (nonatomic,copy) UIColor *color;
 @end

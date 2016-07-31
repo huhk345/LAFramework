@@ -13,5 +13,7 @@
 #import "NSDictionary+LAJson.h"
 #import "NSSet+LAJson.h"
 #import "NSString+LAJson.h"
+#import "LAReformatter.h"
+#import "LAJsonObject.h"
 
 #endif /* LAJsonKit_h */

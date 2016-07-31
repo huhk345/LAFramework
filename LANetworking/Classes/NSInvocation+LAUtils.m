@@ -64,19 +64,21 @@
                 returnValue = [tempReulstValue ISO8601StringUTC];
             }else if([tempReulstValue isKindOfClass:[NSNull class]] || [tempReulstValue isKindOfClass:[NSString class]]){
                 returnValue = tempReulstValue;
-            }else if([tempReulstValue conformsToProtocol:@protocol(LAObjectConvert)]){
+            }else if([tempReulstValue conformsToProtocol:@protocol(LAObjectConverter)]){
                 if([tempReulstValue respondsToSelector:@selector(convertToDictionary:)]){
                     returnValue = [tempReulstValue convertToDictionary:error];
                     if(error){
+                        DLogError(@"object convert error %@",error);
                         break;
                     }
                 }else if([tempReulstValue respondsToSelector:@selector(convertToString:)]){
                     returnValue = [tempReulstValue convertToString:error];
                     if(error){
+                        DLogError(@"object convert error %@",error);
                         break;
                     }
                 }else{
-                    NSAssert(NO, @"unsupport object! please impl LAObjectConvert protocol!");
+                    NSAssert(NO, @"unsupport object! please impl LAObjectConverter protocol!");
                 }
             }
             break;

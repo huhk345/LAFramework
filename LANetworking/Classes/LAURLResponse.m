@@ -49,14 +49,14 @@
         NSMutableArray *result = [NSMutableArray array];
         for (id item in _responseObject) {
             id reformatterItem = [reformatter new];
-            [reformatterItem convertToObject:item];
+            [reformatterItem convertFromDictionary:item];
             [result addObject:reformatterItem];
         }
         _responseObject = result;
     }
     else if([_responseObject isKindOfClass:[NSDictionary class]]){
         _responseObject = [reformatter new];
-        [_responseObject convertToObject:self.responseObject];
+        [_responseObject convertFromDictionary:self.responseObject];
     }
 }
 
