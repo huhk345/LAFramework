@@ -15,5 +15,6 @@
 #import "NSString+LAJson.h"
 #import "LAReformatter.h"
 #import "LAJsonObject.h"
+#import "JSONValueTransformer.h"
 
 #endif /* LAJsonKit_h */

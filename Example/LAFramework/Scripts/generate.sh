@@ -7,7 +7,7 @@
 #  Copyright (c) 2015 Digital Rickshaw. All rights reserved.
 
 # TODO: this could probably be folded into the Perl script
-
+CURRENT_DIR=$(pwd)
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
 protoRegex="@protocol ([a-zA-Z0-9]*) <LAWebService>"
@@ -24,3 +24,5 @@ find "${SRCROOT}" -type f -name "*.h" -print0 | while IFS= read -r -d '' file; d
 done
 
 echo "Web service generation finished"
+echo "$CURRENT_DIR"
+cd $CURRENT_DIR

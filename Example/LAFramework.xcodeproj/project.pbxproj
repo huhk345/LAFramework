@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		18CC9FA91D50D93D004203C8 /* LAJsonTestObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 18CC9FA81D50D93D004203C8 /* LAJsonTestObject.m */; };
+		18CC9FAC1D50E28A004203C8 /* JSONValueTransformer+LAValueTransFormer.m in Sources */ = {isa = PBXBuildFile; fileRef = 18CC9FAB1D50E28A004203C8 /* JSONValueTransformer+LAValueTransFormer.m */; };
 		18E006681D38788100AD8330 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 18E006671D38788100AD8330 /* Launch Screen.storyboard */; };
 		18E0066A1D387CD600AD8330 /* LAWebviewBridgeTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 18E006691D387CD600AD8330 /* LAWebviewBridgeTest.m */; };
 		18E006731D387E1500AD8330 /* 6b85815986686bb0610449fe324d52ea in Resources */ = {isa = PBXBuildFile; fileRef = 18E0066C1D387E1500AD8330 /* 6b85815986686bb0610449fe324d52ea */; };
@@ -55,6 +57,10 @@
 /* Begin PBXFileReference section */
 		0FE979349F4F3B97F545A415 /* Pods-LAFramework_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LAFramework_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-LAFramework_Example/Pods-LAFramework_Example.release.xcconfig"; sourceTree = "<group>"; };
 		1862E5F11D28C28A0026BC92 /* GitHubService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GitHubService.h; sourceTree = "<group>"; };
+		18CC9FA71D50D93D004203C8 /* LAJsonTestObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LAJsonTestObject.h; sourceTree = "<group>"; };
+		18CC9FA81D50D93D004203C8 /* LAJsonTestObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LAJsonTestObject.m; sourceTree = "<group>"; };
+		18CC9FAA1D50E28A004203C8 /* JSONValueTransformer+LAValueTransFormer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "JSONValueTransformer+LAValueTransFormer.h"; sourceTree = "<group>"; };
+		18CC9FAB1D50E28A004203C8 /* JSONValueTransformer+LAValueTransFormer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "JSONValueTransformer+LAValueTransFormer.m"; sourceTree = "<group>"; };
 		18E006671D38788100AD8330 /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = "Launch Screen.storyboard"; path = "LAFramework/Launch Screen.storyboard"; sourceTree = "<group>"; };
 		18E006691D387CD600AD8330 /* LAWebviewBridgeTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LAWebviewBridgeTest.m; sourceTree = "<group>"; };
 		18E0066C1D387E1500AD8330 /* 6b85815986686bb0610449fe324d52ea */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = 6b85815986686bb0610449fe324d52ea; sourceTree = "<group>"; };
@@ -193,6 +199,10 @@
 				1862E5F11D28C28A0026BC92 /* GitHubService.h */,
 				30A21C821D2C980A00228471 /* GithubRepo.h */,
 				30A21C831D2C980A00228471 /* GithubRepo.m */,
+				18CC9FA71D50D93D004203C8 /* LAJsonTestObject.h */,
+				18CC9FA81D50D93D004203C8 /* LAJsonTestObject.m */,
+				18CC9FAA1D50E28A004203C8 /* JSONValueTransformer+LAValueTransFormer.h */,
+				18CC9FAB1D50E28A004203C8 /* JSONValueTransformer+LAValueTransFormer.m */,
 				6003F5A8195388D20070C39A /* Images.xcassets */,
 				6003F594195388D20070C39A /* Supporting Files */,
 			);
@@ -395,7 +405,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = LAFramework/Scripts/generate.sh;
+			shellScript = "LAFramework/Scripts/json_generate.sh\nLAFramework/Scripts/generate.sh\n";
 		};
 		5B96AF41063852FDBAA103E3 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -479,8 +489,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				18CC9FAC1D50E28A004203C8 /* JSONValueTransformer+LAValueTransFormer.m in Sources */,
 				30A21C841D2C980A00228471 /* GithubRepo.m in Sources */,
 				6003F59E195388D20070C39A /* LAAppDelegate.m in Sources */,
+				18CC9FA91D50D93D004203C8 /* LAJsonTestObject.m in Sources */,
 				6003F5A7195388D20070C39A /* LAViewController.m in Sources */,
 				6003F59A195388D20070C39A /* main.m in Sources */,
 			);

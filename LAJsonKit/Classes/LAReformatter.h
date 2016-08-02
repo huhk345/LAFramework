@@ -8,13 +8,13 @@
 
 #import <Foundation/Foundation.h>
 
-#undef  __CLASS__
 #define JsonIncludeNonNull  class __annotation__;
 
 
-#define JsonIgnore          end @interface __CLASS__()
-#define JsonMap(unused)     end @interface __CLASS__()
-#define JsonFormat(unused)  end @interface __CLASS__()
+#define JsonIgnore                  end @interface __CLASS__()
+#define JsonMap(unused)             end @interface __CLASS__()
+#define JsonFormat(unused)          end @interface __CLASS__()
+#define JsonTypeReference(unused)   end @interface __CLASS__()
 
 
 

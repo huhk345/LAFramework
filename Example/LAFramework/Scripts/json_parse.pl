@@ -84,7 +84,7 @@ if ($string =~ m/\@interface ([a-zA-Z0-9_]*)/ ) {
     
         if($propertyString =~ m/\@interface\s+(\w+)[\s|\S]*{/g){
             print "interface name ${1}\n";
-            $propertyName = $1;
+            $propertyName = "__Class__" . $1 ;
         }
         $propertyString = reverse $propertyString;
             
@@ -101,10 +101,7 @@ if ($string =~ m/\@interface ([a-zA-Z0-9_]*)/ ) {
             
 
 		print "Found method sig: ${propertyName}\n";
-
-		my %propertyDesc = ();
-		$propertyDesc{"annotations"} = \%annotations;
-		$annoMap{$propertyName} = \%propertyDesc;
+		$annoMap{$propertyName} = \%annotations;
 	}
 
 	open(FILEOUT, ">$outfilename") or die "Can't write to $outfilename: $!";

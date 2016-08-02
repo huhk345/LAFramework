@@ -9,32 +9,11 @@
 #import <Foundation/Foundation.h>
 #import "LAJsonObject.h"
 
-
-
-#undef  __CLASS__
-#define __CLASS__ GithubRepo
-
 @JsonIncludeNonNull
-@interface GithubRepo : LAJsonObject{
-    
+@interface GithubRepo : LAJsonObject
 
-    NSUInteger aInteger;
-}
-
-@JsonMap("atest")
-@JsonFormat("yyyy-mm-dd")
 @property (nonatomic,copy) NSString *archive_url;
 
+@property (nonatomic,copy) NSString *assignees_url;
 
-@JsonMap("bbb")
-@property (nonatomic,copy) NSString<NSObject> *assignees_url;
-
-
-@property (nonatomic,copy) int (^IntBlock)();
-
-@JsonIgnore
-@property (nonatomic,assign) NSInteger integerValue;
-
-
-@property (nonatomic,copy) UIColor *color;
 @end

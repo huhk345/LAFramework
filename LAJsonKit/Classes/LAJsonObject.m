@@ -9,6 +9,8 @@
 #import "LAJsonObject.h"
 #import "NSDictionary+LAJson.h"
 #import "JSONModelClassProperty.h"
+#import "LAPropertyAnnotation.h"
+#import "JSONValueTransformer.h"
 #import <objc/Runtime.h>
 
 static const NSString * kClassPropertiesKey = @"kClassPropertiesKey";
@@ -18,7 +20,9 @@ static const NSString * kMapperObjectKey = @"kMapperObjectKey";
 #pragma mark - class static variables
 static NSArray* allowedJSONTypes = nil;
 static NSArray* allowedPrimitiveTypes = nil;
+static NSArray* containerTypes = nil;
 static NSDictionary *primitivesNames = nil;
+static JSONValueTransformer* valueTransformer = nil;
 
 @implementation LAJsonObject
 
@@ -31,9 +35,11 @@ static NSDictionary *primitivesNames = nil;
         
         @autoreleasepool {
             allowedJSONTypes = @[
-                                 [NSString class], [NSNumber class], [NSDecimalNumber class], [NSArray class], [NSDictionary class], [NSNull class], //immutable JSON classes
-                                 [NSMutableString class], [NSMutableArray class], [NSMutableDictionary class] //mutable JSON classes
+                                 [NSString class], [NSNumber class], [NSDecimalNumber class], [NSArray class], [NSDictionary class], [NSNull class], [NSSet class], //immutable JSON classes
+                                 [NSMutableString class], [NSMutableArray class], [NSMutableDictionary class], [NSMutableSet set] //mutable JSON classes
                                  ];
+            containerTypes = @[[NSArray class], [NSDictionary class], [NSSet class],[NSMutableArray class], [NSMutableDictionary class], [NSMutableSet set] ];
+            
             
             allowedPrimitiveTypes = @[
                                       @"BOOL", @"float", @"int", @"long", @"double", @"short",
@@ -49,6 +55,8 @@ static NSDictionary *primitivesNames = nil;
                                  @"I":@"NSInteger", @"Q":@"NSUInteger", @"B":@"BOOL",
                                  
                                  @"@?":@"Block"};
+            
+            valueTransformer = [[JSONValueTransformer alloc] init];
         }
     });
 }
@@ -117,7 +125,7 @@ static NSDictionary *primitivesNames = nil;
         //export nil when they are not optional values as JSON null, so that the structure of the exported data
         //is still valid if it's to be imported as a model again
         if (isNull(value)) {
-            if (value == nil){
+            if (value == nil && objc_getAssociatedObject(self.class, &kMapperObjectKey)[[NSString stringWithFormat:@"__Class__%@", NSStringFromClass([self class])]]){
                 [tempDictionary removeObjectForKey:keyPath];
             }
             else{
@@ -125,6 +133,8 @@ static NSDictionary *primitivesNames = nil;
             }
             continue;
         }
+        
+        LAPropertyAnnotation *annotation = objc_getAssociatedObject(self.class, &kMapperObjectKey)[p.name];
         
         //check if the property is another model
         if ([value isKindOfClass:[LAJsonObject class]]) {
@@ -137,7 +147,11 @@ static NSDictionary *primitivesNames = nil;
             continue;
             
         } else {
-            
+            // 1) check for built-in transformation
+            if (annotation.reformatter && p.type && [containerTypes containsObject:p.type]) {
+                value = [self __reverseTransform:value
+                               withTypeReference:annotation.typeReference];
+            }
             
             // 2) check for standard types OR 2.1) primitives
             if (p.structName==nil && (p.isStandardJSONType || p.type==nil)) {
@@ -147,8 +161,48 @@ static NSDictionary *primitivesNames = nil;
                 
                 continue;
             }
-//TODO: custom value transformer
+
+            
             // 3) try to apply a value transformer
+            //create selector from the property's class name
+            NSString* selectorName = [NSString stringWithFormat:@"%@From%@:", @"JSONObject", p.type?p.type:p.structName];
+            if ([annotation.reformatter length]) {
+                selectorName = annotation.reformatter;
+            }
+            SEL selector = NSSelectorFromString(selectorName);
+            
+            BOOL foundCustomTransformer = NO;
+            if ([valueTransformer respondsToSelector:selector]) {
+                foundCustomTransformer = YES;
+            } else {
+                //try for hidden transformer
+                selectorName = [NSString stringWithFormat:@"__%@",selectorName];
+                selector = NSSelectorFromString(selectorName);
+                if ([valueTransformer respondsToSelector:selector]) {
+                    foundCustomTransformer = YES;
+                }
+            }
+            
+            //check if there's a transformer declared
+            if (foundCustomTransformer) {
+                
+                //it's OK, believe me...
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+                value = [valueTransformer performSelector:selector withObject:value];
+#pragma clang diagnostic pop
+                
+                [tempDictionary setValue:value forKeyPath: keyPath];
+                
+            } else {
+                
+                //in this case most probably a custom property was defined in a model
+                //but no default reverse transformer for it
+                @throw [NSException exceptionWithName:@"Value transformer not found"
+                                               reason:[NSString stringWithFormat:@"[JSONValueTransformer %@] not found", selectorName]
+                                             userInfo:nil];
+                return nil;
+            }
         }
     }
     
@@ -177,16 +231,33 @@ static NSDictionary *primitivesNames = nil;
         [self __inspectProperties];
     }
     
-//    //if there's a custom key mapper, store it in the associated object
-//    id mapper = [[self class] keyMapper];
-//    if ( mapper && !objc_getAssociatedObject(self.class, &kMapperObjectKey) ) {
-//        objc_setAssociatedObject(
-//                                 self.class,
-//                                 &kMapperObjectKey,
-//                                 mapper,
-//                                 OBJC_ASSOCIATION_RETAIN // This is atomic
-//                                 );
-//    }
+    //if there's a custom key mapper, store it in the associated object
+    NSDictionary *mapper = [self __propertiesAnnotations];
+    if ( mapper && !objc_getAssociatedObject(self.class, &kMapperObjectKey) ) {
+        objc_setAssociatedObject(
+                                 self.class,
+                                 &kMapperObjectKey,
+                                 mapper,
+                                 OBJC_ASSOCIATION_RETAIN // This is atomic
+                                 );
+    }
+}
+
+
+-(NSDictionary *)__propertiesAnnotations{
+    NSURL* url = [[NSBundle mainBundle] URLForResource:NSStringFromClass([self class]) withExtension:@"lajson"];
+    if (url != nil) {
+        NSDictionary* jsonDict = [NSJSONSerialization JSONObjectWithData:[NSData dataWithContentsOfURL:url] options:0 error:nil];
+        NSMutableDictionary* result = [[NSMutableDictionary alloc] init];
+        
+        for (NSString* key in jsonDict) {
+            result[key] = [[LAPropertyAnnotation alloc] initWithDictionary:jsonDict[key]];
+        }
+        return result;
+
+    }else{
+        return nil;
+    }
 }
 
 //inspects the class, get's a list of the class properties
@@ -312,8 +383,12 @@ static NSDictionary *primitivesNames = nil;
 }
 
 
--(NSString*)__mapString:(NSString*)string{
-    return string;
+-(NSString*)__mapString:(NSString*)key{
+    NSDictionary *mapper = objc_getAssociatedObject(self.class, &kMapperObjectKey);
+    LAPropertyAnnotation *annotation = mapper[key];
+    if([annotation.property length] > 0)
+        return annotation.property;
+    return key;
 }
 
 
@@ -347,6 +422,55 @@ static NSDictionary *primitivesNames = nil;
     return NO;
 }
 
+//built-in reverse transformations (export to JSON compliant objects)
+-(id)__reverseTransform:(id)value
+      withTypeReference:(NSString *)typeReference{
+    
+    
+    Class protocolClass = NSClassFromString(typeReference);
+    if (!protocolClass) return value;
+
+    //if the protocol is actually a JSONModel class
+    if ([protocolClass isSubclassOfClass: [LAJsonObject class]]) {
+        //check if should export list of dictionaries
+        if ([value isKindOfClass:[NSArray class]] || [value isKindOfClass:[NSSet class]]) {
+            NSMutableArray* tempArray = [NSMutableArray arrayWithCapacity: [(NSArray*)value count] ];
+            for (id model in value) {
+                if([model conformsToProtocol:@protocol(LAObjectConverter)]){
+                    if ([model respondsToSelector:@selector(convertToDictionary:)]) {
+                        [tempArray addObject: [model convertToDictionary:nil]];
+                    }
+                    else{
+                        [tempArray addObject: model];
+                    }
+                }else if([containerTypes containsObject:[model class]]){
+                    [tempArray addObject:[self __reverseTransform:model withTypeReference:typeReference]];
+                }
+            }
+            return [tempArray copy];
+        }
+        
+        //check if should export dictionary of dictionaries
+        if ([value isKindOfClass:[NSDictionary class]]) {
+            NSMutableDictionary* res = [NSMutableDictionary dictionary];
+            for (NSString* key in [(NSDictionary*)value allKeys]) {
+                id model = value[key];
+                if ([model conformsToProtocol:@protocol(LAObjectConverter)]) {
+                    [res setValue: [model convertToDictionary:nil] forKey: key];
+                }
+                else{
+                    [res setValue:[self __reverseTransform:model withTypeReference:typeReference] forKey:key];
+                }
+
+            }
+            return [NSDictionary dictionaryWithDictionary:res];
+        }
+    }
+    
+    return value;
+}
+
+
 
 #pragma mark - persistance
 -(void)__createDictionariesForKeyPath:(NSString*)keyPath inDictionary:(NSMutableDictionary**)dict{
@@ -372,12 +496,4 @@ static NSDictionary *primitivesNames = nil;
 }
 
 
-
-#pragma mark - help methods
-extern BOOL isNull(id value){
-    if (!value) return YES;
-    if ([value isKindOfClass:[NSNull class]]) return YES;
-    
-    return NO;
-}
 @end
