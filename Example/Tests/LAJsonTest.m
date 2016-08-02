@@ -25,11 +25,23 @@
     [super tearDown];
 }
 
-- (void)testExample {
+- (void)testNilObject {
     // This is an example of a functional test case.
     // Use XCTAssert and related functions to verify your tests produce the correct results.
     GithubRepo *repo = [[GithubRepo alloc] init];
-    [repo convertToDictionary:nil];
+    NSDictionary *dic = [repo convertToDictionary:nil];
+    XCTAssert([dic count] == 0);
+}
+
+
+- (void)testNilObjectWithOneProperty {
+    // This is an example of a functional test case.
+    // Use XCTAssert and related functions to verify your tests produce the correct results.
+    GithubRepo *repo = [[GithubRepo alloc] init];
+    repo.archive_url = @"testString";
+    NSDictionary *dic = [repo convertToDictionary:nil];
+    XCTAssert([dic count] == 1);
+    XCTAssert([dic[@"archive_url"] isEqualToString:@"testString"]);
 }
 
 - (void)testPerformanceExample {
