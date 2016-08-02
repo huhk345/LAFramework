@@ -9,6 +9,9 @@
 #import <Foundation/Foundation.h>
 #import "LAJsonObject.h"
 
+#undef  __CLASS__
+#define __CLASS__ GithubRepo
+
 @JsonIncludeNonNull
 @interface GithubRepo : LAJsonObject
 

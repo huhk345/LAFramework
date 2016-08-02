@@ -75,32 +75,34 @@ if ($string =~ m/\@interface ([a-zA-Z0-9_]*)/ ) {
 	
 		chomp(@lines);
 
-		# Get the method signature
+		# Get property name
 		my $propertyString = join(" ", @lines[$i .. $#lines]);
 
 		print "Working on property string: ${propertyString}\n";
 
 		my $propertyName = "";
     
-        if($propertyString =~ m/\@interface\s+(\w+)[\s|\S]*{/g){
+        if($propertyString =~ m/[@]interface\s+(\w+)[\s|\S]*/g){
             print "interface name ${1}\n";
             $propertyName = "__Class__" . $1 ;
         }
-        $propertyString = reverse $propertyString;
+        else{
+            $propertyString = reverse $propertyString;
             
-        if($propertyString =~ m/;\s*([a-zA-Z0-9_]+)/g){
-            $propertyName = reverse $1;
-        }
+            if($propertyString =~ m/;\s*([a-zA-Z0-9_]+)/g){
+                $propertyName = reverse $1;
+            }
         
-		if (length($propertyName) == 0) {
-			if ($propertyString =~ m/.*\(.*\)([a-zA-Z0-9_]+)[\s]*;/g) {
-				$propertyName = $1;
-			}
-		}
-            
+            if (length($propertyName) == 0) {
+                if ($propertyString =~ m/.*\(.*\)([a-zA-Z0-9_]+)[\s]*;/g) {
+                    $propertyName = $1;
+                }
+            }
+        }
+    
             
 
-		print "Found method sig: ${propertyName}\n";
+		print "Found propertyName: ${propertyName}\n";
 		$annoMap{$propertyName} = \%annotations;
 	}
 

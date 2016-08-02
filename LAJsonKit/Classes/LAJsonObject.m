@@ -82,7 +82,13 @@ static JSONValueTransformer* valueTransformer = nil;
 
 
 -(NSDictionary *)convertToDictionary:(NSError **)error{
-    [self toDictionaryWithKeys:nil];
+    NSDictionary *result = nil;
+    @try {
+        result = [self toDictionaryWithKeys:nil];
+    } @catch (NSException *exception) {
+        *error = [[NSError alloc] initWithDomain:exception.name code:-1 userInfo:exception.userInfo];
+    }
+    return result;
 }
 
 
