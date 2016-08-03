@@ -106,8 +106,11 @@ static JSONValueTransformer* valueTransformer = nil;
     //loop over all properties
     for (JSONModelClassProperty* p in properties) {
         
+        
+        LAPropertyAnnotation *annotation = objc_getAssociatedObject(self.class, &kMapperObjectKey)[p.name];
+        
         //skip if unwanted
-        if (propertyNames != nil && ![propertyNames containsObject:p.name])
+        if (propertyNames != nil && ![propertyNames containsObject:p.name] || annotation.ignore)
             continue;
         
         //fetch key and value
@@ -131,7 +134,7 @@ static JSONValueTransformer* valueTransformer = nil;
         //export nil when they are not optional values as JSON null, so that the structure of the exported data
         //is still valid if it's to be imported as a model again
         if (isNull(value)) {
-            if (value == nil && objc_getAssociatedObject(self.class, &kMapperObjectKey)[[NSString stringWithFormat:@"__Class__%@", NSStringFromClass([self class])]]){
+            if (value == nil && objc_getAssociatedObject(self.class, &kMapperObjectKey)[[NSString stringWithFormat:@"__Class__%@", NSStringFromClass([self class])]] == nil){
                 [tempDictionary removeObjectForKey:keyPath];
             }
             else{
@@ -139,8 +142,6 @@ static JSONValueTransformer* valueTransformer = nil;
             }
             continue;
         }
-        
-        LAPropertyAnnotation *annotation = objc_getAssociatedObject(self.class, &kMapperObjectKey)[p.name];
         
         //check if the property is another model
         if ([value isKindOfClass:[LAJsonObject class]]) {
@@ -154,7 +155,7 @@ static JSONValueTransformer* valueTransformer = nil;
             
         } else {
             // 1) check for built-in transformation
-            if (annotation.reformatter && p.type && [containerTypes containsObject:p.type]) {
+            if (annotation.typeReference && p.type && [containerTypes containsObject:p.type]) {
                 value = [self __reverseTransform:value
                                withTypeReference:annotation.typeReference];
             }
@@ -173,7 +174,7 @@ static JSONValueTransformer* valueTransformer = nil;
             //create selector from the property's class name
             NSString* selectorName = [NSString stringWithFormat:@"%@From%@:", @"JSONObject", p.type?p.type:p.structName];
             if ([annotation.reformatter length]) {
-                selectorName = annotation.reformatter;
+                selectorName = [NSString stringWithFormat:@"%@From%@:", @"JSONObject", annotation.reformatter];
             }
             SEL selector = NSSelectorFromString(selectorName);
             

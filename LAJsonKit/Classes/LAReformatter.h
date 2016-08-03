@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-#define JsonIncludeNonNull  class __annotation__;
+#define JsonIncludeNull  class __annotation__;
 
 
 #define JsonIgnore                  end @interface __CLASS__()

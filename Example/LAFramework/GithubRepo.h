@@ -12,7 +12,7 @@
 #undef  __CLASS__
 #define __CLASS__ GithubRepo
 
-@JsonIncludeNonNull
+@JsonIncludeNull
 @interface GithubRepo : LAJsonObject
 
 @property (nonatomic,copy) NSString *archive_url;

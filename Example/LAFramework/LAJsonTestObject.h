@@ -22,7 +22,6 @@
 @JsonIgnore
 @property (nonatomic,copy) NSString *ignore;
 
-@JsonFormat("LADate")
 @property (nonatomic,strong) NSDate *aDate;
 
 @JsonFormat("LADate")
