@@ -8,6 +8,7 @@
 
 #import <XCTest/XCTest.h>
 #import "GithubRepo.h"
+#import "LAJsonTestObject.h"
 
 @interface LAJsonTest : XCTestCase
 
@@ -30,7 +31,7 @@
     // Use XCTAssert and related functions to verify your tests produce the correct results.
     GithubRepo *repo = [[GithubRepo alloc] init];
     NSDictionary *dic = [repo convertToDictionary:nil];
-    XCTAssert([dic count] == 0);
+    XCTAssert([dic count] == 2);
 }
 
 
@@ -40,15 +41,76 @@
     GithubRepo *repo = [[GithubRepo alloc] init];
     repo.archive_url = @"testString";
     NSDictionary *dic = [repo convertToDictionary:nil];
-    XCTAssert([dic count] == 1);
+    XCTAssert([dic count] == 2);
     XCTAssert([dic[@"archive_url"] isEqualToString:@"testString"]);
+    XCTAssert([dic[@"assignees_url"] isKindOfClass:[NSNull class]]);
 }
 
-- (void)testPerformanceExample {
-    // This is an example of a performance test case.
-    [self measureBlock:^{
-        // Put the code you want to measure the time of here.
-    }];
+
+- (void)testComplexNilObject{
+    LAJsonTestObject *object = [[LAJsonTestObject alloc] init];
+    NSDictionary *dic = [object convertToDictionary:nil];
+    XCTAssert([dic count] == 0);
 }
+
+
+- (void)testComplexObject{
+    LAJsonTestObject *object = [[LAJsonTestObject alloc] init];
+    object.aString = @"aString";
+    object.mapProperty = @"mapString";
+    object.ignore = @"ignore";
+    object.aDate = [NSDate date];
+    object.aDateTow = [NSDate date];
+    object.aInteger = 1;
+    
+    NSDictionary *dic = [object convertToDictionary:nil];
+    XCTAssert([dic count] == 5);
+    XCTAssert([dic[@"aString"] isEqualToString:@"aString"]);
+    XCTAssert([dic[@"aMapString"] isEqualToString:@"mapString"]);
+    XCTAssert(dic[@"ignore"] == nil);
+    XCTAssert([dic[@"aDate"] length] > 0);
+    XCTAssert([dic[@"aDate2"] length] > 0);
+    XCTAssert([dic[@"aInteger"] intValue] == 1);
+    
+}
+
+
+
+- (void)testArrayObject{
+    LAJsonTestObject *object = [[LAJsonTestObject alloc] init];
+    object.aString = @"aString";
+    object.mapProperty = @"mapString";
+    object.ignore = @"ignore";
+    object.aDate = [NSDate date];
+    object.aDateTow = [NSDate date];
+    object.aInteger = 1;
+    
+    GithubRepo *repo1 = [[GithubRepo alloc] init];
+    repo1.archive_url = @"archive_url1";
+    
+    GithubRepo *repo2 = [[GithubRepo alloc] init];
+    repo2.archive_url = @"archive_url2";
+    repo2.assignees_url = @"assignees_url2";
+    object.repos = @[repo1,repo2];
+    
+    
+    NSDictionary *dic = [object convertToDictionary:nil];
+    XCTAssert([dic count] == 6);
+    XCTAssert([dic[@"aString"] isEqualToString:@"aString"]);
+    XCTAssert([dic[@"aMapString"] isEqualToString:@"mapString"]);
+    XCTAssert(dic[@"ignore"] == nil);
+    XCTAssert([dic[@"aDate"] length] > 0);
+    XCTAssert([dic[@"aDate2"] length] > 0);
+    XCTAssert([dic[@"aInteger"] intValue] == 1);
+    
+    XCTAssert([dic[@"repos"] isKindOfClass:[NSArray class]]);
+    XCTAssert([dic[@"repos"] count] == object.repos.count);
+    
+    XCTAssert([dic[@"repos"][1][@"archive_url"] isEqualToString:@"archive_url2"]);
+    XCTAssert([dic[@"repos"][1][@"assignees_url"] isEqualToString:@"assignees_url2"]);
+
+    
+}
+
 
 @end
