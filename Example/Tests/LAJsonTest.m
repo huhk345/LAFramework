@@ -50,7 +50,7 @@
 - (void)testComplexNilObject{
     LAJsonTestObject *object = [[LAJsonTestObject alloc] init];
     NSDictionary *dic = [object convertToDictionary:nil];
-    XCTAssert([dic count] == 0);
+    XCTAssert([dic count] == 1);
 }
 
 
