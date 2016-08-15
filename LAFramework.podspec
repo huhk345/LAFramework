@@ -56,7 +56,7 @@ Pod::Spec.new do |s|
 
   s.subspec 'LAJsonKit' do |sp|
     sp.source_files = 'LAJsonKit/Classes/**/*'
-    sp.public_header_files = 'LAJsonKit/Classes/*.h'
+    sp.public_header_files = 'LAJsonKit/Classes/**/*.h'
   end
 
   s.subspec 'LAMediator' do |sp|
