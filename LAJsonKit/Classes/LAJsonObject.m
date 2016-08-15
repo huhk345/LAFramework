@@ -12,10 +12,14 @@
 #import "LAPropertyAnnotation.h"
 #import "JSONValueTransformer.h"
 #import <objc/Runtime.h>
+#import <objc/message.h>
 
 static const NSString * kClassPropertiesKey = @"kClassPropertiesKey";
 static const NSString * kMapperObjectKey = @"kMapperObjectKey";
 
+static const NSString * JsonErrorDomain = @"com.laker.LAFramework.LAJsonKit";
+static const NSString * kJsonErrorReason = @"reason";
+static const NSString * kJsonErrorName = @"name";
 
 #pragma mark - class static variables
 static NSArray* allowedJSONTypes = nil;
@@ -23,6 +27,15 @@ static NSArray* allowedPrimitiveTypes = nil;
 static NSArray* containerTypes = nil;
 static NSDictionary *primitivesNames = nil;
 static JSONValueTransformer* valueTransformer = nil;
+
+typedef NS_ENUM(int, kJSONModelErrorTypes){
+    kJSONErrorConvertToDictionary,
+    kJSONErrorUnsupportType,
+    kJsonErrorUnsupportValue,
+    kJsonErrorCanNotTransformValue,
+    kJsonErrorMissmatchType,
+};
+
 
 @implementation LAJsonObject
 
@@ -61,12 +74,42 @@ static JSONValueTransformer* valueTransformer = nil;
     });
 }
 
+- (instancetype)initWithDictionary:(NSDictionary *)dic error:(NSError *__autoreleasing *)error{
+
+    if(self = [super init]){
+        if (![dic isKindOfClass:[NSDictionary class]]) {
+            *error = [NSError errorWithDomain:JsonErrorDomain
+                                         code:kJsonErrorUnsupportValue
+                                     userInfo:@{kJsonErrorReason:@"import object is not dictionary!"}];
+            return nil;
+        }
+        if(![self __importDictionary:dic error:error]){
+            return nil;
+        }
+    }
+    return self;
+}
+
 
 
 
 #pragma mark - LAReformatter delegate methods
--(void)convertFromDictionary:(NSDictionary *)dictionary{
-    
+-(void)convertFromDictionary:(NSDictionary *)dic{
+    if ([dic isKindOfClass:[NSDictionary class]]) {
+        NSError *error;
+        @try{
+            if(![self __importDictionary:dic error:&error]){
+                DLogError(@"convert dictionary to object error!");
+            }
+        }
+        @catch (NSException *exception) {
+            DLogError(@"json convert error %@",exception);
+        }
+
+    }else{
+        DLogError(@"import object is not dictionary!");
+    }
+
 }
 
 
@@ -86,7 +129,10 @@ static JSONValueTransformer* valueTransformer = nil;
     @try {
         result = [self toDictionaryWithKeys:nil];
     } @catch (NSException *exception) {
-        *error = [[NSError alloc] initWithDomain:exception.name code:-1 userInfo:exception.userInfo];
+        *error = [[NSError alloc] initWithDomain:JsonErrorDomain
+                                            code:kJSONErrorConvertToDictionary
+                                        userInfo:@{kJsonErrorName:exception.name,
+                                                   kJsonErrorReason:exception.reason}];
     }
     return result;
 }
@@ -96,6 +142,218 @@ static JSONValueTransformer* valueTransformer = nil;
 
 
 #pragma mark - JSON private methods
+-(BOOL)__importDictionary:(NSDictionary*)dict error:(NSError**)err{
+    //loop over the incoming keys and set self's properties
+    for (JSONModelClassProperty* property in [self __properties__]) {
+        LAPropertyAnnotation *annotation = objc_getAssociatedObject(self.class, &kMapperObjectKey)[property.name];
+        
+        //convert key name to model keys, if a mapper is provided
+        NSString* jsonKeyPath = [self __mapString:property.name];
+        //JMLog(@"keyPath: %@", jsonKeyPath);
+        
+        //general check for data type compliance
+        id jsonValue;
+        @try {
+            jsonValue = [dict valueForKeyPath:jsonKeyPath];
+        }
+        @catch (NSException *exception) {
+            jsonValue = dict[jsonKeyPath];
+        }
+        
+        //check for Optional properties
+        if (isNull(jsonValue)) {
+            //skip this property, continue with next property
+            continue;
+        }
+        
+        Class jsonValueClass = [jsonValue class];
+        BOOL isValueOfAllowedType = NO;
+        
+        for (Class allowedType in allowedJSONTypes) {
+            if ( [jsonValueClass isSubclassOfClass: allowedType] ) {
+                isValueOfAllowedType = YES;
+                break;
+            }
+        }
+        
+        if (isValueOfAllowedType==NO) {
+            //type not allowed
+            DLogError(@"Type %@ is not allowed in JSON.", NSStringFromClass(jsonValueClass));
+            
+            if (err) {
+                NSString* msg = [NSString stringWithFormat:@"Type %@ is not allowed in JSON.", NSStringFromClass(jsonValueClass)];
+                *err  = [[NSError alloc] initWithDomain:JsonErrorDomain
+                                                   code:kJSONErrorUnsupportType
+                                               userInfo:@{kJsonErrorName:property.name,
+                                                          kJsonErrorReason:msg}];
+            }
+            return NO;
+        }
+        
+        //check if there's matching property in the model
+        if (property) {
+            
+            // check for custom setter, than the model doesn't need to do any guessing
+            // how to read the property's value from JSON
+            if ([self __customSetValue:jsonValue forProperty:property]) {
+                //skip to next JSON key
+                continue;
+            };
+            
+            // 0) handle primitives
+            if (property.type == nil && property.structName==nil) {
+                
+                //generic setter
+                if (jsonValue != [self valueForKey:property.name]) {
+                    [self setValue:jsonValue forKey: property.name];
+                }
+                
+                //skip directly to the next key
+                continue;
+            }
+            
+            // 0.5) handle nils
+            if (isNull(jsonValue)) {
+                if ([self valueForKey:property.name] != nil) {
+                    [self setValue:nil forKey: property.name];
+                }
+                continue;
+            }
+            
+            
+            // 1) check if property is itself a JSONModel
+            if ([property.type isSubclassOfClass:[LAJsonObject class]]) {
+                
+                //initialize the property's model, store it
+                NSError* initErr = nil;
+                id value = [[property.type alloc] initWithDictionary: jsonValue error:&initErr];
+                
+                if (!value) {
+                    *err = initErr;
+                    return NO;
+                }
+                if (![value isEqual:[self valueForKey:property.name]]) {
+                    [self setValue:value forKey: property.name];
+                }
+                
+                //for clarity, does the same without continue
+                continue;
+                
+            } else {
+                
+                // 2) check if there's a protocol to the property
+                //  ) might or not be the case there's a built in transform for it
+                if ([annotation.typeReference length] > 0) {
+                    
+                    jsonValue = [self __transform:jsonValue
+                                 forTypeReference:annotation.typeReference
+                                     withProperty:property
+                                            error:err];
+                    if (!jsonValue) {
+                        if ((err != nil) && (*err == nil)) {
+                            NSString* msg = [NSString stringWithFormat:@"Failed to transform value, but no error was set during transformation. (%@)", property];
+                            *err = [[NSError alloc] initWithDomain:JsonErrorDomain
+                                                              code:kJsonErrorCanNotTransformValue
+                                                          userInfo:@{kJsonErrorReason:msg}];
+                        }
+                        return NO;
+                    }
+                }
+                
+                // 3.1) handle matching standard JSON types
+                if (property.isStandardJSONType && [jsonValue isKindOfClass: property.type]) {
+                    
+                    //mutable properties
+                    if (property.isMutable) {
+                        jsonValue = [jsonValue mutableCopy];
+                    }
+                    
+                    //set the property value
+                    if (![jsonValue isEqual:[self valueForKey:property.name]]) {
+                        [self setValue:jsonValue forKey: property.name];
+                    }
+                    continue;
+                }
+                
+                // 3.3) handle values to transform
+                if (
+                    (![jsonValue isKindOfClass:property.type] && !isNull(jsonValue))
+                    ||
+                    //the property is mutable
+                    property.isMutable
+                    ||
+                    //custom struct property
+                    property.structName
+                    ) {
+                    
+                    // searched around the web how to do this better
+                    // but did not find any solution, maybe that's the best idea? (hardly)
+                    Class sourceClass = [JSONValueTransformer classByResolvingClusterClasses:[jsonValue class]];
+                    
+                    //JMLog(@"to type: [%@] from type: [%@] transformer: [%@]", p.type, sourceClass, selectorName);
+                    
+                    //build a method selector for the property and json object classes
+                    NSString* selectorName = [NSString stringWithFormat:@"%@From%@:",
+                                              (property.structName? property.structName : property.type), //target name
+                                              sourceClass]; //source name
+                    if ([annotation.reformatter length]) {
+                        selectorName = [NSString stringWithFormat:@"%@From%@:", annotation.reformatter, NSStringFromClass(sourceClass)];
+                    }
+                    SEL selector = NSSelectorFromString(selectorName);
+                    
+                    //check for custom transformer
+                    BOOL foundCustomTransformer = NO;
+                    if ([valueTransformer respondsToSelector:selector]) {
+                        foundCustomTransformer = YES;
+                    } else {
+                        //try for hidden custom transformer
+                        selectorName = [NSString stringWithFormat:@"__%@",selectorName];
+                        selector = NSSelectorFromString(selectorName);
+                        if ([valueTransformer respondsToSelector:selector]) {
+                            foundCustomTransformer = YES;
+                        }
+                    }
+                    
+                    //check if there's a transformer with that name
+                    if (foundCustomTransformer) {
+                        
+                        //it's OK, believe me...
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+                        //transform the value
+                        jsonValue = [valueTransformer performSelector:selector withObject:jsonValue];
+#pragma clang diagnostic pop
+                        
+                        if (![jsonValue isEqual:[self valueForKey:property.name]]) {
+                            [self setValue:jsonValue forKey: property.name];
+                        }
+                        
+                    } else {
+                        
+                        // it's not a JSON data type, and there's no transformer for it
+                        // if property type is not supported - that's a programmer mistake -> exception
+                        @throw [NSException exceptionWithName:@"Type not allowed"
+                                                       reason:[NSString stringWithFormat:@"%@ type not supported for %@.%@", property.type, [self class], property.name]
+                                                     userInfo:nil];
+                        return NO;
+                    }
+                    
+                } else {
+                    // 3.4) handle "all other" cases (if any)
+                    if (![jsonValue isEqual:[self valueForKey:property.name]]) {
+                        [self setValue:jsonValue forKey: property.name];
+                    }
+                }
+            }
+        }
+    }
+    
+    return YES;
+}
+
+
+
+
 //exports the model as a dictionary of JSON compliant objects
 -(NSDictionary*)toDictionaryWithKeys:(NSArray*)propertyNames{
     NSArray* properties = [self __properties__];
@@ -220,15 +478,18 @@ static JSONValueTransformer* valueTransformer = nil;
 //returns a list of the model's properties
 -(NSArray*)__properties__{
     //fetch the associated object
-    NSDictionary* classProperties = objc_getAssociatedObject(self.class, &kClassPropertiesKey);
-    if (classProperties) return [classProperties allValues];
-    
-    //if here, the class needs to inspect itself
-    [self __setup__];
-    
-    //return the property list
-    classProperties = objc_getAssociatedObject(self.class, &kClassPropertiesKey);
-    return [classProperties allValues];
+    @synchronized (self.class) {
+        NSDictionary* classProperties = objc_getAssociatedObject(self.class, &kClassPropertiesKey);
+        if (classProperties) return [classProperties allValues];
+        
+        //if here, the class needs to inspect itself
+        [self __setup__];
+        
+        //return the property list
+        classProperties = objc_getAssociatedObject(self.class, &kClassPropertiesKey);
+        return [classProperties allValues];
+    }
+
 }
 
 
@@ -399,6 +660,42 @@ static JSONValueTransformer* valueTransformer = nil;
 }
 
 
+#pragma mark - custom transformations
+-(BOOL)__customSetValue:(id<NSObject>)value forProperty:(JSONModelClassProperty*)property{
+    if (!property.customSetters)
+        property.customSetters = [NSMutableDictionary new];
+    
+    NSString *className = NSStringFromClass([JSONValueTransformer classByResolvingClusterClasses:[value class]]);
+    
+    if (!property.customSetters[className]) {
+        //check for a custom property setter method
+        NSString* ucfirstName = [property.name stringByReplacingCharactersInRange:NSMakeRange(0,1)
+                                                                       withString:[[property.name substringToIndex:1] uppercaseString]];
+        NSString* selectorName = [NSString stringWithFormat:@"set%@With%@:", ucfirstName, className];
+        
+        SEL customPropertySetter = NSSelectorFromString(selectorName);
+        
+        //check if there's a custom selector like this
+        if (![self respondsToSelector: customPropertySetter]) {
+            property.customSetters[className] = [NSNull null];
+            return NO;
+        }
+        
+        //cache the custom setter selector
+        property.customSetters[className] = selectorName;
+    }
+    
+    if (property.customSetters[className] != [NSNull null]) {
+        //call the custom setter
+        //https://github.com/steipete
+        SEL selector = NSSelectorFromString(property.customSetters[className]);
+        ((void (*) (id, SEL, id))objc_msgSend)(self, selector, value);
+        return YES;
+    }
+    
+    return NO;
+}
+
 -(BOOL)__customGetValue:(id<NSObject>*)value forProperty:(JSONModelClassProperty*)property{
     if (property.getterType == kNotInspected) {
         //check for a custom property getter method
@@ -428,6 +725,95 @@ static JSONValueTransformer* valueTransformer = nil;
     
     return NO;
 }
+
+
+
+#pragma mark - built-in transformer methods
+//few built-in transformations
+-(id)__transform:(id)value
+forTypeReference:(NSString *)typeReference
+    withProperty:(JSONModelClassProperty *)property
+           error:(NSError**)err{
+    Class targetClass = NSClassFromString(typeReference);
+    if (!targetClass) {
+        
+        //no other protocols on arrays and dictionaries
+        //except JSONModel classes
+        if ([value isKindOfClass:[NSArray class]]) {
+            @throw [NSException exceptionWithName:@"Bad property typereference declaration"
+                                           reason:[NSString stringWithFormat:@"<%@> is not allowed LAJsonObject typereference, and not a LAJsonObject class.", typeReference]
+                                         userInfo:nil];
+        }
+        return value;
+    }
+    
+    //if the protocol is actually a JSONModel class
+    if ([targetClass isSubclassOfClass:[LAJsonObject class]]) {
+        
+        //check if it's a list of models
+        if ([property.type isSubclassOfClass:[NSArray class]]) {
+            
+            // Expecting an array, make sure 'value' is an array
+            if(![[value class] isSubclassOfClass:[NSArray class]]){
+                NSString* mismatch = [NSString stringWithFormat:@"Property '%@' is declared as NSArray<%@>* but the corresponding JSON value is not a JSON Array.", property.name, typeReference];
+                *err = [NSError errorWithDomain:JsonErrorDomain
+                                           code:kJsonErrorMissmatchType
+                                       userInfo:@{kJsonErrorReason:mismatch}];
+                return nil;
+            }
+            
+            //one shot conversion
+        
+            NSMutableArray *array = [NSMutableArray array];
+            for (id object in value) {
+                id jsonObject = [[targetClass alloc] initWithDictionary:object error:err];
+                if (jsonObject) {
+                    [array addObject:jsonObject];
+                }else{
+                    break;
+                }
+            }
+            if(*err){
+                return nil;
+            }
+            value = [NSArray arrayWithArray:array];
+        }
+        
+        //check if it's a dictionary of models
+        if ([property.type isSubclassOfClass:[NSDictionary class]]) {
+            
+            // Expecting a dictionary, make sure 'value' is a dictionary
+            if(![[value class] isSubclassOfClass:[NSDictionary class]]){
+                NSString* mismatch = [NSString stringWithFormat:@"Property '%@' is declared as NSDictionary<%@>* but the corresponding JSON value is not a JSON Object.", property.name, typeReference];
+                *err = [NSError errorWithDomain:JsonErrorDomain
+                                           code:kJsonErrorMissmatchType
+                                       userInfo:@{kJsonErrorReason:mismatch}];
+                return nil;
+            }
+            
+            NSMutableDictionary* res = [NSMutableDictionary dictionary];
+            
+            for (NSString* key in [value allKeys]) {
+                id jsonObject = [[targetClass alloc] initWithDictionary:value[key] error:err];
+                if (jsonObject != nil){
+                    [res setValue:jsonObject forKey:key];
+                }else{
+                    break;
+                }
+               
+            }
+            if(*err){
+                return nil;
+            }
+            value = [NSDictionary dictionaryWithDictionary:res];
+        }
+    }
+    
+    return value;
+}
+
+
+
 
 //built-in reverse transformations (export to JSON compliant objects)
 -(id)__reverseTransform:(id)value

@@ -108,7 +108,35 @@
     
     XCTAssert([dic[@"repos"][1][@"archive_url"] isEqualToString:@"archive_url2"]);
     XCTAssert([dic[@"repos"][1][@"assignees_url"] isEqualToString:@"assignees_url2"]);
+    
+}
 
+
+- (void)testArrayDictionaryToObject{
+    LAJsonTestObject *object = [[LAJsonTestObject alloc] init];
+    object.aString = @"aString";
+    object.mapProperty = @"mapString";
+    object.ignore = @"ignore";
+    object.aDate = [NSDate date];
+    object.aDateTow = [NSDate date];
+    object.aInteger = 1;
+    
+    GithubRepo *repo1 = [[GithubRepo alloc] init];
+    repo1.archive_url = @"archive_url1";
+    
+    GithubRepo *repo2 = [[GithubRepo alloc] init];
+    repo2.archive_url = @"archive_url2";
+    repo2.assignees_url = @"assignees_url2";
+    object.repos = @[repo1,repo2];
+    
+    
+    NSDictionary *dic = [object convertToDictionary:nil];
+    
+    LAJsonTestObject *object2 = [[LAJsonTestObject alloc] init];
+    [object2 convertFromDictionary:dic];
+    NSDictionary *dic2 = [object2 convertToDictionary:nil];
+    XCTAssert([dic2 isEqualToDictionary:dic]);
+    
     
 }
 

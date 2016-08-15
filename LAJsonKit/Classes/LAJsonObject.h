@@ -12,6 +12,6 @@
 
 @interface LAJsonObject : NSObject<LAReformatter,LAObjectConverter>
 
-
+-(instancetype)initWithDictionary:(NSDictionary *)dic error:(NSError **)error;
 
 @end
