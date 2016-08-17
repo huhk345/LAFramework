@@ -83,6 +83,7 @@ Pod::Spec.new do |s|
 
   s.subspec 'LANetworking' do |sp|
     sp.source_files = 'LANetworking/Classes/**/*'
+    sp.preserve_paths = 'LANetworking/Scripts/**/*'
     sp.dependency 'LAFramework/LADataCategory'
     sp.dependency 'LAFramework/LACache'
     sp.dependency 'LAFramework/LAJsonKit'
