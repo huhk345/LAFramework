@@ -7,18 +7,20 @@
 //
 
 #import "NSSet+LAJson.h"
+#import "NSArray+LAJson.h"
 
 @implementation NSSet (LAJson)
 
 //TODO: convert custom Object to Dictionary in NSSet
 - (NSString *)jsonString{
-    NSError *error = nil;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:self options:NSJSONWritingPrettyPrinted error:&error];
-    if (!error) {
-        return [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-    }
-    DLogError("Convert to  json String error : %@",error);
-    return nil;
+    return [[self allObjects] jsonString];
 }
+
+
+- (id)__toDictionary{
+    return [[self allObjects] __toDictionary];
+}
+
+
 
 @end

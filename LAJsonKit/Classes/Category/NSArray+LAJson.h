@@ -12,4 +12,6 @@
 
 - (NSString *)jsonString;
 
+- (id)__toDictionary;
+
 @end

@@ -9,6 +9,8 @@
 #import <XCTest/XCTest.h>
 #import "GithubRepo.h"
 #import "LAJsonTestObject.h"
+#import "LAJsonKit.h"
+#import <Foundation/Foundation.h>
 
 @interface LAJsonTest : XCTestCase
 
@@ -136,9 +138,35 @@
     [object2 convertFromDictionary:dic];
     NSDictionary *dic2 = [object2 convertToDictionary:nil];
     XCTAssert([dic2 isEqualToDictionary:dic]);
-    
-    
 }
+
+
+-(void)testArrayToJson{
+    GithubRepo *repo1 = [[GithubRepo alloc] init];
+    repo1.archive_url = @"archive_url1";
+    
+    GithubRepo *repo2 = [[GithubRepo alloc] init];
+    repo2.archive_url = @"archive_url2";
+    repo2.assignees_url = @"assignees_url2";
+    NSArray *array = @[repo1,repo2];
+    
+    XCTAssert([[[[array jsonString] stringByReplacingOccurrencesOfString:@" " withString:@""] stringByReplacingOccurrencesOfString:@"\n" withString:@""] isEqualToString:@"[{\"assignees_url\":null,\"archive_url\":\"archive_url1\"},{\"assignees_url\":\"assignees_url2\",\"archive_url\":\"archive_url2\"}]"]);
+}
+
+
+
+-(void)testDictronaryToJson{
+    GithubRepo *repo1 = [[GithubRepo alloc] init];
+    repo1.archive_url = @"archive_url1";
+    
+    GithubRepo *repo2 = [[GithubRepo alloc] init];
+    repo2.archive_url = @"archive_url2";
+    repo2.assignees_url = @"assignees_url2";
+    NSDictionary *dic = @{@"aa":repo1,@"bb":repo2};
+    
+    XCTAssert([[[[dic jsonString] stringByReplacingOccurrencesOfString:@" " withString:@""] stringByReplacingOccurrencesOfString:@"\n" withString:@""] isEqualToString:@"{\"aa\":{\"assignees_url\":null,\"archive_url\":\"archive_url1\"},\"bb\":{\"assignees_url\":\"assignees_url2\",\"archive_url\":\"archive_url2\"}}"]);
+}
+
 
 
 @end

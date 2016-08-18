@@ -12,7 +12,7 @@
 #import <LAFramework/LAURLResponse.h>
 #import "ReactiveCocoa.h"
 #import "AFHTTPSessionManager+rac.h"
-#import "LAProtocalImpl.h"
+#import "LAprotocolImpl.h"
 #import "GithubRepo.h"
 #import "LACache.h"
 #import "OHHTTPStubs.h"
@@ -56,7 +56,7 @@
 }
 
 - (void)testBuildURL {
-    LAProtocalImpl<GitHubService> *service = [[LANetworkingBuilder initBuilderWithBlock:^(LANetworkingBuilder *builder) {
+    LAprotocolImpl<GitHubService> *service = [[LANetworkingBuilder initBuilderWithBlock:^(LANetworkingBuilder *builder) {
         builder.baseURL = [NSURL URLWithString:@"https://api.github.com"];
     }] create:@protocol(GitHubService)];
     RACSignal *signal = [service listRepos:@"huhk345"];
@@ -84,7 +84,7 @@
 
 
 - (void)testRequestCachedData {
-    LAProtocalImpl<GitHubService> *service = [[LANetworkingBuilder initBuilderWithBlock:^(LANetworkingBuilder *builder) {
+    LAprotocolImpl<GitHubService> *service = [[LANetworkingBuilder initBuilderWithBlock:^(LANetworkingBuilder *builder) {
         builder.baseURL = [NSURL URLWithString:@"https://api.github.com"];
     }] create:@protocol(GitHubService)];
     RACSignal *signal = [service listRepos:@"huhk345"];
@@ -105,7 +105,7 @@
 
 
 - (void)testBuildURLAndHeader {
-    LAProtocalImpl<GitHubService> *service = [[LANetworkingBuilder initBuilderWithBlock:^(LANetworkingBuilder *builder) {
+    LAprotocolImpl<GitHubService> *service = [[LANetworkingBuilder initBuilderWithBlock:^(LANetworkingBuilder *builder) {
         builder.baseURL = [NSURL URLWithString:@"https://api.github.com"];
     }] create:@protocol(GitHubService)];
     RACSignal *signal = [service listRepository:@"huhk345" repo:@"LAFramework"];
@@ -130,7 +130,7 @@
 
 
 - (void)testBuildHeader {
-    LAProtocalImpl<GitHubService> *service = [[LANetworkingBuilder initBuilderWithBlock:^(LANetworkingBuilder *builder) {
+    LAprotocolImpl<GitHubService> *service = [[LANetworkingBuilder initBuilderWithBlock:^(LANetworkingBuilder *builder) {
         builder.baseURL = [NSURL URLWithString:@"https://api.github.com"];
     }] create:@protocol(GitHubService)];
     RACSignal *signal = [service listRepos:@"huhk345" token:@"LAFramework"];

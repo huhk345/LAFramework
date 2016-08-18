@@ -8,7 +8,7 @@
 
 #import "LANetworkingBuilder.h"
 #import <ObjC/runtime.h>
-#import "LAProtocalImpl.h"
+#import "LAprotocolImpl.h"
 #import "LAMethodAnnotation.h"
 
 
@@ -32,7 +32,7 @@
 
 -(id)create:(Protocol *)protocol{
     Class cls = [self classImplForProtocol:protocol];
-    LAProtocalImpl* obj = [[cls alloc] init];
+    LAprotocolImpl* obj = [[cls alloc] init];
     obj.protocol = protocol;
     obj.annotation = [self methodAnnotationForProtocol:protocol];
     obj.defaultHeaders = self.header;
@@ -55,7 +55,7 @@
         cls = NSClassFromString(className);
         
         if (cls == nil) {
-            cls = objc_allocateClassPair([LAProtocalImpl class], [className UTF8String], 0);
+            cls = objc_allocateClassPair([LAprotocolImpl class], [className UTF8String], 0);
             class_addProtocol(cls, protocol);
             objc_registerClassPair(cls);
         }

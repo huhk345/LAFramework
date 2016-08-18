@@ -1,5 +1,5 @@
 //
-//  LAProtocalImpl.h
+//  LAProtocolImpl.h
 //  Pods
 //
 //  Created by LakeR on 16/7/2.
@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface LAProtocalImpl : NSObject
+@interface LAprotocolImpl : NSObject
 
 
 @property(nonatomic,strong) Protocol* protocol;

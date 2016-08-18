@@ -7,6 +7,7 @@
 #  Copyright (c) 2016 LakeR inc. All rights reserved.
 
 # TODO: this could probably be folded into the Perl script
+find ${CONFIGURATION_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH} -name '*.lajson' -delete
 CURRENT_DIR=$(pwd)
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 

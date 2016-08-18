@@ -1,12 +1,12 @@
 //
-//  LAProtocalImpl.m
+//  LAprotocolImpl.m
 //  Pods
 //
 //  Created by LakeR on 16/7/2.
 //
 //
 
-#import "LAProtocalImpl.h"
+#import "LAprotocolImpl.h"
 #import <ObjC/runtime.h>
 #import "LAMethodAnnotation.h"
 #import "LAParameterResult.h"
@@ -19,7 +19,7 @@
 #import "LAReformatter.h"
 #import "LACache.h"
 
-@implementation LAProtocalImpl
+@implementation LAprotocolImpl
 
 
 #pragma mark - invocatin hooking methods

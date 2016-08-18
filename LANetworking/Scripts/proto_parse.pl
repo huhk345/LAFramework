@@ -25,7 +25,7 @@ close FILEIN;
 if ($string =~ m/\@protocol ([a-zA-Z0-9_]*) <LAWebService>/ ) {
 	print "Protocol: ${1}\n";
 
-	my $outfilename = "${outdir}/${1}.drproto";
+	my $outfilename = "${outdir}/${1}.laproto";
 	print "Output file name: ${outfilename}\n";
 
 	my %annoMap = ();
@@ -101,9 +101,22 @@ if ($string =~ m/\@protocol ([a-zA-Z0-9_]*) <LAWebService>/ ) {
 
 		# Capture the parameter names
 		my @params = ();
+		while ($methodString =~ m/:[\s]*\(([^)]*)\)[\s]*([a-zA-Z0-9_]+)/g) {
+			my $filedName1 = $1;
+			my $filedName2 = $2;
+			if ($filedName1 =~ m/Part\([\s]*"([a-zA-Z0-9_]*)"/g) {
+				print "find part : $1\n";
+				push @params, $1;
+			}
+			elsif($filedName1 =~ m/Header\([\s]*"([a-zA-Z0-9_]*)"/g){
+				print "find Header : -H$1\n";
+				push @params, $1;
+			}
+			else{
+				print "find param : $2\n";
+				push @params, $2;
+			}
 
-		while ($methodString =~ m/:[\s]*\([^)]*\)[\s]*([a-zA-Z0-9_]+)/g) {
-			push @params, $1;
 		}
 
 		$methodDesc{"parameterNames"} = \@params;
@@ -111,16 +124,10 @@ if ($string =~ m/\@protocol ([a-zA-Z0-9_]*) <LAWebService>/ ) {
 		# Capture the desired NSURLSessionTask sub-type (from the return value)
 		print "working on task type\n";
 		
-		if ($methodString =~ m/-[\s]*\(([^)]*)\)/g) {
-			$methodDesc{"taskType"} = $1;
+		if ($methodString =~ m/-[\s]*\([\s]*LANSignal\(([^)]*)\)/g) {
+			$methodDesc{"reformaterName"} = $1;
 		}
 	
-		# Capture the desired data type for the callback
-		print "working on callback type\n";
-
-		if ($methodString =~ m/DR_CALLBACK\(([^)]+)\)/g) {
-			$methodDesc{"resultType"} = $1;
-		}
 
 		$annoMap{$methodSig} = \%methodDesc;
 	}

@@ -46,7 +46,7 @@ Pod::Spec.new do |s|
   s.dependency 'AFNetworking', '~> 3.1.0'
   s.dependency 'ReactiveCocoa', '~> 4.2.0'
   s.dependency 'CocoaLumberjack', '~>2.3.0'
-
+  s.preserve_paths = 'LAFramework/runscript.rb'
 
   s.subspec 'LADataCategory' do |sp|
     sp.source_files = 'LADataCategory/Classes/**/*'

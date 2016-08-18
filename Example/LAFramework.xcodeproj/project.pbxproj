@@ -277,9 +277,9 @@
 				6003F586195388D20070C39A /* Sources */,
 				6003F587195388D20070C39A /* Frameworks */,
 				6003F588195388D20070C39A /* Resources */,
-				307A08B51D29F2D300241B9B /* ShellScript */,
 				08FD4A781B40131568007135 /* [CP] Embed Pods Frameworks */,
 				D4BADC2898FE274710A52A3F /* [CP] Copy Pods Resources */,
+				18E7FB671D656C6B00521005 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -394,7 +394,7 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-LAFramework_Example/Pods-LAFramework_Example-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		307A08B51D29F2D300241B9B /* ShellScript */ = {
+		18E7FB671D656C6B00521005 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -405,7 +405,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "LAFramework/Scripts/json_generate.sh\nLAFramework/Scripts/generate.sh\n";
+			shellScript = "../LANetworking/Scripts/generate.sh\n../LAJsonKit/Scripts/json_generate.sh";
 		};
 		5B96AF41063852FDBAA103E3 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;

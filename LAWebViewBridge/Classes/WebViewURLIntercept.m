@@ -11,7 +11,7 @@
 #import "WebViewURLIntercept.h"
 #import <MobileCoreServices/MobileCoreServices.h>
 
-static NSString * kRecursiveRequestFlagProperty = @"com.laker.webviewURLProtocal";
+static NSString * kRecursiveRequestFlagProperty = @"com.laker.webviewURLProtocol";
 static NSString * RegexString = @"\\s*.\\s*jb_(\\w+)\\(";
 static NSString * ReplaceString = @".__callNative(\"$1\")(";
 
@@ -97,7 +97,7 @@ static NSArray<NSString *> * fileNameFilter;
 
 
 
-#pragma mark - NSURLProtocal override methods
+#pragma mark - NSURLProtocol override methods
 + (BOOL)canInitWithRequest:(NSURLRequest *)request{
     NSString* userAgent = request.allHTTPHeaderFields[@"User-Agent"];
     if (userAgent && [[self getWebViewUserAgentTest] evaluateWithObject:userAgent] &&
@@ -579,7 +579,7 @@ static NSArray<NSString *> * fileNameFilter;
         // o if the request is cancelled by a call to -stopLoading, in which case the client doesn't
         //   want to know about the failure
     } else {
-        DLogError(@"protocal %p error %@ / %d",self, [error domain], (int) [error code]);
+        DLogError(@"protocol %p error %@ / %d",self, [error domain], (int) [error code]);
         [[self client] URLProtocol:self didFailWithError:error];
     }
     
