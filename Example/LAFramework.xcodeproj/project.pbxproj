@@ -422,7 +422,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "Pods/LAFramework/LANetworking/Scripts/generate.sh\nPods/LAFramework/LAJsonKit/Scripts/json_generate.sh";
+			shellScript = "../LANetworking/Scripts/generate.sh\n../LAJsonKit/Scripts/json_generate.sh";
 		};
 		C6BD6733B3051233EAEFE635 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -451,7 +451,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "Pods/LAFramework/LANetworking/Scripts/generate.sh\nPods/LAFramework/LAJsonKit/Scripts/json_generate.sh";
+			shellScript = "../LANetworking/Scripts/generate.sh\n../LAJsonKit/Scripts/json_generate.sh";
 		};
 		D4BADC2898FE274710A52A3F /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
