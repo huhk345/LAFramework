@@ -15,7 +15,12 @@ LAFramework is available through [CocoaPods](http://cocoapods.org). To install
 it, simply add the following line to your Podfile:
 
 ```ruby
-pod "LAFramework"
+pod 'LAFramework' , :git => 'git@github.com:huhk345/LAFramework.git’
+
+post_install do |installer|
+    require File.expand_path('runscript.rb', './Pods/LAFramework/LAFramework')
+    RunScriptConfigurator::post_install(installer)
+end
 ```
 
 ## Introduction
