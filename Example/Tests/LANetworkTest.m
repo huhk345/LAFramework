@@ -41,6 +41,11 @@
             return [OHHTTPStubsResponse responseWithFileAtPath:fixture
                                                     statusCode:200
                                                        headers:@{@"Content-Type":@"application/json"}];
+        } else if([request.URL.path isEqualToString:@"/testPost"]){
+            return [OHHTTPStubsResponse responseWithData:[@"{\"message\":0}" dataUsingEncoding:NSUTF8StringEncoding]
+                                                  statusCode:200
+                                                     headers:@{@"Content-Type":@"application/json"}];
+
         }
         else {
             NSError* error = [NSError errorWithDomain:NSURLErrorDomain code:kCFURLErrorBadURL userInfo:nil];
@@ -152,6 +157,35 @@
     }];
 }
 
+
+- (void)testPostRawData{
+    GithubRepo *repo1 = [[GithubRepo alloc] init];
+    repo1.archive_url = @"archive_url1";
+    
+    GithubRepo *repo2 = [[GithubRepo alloc] init];
+    repo2.archive_url = @"archive_url2";
+    repo2.assignees_url = @"assignees_url2";
+    NSArray *array = @[repo1,repo2];
+    
+    LAprotocolImpl<GitHubService> *service = [[LANetworkingBuilder initBuilderWithBlock:^(LANetworkingBuilder *builder) {
+        builder.baseURL = [NSURL URLWithString:@"https://api.github.com"];
+    }] create:@protocol(GitHubService)];
+    
+    XCTestExpectation *callBackExpectation = [self expectationWithDescription:@"callback"];
+    [[service postRecord:array] subscribeNext:^(LAURLResponse *response) {
+        XCTAssertTrue([[response.responseObject valueForKey:@"message"] integerValue] == 0);
+        [callBackExpectation fulfill];
+    } error:^(NSError *error) {
+        
+    }];
+    
+    [self waitForExpectationsWithTimeout:5 handler:^(NSError *error) {
+        if (error) {
+            NSLog(@"%@", error);
+        }
+    }];
+
+}
 
 
 

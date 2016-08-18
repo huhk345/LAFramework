@@ -11,7 +11,7 @@ find ${CONFIGURATION_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH} -name '*.la
 CURRENT_DIR=$(pwd)
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
-protoRegex="@protocol ([a-zA-Z0-9]*) <LAWebService>"
+protoRegex="@protocol[[:space:]]+([a-zA-Z0-9]*)[[:space:]]+<[[:space:]]*LAWebService>[[:space:]]*"
 
 find "${SRCROOT}" -type f -name "*.h" -print0 | while IFS= read -r -d '' file; do
 	contents=$(<"${file}")

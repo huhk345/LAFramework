@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <LAFramework/LAWebService.h>
 
-@protocol GitHubService <LAWebService>
+@protocol GitHubService < LAWebService>
 
 
 
@@ -27,5 +27,11 @@
 @Headers({"Token":"{:token}"})
 @Cache("1D")
 - (LANSignal(GithubRepo))listRepos:(NSString*)user token:(NSString *)token;
+
+
+
+@POST("/testPost")
+@FormRaw
+- (LANSignal(void))postRecord:(Part("rawData") NSArray *)array;
 
 @end

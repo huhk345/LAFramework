@@ -58,11 +58,13 @@
             break;
         }
         case '@':{
-            id tempReulstValue;
+            __unsafe_unretained id tempReulstValue;
             [self getArgument:&tempReulstValue atIndex:index];
             if([tempReulstValue isKindOfClass:[NSDate class]]){
                 returnValue = [tempReulstValue ISO8601StringUTC];
-            }else if([tempReulstValue isKindOfClass:[NSNull class]] || [tempReulstValue isKindOfClass:[NSString class]]){
+            }else if([tempReulstValue isKindOfClass:[NSNull class]] || [tempReulstValue isKindOfClass:[NSString class]]
+                     || [tempReulstValue isKindOfClass:[NSArray class]] || [tempReulstValue isKindOfClass:[NSDictionary class]]
+                     || [tempReulstValue isKindOfClass:[NSSet class]]){
                 returnValue = tempReulstValue;
             }else if([tempReulstValue conformsToProtocol:@protocol(LAObjectConverter)]){
                 if([tempReulstValue respondsToSelector:@selector(convertToDictionary:)]){

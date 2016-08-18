@@ -22,7 +22,7 @@ my $string = join("", <FILEIN>);
 close FILEIN;
 
 # Find the protocol declaration
-if ($string =~ m/\@protocol ([a-zA-Z0-9_]*) <LAWebService>/ ) {
+if ($string =~ m/\@protocol[\s]+([a-zA-Z0-9_]*)[\s]+<[ ]*LAWebService[ ]*>/ ) {
 	print "Protocol: ${1}\n";
 
 	my $outfilename = "${outdir}/${1}.laproto";

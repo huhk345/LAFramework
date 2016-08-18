@@ -209,11 +209,31 @@
                                      parameters:(NSDictionary *)parameters
                                      annotation:(LAMethodAnnotation *)methodAnnotation
                                           error:(NSError **)error{
+    if(!requestSerializer.HTTPRequestHeaders[@"Content-Type"]){
+        [requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    }
     NSMutableURLRequest *mutableRequest = [requestSerializer requestWithMethod:methodAnnotation.httpMethod
                                                                      URLString:[[NSURL URLWithString:path relativeToURL:self.baseURL] absoluteString]
                                                                     parameters:nil
                                                                          error:error];
-    mutableRequest.HTTPBody = [[parameters jsonString] dataUsingEncoding:NSUTF8StringEncoding];
+    id value = parameters;
+    if(parameters[@"rawData"]){
+        value = parameters[@"rawData"];
+    }
+    if ([value respondsToSelector:@selector(jsonString)]) {
+        mutableRequest.HTTPBody = [[value jsonString] dataUsingEncoding:NSUTF8StringEncoding];
+    }
+    else if([value isKindOfClass:[NSData class]]){
+        mutableRequest.HTTPBody = value;
+    }
+    else if([value isKindOfClass:[NSURL class]] && [((NSURL *)value) isFileURL]){
+        mutableRequest.HTTPBody = [NSData dataWithContentsOfURL:value];
+    }else{
+        DLogError(@"unsupport parameter for raw form data!");
+        return nil;
+    }
+
+   
     return mutableRequest;
 }
 
