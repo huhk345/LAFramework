@@ -279,7 +279,7 @@
 				6003F588195388D20070C39A /* Resources */,
 				08FD4A781B40131568007135 /* [CP] Embed Pods Frameworks */,
 				D4BADC2898FE274710A52A3F /* [CP] Copy Pods Resources */,
-				18E7FB671D656C6B00521005 /* ShellScript */,
+				D1516097BEB8A984FAA25FF1 /* Annotation Script */,
 			);
 			buildRules = (
 			);
@@ -300,6 +300,7 @@
 				6003F5AC195388D20070C39A /* Resources */,
 				C6BD6733B3051233EAEFE635 /* [CP] Embed Pods Frameworks */,
 				5B96AF41063852FDBAA103E3 /* [CP] Copy Pods Resources */,
+				C034F4B560B60BCA4C138193 /* Annotation Script */,
 			);
 			buildRules = (
 			);
@@ -394,19 +395,6 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-LAFramework_Example/Pods-LAFramework_Example-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		18E7FB671D656C6B00521005 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "../LANetworking/Scripts/generate.sh\n../LAJsonKit/Scripts/json_generate.sh";
-		};
 		5B96AF41063852FDBAA103E3 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -422,6 +410,20 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-LAFramework_Tests/Pods-LAFramework_Tests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		C034F4B560B60BCA4C138193 /* Annotation Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Annotation Script";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "Pods/LAFramework/LANetworking/Scripts/generate.sh\nPods/LAFramework/LAJsonKit/Scripts/json_generate.sh";
+		};
 		C6BD6733B3051233EAEFE635 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -436,6 +438,20 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-LAFramework_Tests/Pods-LAFramework_Tests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		D1516097BEB8A984FAA25FF1 /* Annotation Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Annotation Script";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "Pods/LAFramework/LANetworking/Scripts/generate.sh\nPods/LAFramework/LAJsonKit/Scripts/json_generate.sh";
 		};
 		D4BADC2898FE274710A52A3F /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
