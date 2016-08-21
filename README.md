@@ -62,6 +62,65 @@ Each `RACSignal` returned from the created `GitHubService` can make an asynchron
 }];
 ```
 
+#####LAJsonKit#####
+Create a new Objective-C class for your data model and make it inherit the LAJsonObject class.
+Declare properties in your header file with the name of the JSON keys:
+
+```objective-c
+@interface GithubRepo : LAJsonObject
+
+@property (nonatomic,copy) NSString *archive_url;
+@property (nonatomic,copy) NSString *assignees_url;
+
+@end
+```
+
+Use annotations to modify the propery
+```objective-c
+#undef  __CLASS__
+#define __CLASS__ LAJsonTestObject
+
+@interface LAJsonTestObject : LAJsonObject
+
+@property (nonatomic,copy) NSString *aString;
+
+@JsonMap("aMapString")
+@property (nonatomic,copy) NSString *mapProperty;
+
+@JsonIgnore
+@property (nonatomic,copy) NSString *ignore;
+
+@property (nonatomic,strong) NSDate *aDate;
+
+@JsonFormat("LADate")
+@JsonMap("aDate2")
+@property (nonatomic,strong) NSDate *aDateTow;
+
+@JsonTypeReference("GithubRepo")
+@property (nonatomic,strong) NSArray *repos;
+
+@property (nonatomic,assign) NSInteger aInteger;
+
+@end
+```
+
+Custom data transformers
+```objective-c
+@implementation JSONValueTransformer (LAValueTransFormer)
+
+- (NSDate *)LADateFromNSString:(NSString *)string{
+    NSDateFormatter *formatter = [NSDateFormatter new];
+    formatter.dateFormat = @"yyyy/MM/dd:HH/mm/ss";
+    return [formatter dateFromString:string];
+}
+
+- (NSString *)JSONObjectFromLADate:(NSDate *)date{
+    NSDateFormatter *formatter = [NSDateFormatter new];
+    formatter.dateFormat = @"yyyy/MM/dd:HH/mm/ss";
+    return [formatter stringFromDate:date];
+}
+@end
+```
 
 ## Author
 
