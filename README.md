@@ -75,7 +75,7 @@ Declare properties in your header file with the name of the JSON keys:
 @end
 ```
 
-Use annotations to modify the propery
+Use annotations to modify the property
 ```objective-c
 #undef  __CLASS__
 #define __CLASS__ LAJsonTestObject
