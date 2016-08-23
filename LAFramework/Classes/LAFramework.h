@@ -16,6 +16,7 @@
 #import "LASystemInfo.h"
 #import "LAWebViewBridge.h"
 
+#import "NSBundle+Framework.h"
 
 #import <ReactiveCocoa/ReactiveCocoa.h>
 #import <CocoaLumberjack/CocoaLumberjack.h>
