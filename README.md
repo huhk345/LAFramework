@@ -25,7 +25,7 @@ end
 
 ## Introduction
 
-#####LANetworking#####
+###LANetworking###
 
 Just define a protocol that inherits from `LAWebService`.
 
@@ -62,7 +62,7 @@ Each `RACSignal` returned from the created `GitHubService` can make an asynchron
 }];
 ```
 
-#####LAJsonKit#####
+###LAJsonKit###
 Create a new Objective-C class for your data model and make it inherit the LAJsonObject class.
 Declare properties in your header file with the name of the JSON keys:
 
@@ -121,6 +121,7 @@ Custom data transformers
 }
 @end
 ```
+
 
 ## Author
 
