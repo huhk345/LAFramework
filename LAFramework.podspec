@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'LAFramework'
-  s.version          = '0.1.1'
+  s.version          = '0.1.2'
   s.summary          = 'iOS Base Framework.'
 
 # This description is used to generate tags and improve search results.
@@ -44,7 +44,7 @@ Pod::Spec.new do |s|
 
 
   s.dependency 'AFNetworking', '~> 3.1.0'
-  s.dependency 'ReactiveCocoa', '~> 4.2.0'
+  s.dependency 'ReactiveObjC', '~> 1.0.1'
   s.dependency 'CocoaLumberjack', '~>2.3.0'
   s.preserve_paths = 'LAFramework/runscript.rb'
 

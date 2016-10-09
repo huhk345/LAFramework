@@ -15,7 +15,7 @@
 #ifdef __OBJC__
 
 
-#import <ReactiveCocoa/ReactiveCocoa.h>
+#import <ReactiveObjc/ReactiveObjc.h>
 #import <CocoaLumberjack/CocoaLumberjack.h>
 
 #ifdef DEBUG

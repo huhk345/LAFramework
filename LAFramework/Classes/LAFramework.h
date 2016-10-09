@@ -18,7 +18,7 @@
 
 #import "NSBundle+Framework.h"
 
-#import <ReactiveCocoa/ReactiveCocoa.h>
+#import <ReactiveObjC/ReactiveObjC.h>
 #import <CocoaLumberjack/CocoaLumberjack.h>
 
 

@@ -1,5 +1,4 @@
 use_frameworks!
-
 target 'LAFramework_Example' do
   pod 'LAFramework', :path => '../'
   target 'LAFramework_Tests' do

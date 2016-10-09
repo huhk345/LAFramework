@@ -22,66 +22,64 @@ PODS:
     - CocoaLumberjack/Core
   - CocoaLumberjack/Extensions (2.3.0):
     - CocoaLumberjack/Default
-  - LAFramework (0.1.1):
+  - LAFramework (0.1.2):
     - AFNetworking (~> 3.1.0)
     - CocoaLumberjack (~> 2.3.0)
-    - LAFramework/LACache (= 0.1.1)
-    - LAFramework/LADataCategory (= 0.1.1)
-    - LAFramework/LAJsonKit (= 0.1.1)
-    - LAFramework/LAMediator (= 0.1.1)
-    - LAFramework/LANetworking (= 0.1.1)
-    - LAFramework/LASystemInfo (= 0.1.1)
-    - LAFramework/LAWebViewBridge (= 0.1.1)
-    - ReactiveCocoa (~> 4.2.0)
-  - LAFramework/LACache (0.1.1):
+    - LAFramework/LACache (= 0.1.2)
+    - LAFramework/LADataCategory (= 0.1.2)
+    - LAFramework/LAJsonKit (= 0.1.2)
+    - LAFramework/LAMediator (= 0.1.2)
+    - LAFramework/LANetworking (= 0.1.2)
+    - LAFramework/LASystemInfo (= 0.1.2)
+    - LAFramework/LAWebViewBridge (= 0.1.2)
+    - ReactiveObjC (~> 1.0.1)
+  - LAFramework/LACache (0.1.2):
     - AFNetworking (~> 3.1.0)
     - CocoaLumberjack (~> 2.3.0)
     - LAFramework/LADataCategory
-    - ReactiveCocoa (~> 4.2.0)
-  - LAFramework/LADataCategory (0.1.1):
+    - ReactiveObjC (~> 1.0.1)
+  - LAFramework/LADataCategory (0.1.2):
     - AFNetworking (~> 3.1.0)
     - CocoaLumberjack (~> 2.3.0)
-    - ReactiveCocoa (~> 4.2.0)
-  - LAFramework/LAJsonKit (0.1.1):
+    - ReactiveObjC (~> 1.0.1)
+  - LAFramework/LAJsonKit (0.1.2):
     - AFNetworking (~> 3.1.0)
     - CocoaLumberjack (~> 2.3.0)
-    - ReactiveCocoa (~> 4.2.0)
-  - LAFramework/LAMediator (0.1.1):
+    - ReactiveObjC (~> 1.0.1)
+  - LAFramework/LAMediator (0.1.2):
     - AFNetworking (~> 3.1.0)
     - CocoaLumberjack (~> 2.3.0)
-    - ReactiveCocoa (~> 4.2.0)
-  - LAFramework/LANetworking (0.1.1):
+    - ReactiveObjC (~> 1.0.1)
+  - LAFramework/LANetworking (0.1.2):
     - AFNetworking (~> 3.1.0)
     - CocoaLumberjack (~> 2.3.0)
     - LAFramework/LACache
     - LAFramework/LADataCategory
     - LAFramework/LAJsonKit
-    - ReactiveCocoa (~> 4.2.0)
-  - LAFramework/LASystemInfo (0.1.1):
+    - ReactiveObjC (~> 1.0.1)
+  - LAFramework/LASystemInfo (0.1.2):
     - AFNetworking (~> 3.1.0)
     - CocoaLumberjack (~> 2.3.0)
-    - ReactiveCocoa (~> 4.2.0)
-  - LAFramework/LAWebViewBridge (0.1.1):
+    - ReactiveObjC (~> 1.0.1)
+  - LAFramework/LAWebViewBridge (0.1.2):
     - AFNetworking (~> 3.1.0)
     - CocoaLumberjack (~> 2.3.0)
     - LAFramework/LACache
-    - ReactiveCocoa (~> 4.2.0)
-  - OHHTTPStubs (5.1.0):
-    - OHHTTPStubs/Default (= 5.1.0)
-  - OHHTTPStubs/Core (5.1.0)
-  - OHHTTPStubs/Default (5.1.0):
+    - ReactiveObjC (~> 1.0.1)
+  - OHHTTPStubs (5.2.1):
+    - OHHTTPStubs/Default (= 5.2.1)
+  - OHHTTPStubs/Core (5.2.1)
+  - OHHTTPStubs/Default (5.2.1):
     - OHHTTPStubs/Core
     - OHHTTPStubs/JSON
     - OHHTTPStubs/NSURLSession
     - OHHTTPStubs/OHPathHelpers
-  - OHHTTPStubs/JSON (5.1.0):
+  - OHHTTPStubs/JSON (5.2.1):
     - OHHTTPStubs/Core
-  - OHHTTPStubs/NSURLSession (5.1.0):
+  - OHHTTPStubs/NSURLSession (5.2.1):
     - OHHTTPStubs/Core
-  - OHHTTPStubs/OHPathHelpers (5.1.0)
-  - ReactiveCocoa (4.2.1):
-    - Result (~> 2.0)
-  - Result (2.1.1)
+  - OHHTTPStubs/OHPathHelpers (5.2.1)
+  - ReactiveObjC (1.0.1)
 
 DEPENDENCIES:
   - LAFramework (from `../`)
@@ -89,16 +87,15 @@ DEPENDENCIES:
 
 EXTERNAL SOURCES:
   LAFramework:
-    :path: ../
+    :path: "../"
 
 SPEC CHECKSUMS:
   AFNetworking: 5e0e199f73d8626b11e79750991f5d173d1f8b67
   CocoaLumberjack: 97fab7ee5f507fe54445cca7ea80f926729cfd15
-  LAFramework: 7fdde461d795bcfff29a480fc325cad1f119c608
-  OHHTTPStubs: 592f74439d2d72615115cf99a954237a3fbe26e5
-  ReactiveCocoa: 5a42745f11ea236f405bb9ce5e97c5e3b23562dd
-  Result: 822c879f145943320cc80a9a8372378e3d699fe4
+  LAFramework: 9fcd8626c69c07bacf0872efb6d33301c3707156
+  OHHTTPStubs: 3a42f25c00563b71355ac73112ba2324e9e6cef4
+  ReactiveObjC: 0e618037d7b883b4cebcc8da203e8ed9b69ca2d3
 
-PODFILE CHECKSUM: 2392d60fecbfefb62e0a35411fb2bba282476690
+PODFILE CHECKSUM: 44ca543516f3a4cff8d241660bd79ea11768a73a
 
-COCOAPODS: 1.0.1
+COCOAPODS: 1.1.0.rc.2

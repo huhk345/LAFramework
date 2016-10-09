@@ -10,7 +10,7 @@
 #import <LAFramework/LANetworkingBuilder.h>
 #import "GitHubService.h"
 #import <LAFramework/LAURLResponse.h>
-#import "ReactiveCocoa.h"
+#import "ReactiveObjc.h"
 #import "AFHTTPSessionManager+rac.h"
 #import "LAprotocolImpl.h"
 #import "GithubRepo.h"
