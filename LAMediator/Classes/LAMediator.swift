@@ -20,7 +20,7 @@ import ObjectiveC
         static var instance : LAMediator?
     }
     
-    private static var __once: () = {
+    static var __once: () = {
             Singleton.instance = LAMediator()
         }()
     let MediatorDomain = "com.laker.mediator"
