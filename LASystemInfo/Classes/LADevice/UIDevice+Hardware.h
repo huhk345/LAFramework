@@ -21,6 +21,8 @@
 #define IPHONE_6PLUS_NAMESTRING         @"iPhone 6+"
 #define IPHONE_6S_NAMESTRING            @"iPhone 6S"
 #define IPHONE_6SPLUS_NAMESTRING        @"iPhone 6S+"
+#define IPHONE_7_NAMESTRING             @"iPhone 7"
+#define IPHONE_7PLUS_NAMESTRING         @"iPhone 7+"
 #define IPHONE_UNKNOWN_NAMESTRING       @"Unknown iPhone"
 
 #define IPOD_1G_NAMESTRING              @"iPod touch 1G"
@@ -66,6 +68,8 @@ typedef enum {
   UIDevice6PlusiPhone,
   UIDevice6SiPhone,
   UIDevice6SPlusiPhone,
+  UIDevice7iPhone,
+  UIDevice7PlusiPhone,
   
   UIDevice1GiPod,
   UIDevice2GiPod,

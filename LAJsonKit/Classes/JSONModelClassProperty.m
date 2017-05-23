@@ -51,7 +51,7 @@
     }
 
     //return the name, type and additional properties
-    return [NSString stringWithFormat:@"@property %@%@ %@ %@",
+    return [NSString stringWithFormat:@"@property %@%@ %@",
             self.type?[NSString stringWithFormat:@"%@*",self.type]:(self.structName?self.structName:@"primitive"),
             self.name,
             propertiesString

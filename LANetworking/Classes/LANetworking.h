@@ -13,6 +13,6 @@
 #import "LAURLResponse.h"
 #import "LAWebService.h"
 #import "LAReformatter.h"
-#import "LAprotocolImpl.h"
+#import "LAProtocolImpl.h"
 
 #endif /* LANetworking_h */

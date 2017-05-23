@@ -8,7 +8,7 @@
 
 #import "LANetworkingBuilder.h"
 #import <ObjC/runtime.h>
-#import "LAprotocolImpl.h"
+#import "LAProtocolImpl.h"
 #import "LAMethodAnnotation.h"
 
 
