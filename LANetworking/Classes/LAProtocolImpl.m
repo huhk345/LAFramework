@@ -258,7 +258,7 @@
                                                                            name:key];
                                            }else if([parameters[key] isKindOfClass:[NSURL class]]){
                                                NSURL *url = parameters[key];
-                                               if([url isFileURL] && [[NSFileManager defaultManager] isExecutableFileAtPath:[url path]]){
+                                               if([[NSFileManager defaultManager] fileExistsAtPath:[url path] isDirectory:nil]){
                                                    [formData appendPartWithFileURL:url
                                                                               name:key
                                                                           fileName:[[url path] lastPathComponent]

@@ -64,7 +64,7 @@
                 returnValue = [tempReulstValue ISO8601StringUTC];
             }else if([tempReulstValue isKindOfClass:[NSNull class]] || [tempReulstValue isKindOfClass:[NSString class]]
                      || [tempReulstValue isKindOfClass:[NSArray class]] || [tempReulstValue isKindOfClass:[NSDictionary class]]
-                     || [tempReulstValue isKindOfClass:[NSSet class]]){
+                     || [tempReulstValue isKindOfClass:[NSSet class]] || [tempReulstValue isKindOfClass:[NSURL class]]){
                 returnValue = tempReulstValue;
             }else if([tempReulstValue conformsToProtocol:@protocol(LAObjectConverter)]){
                 if([tempReulstValue respondsToSelector:@selector(convertToDictionary:)]){
