@@ -8,7 +8,7 @@
 
 #import "AFHTTPSessionManager+rac.h"
 #import "LAURLResponse.h"
-
+#import "LANetworkingManager.h"
 @implementation AFHTTPSessionManager (rac)
 
 
@@ -26,9 +26,16 @@
                                }
                                DLogDebug(@"\n==================================\nrequest %@\n code : %ld\nresponse:%@\n==================================",request.URL,(long)httpResponse.statusCode,responseString);
                                if (!error) {
-                                   [subscriber sendNext:[[LAURLResponse alloc] initWithRequest:request
-                                                                                      response:httpResponse
-                                                                                  responseData:responseData]];
+                                   BOOL sendNextFlag = YES;
+                                   LAURLResponse *response = [[LAURLResponse alloc] initWithRequest:request
+                                                                                           response:httpResponse
+                                                                                       responseData:responseData];
+                                   if([LANetworkingManager sharedInstance].handler != nil){
+                                        sendNextFlag = ![LANetworkingManager sharedInstance].handler(response);
+                                   }
+                                   if(sendNextFlag){
+                                       [subscriber sendNext:response];
+                                   }
                                    [subscriber sendCompleted];
                                }
                                else{

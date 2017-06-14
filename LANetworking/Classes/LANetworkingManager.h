@@ -7,9 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "LAURLResponse.h"
 
 
 @interface LANetworkingManager : NSObject
+    
+@property (nonatomic,copy) BOOL (^handler)(LAURLResponse *response);
 
 + (instancetype)sharedInstance;
 
