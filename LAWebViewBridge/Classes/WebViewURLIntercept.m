@@ -49,7 +49,7 @@ static NSArray<NSString *> * fileNameFilter;
 @implementation WebViewURLIntercept
 
 +(void)load{
-    [NSURLProtocol registerClass:self];
+//    [NSURLProtocol registerClass:self];
 }
 
 + (id<WebViewURLProtocolDelegate>)delegate{
