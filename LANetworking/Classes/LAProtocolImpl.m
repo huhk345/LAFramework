@@ -269,8 +269,34 @@
                                                                                name:key];
                                                }
                                            }else if([parameters[key] isKindOfClass:[NSArray class]] ||
-                                                    [parameters[key] isKindOfClass:[NSDictionary class]] ||
                                                     [parameters[key] isKindOfClass:[NSSet class]]){
+                                               NSMutableArray *tempArray = [NSMutableArray array];
+                                               for(id data in parameters[key]){
+                                                   if([data isKindOfClass:[NSURL class]]){
+                                                       NSURL *url = data;
+                                                       if([[NSFileManager defaultManager] fileExistsAtPath:[url path] isDirectory:nil]){
+                                                           [formData appendPartWithFileURL:url
+                                                                                      name:key
+                                                                                  fileName:[[url path] lastPathComponent]
+                                                                                  mimeType:[[self class] mimeTypeForFileAtPath:[url path]]
+                                                                                     error:error];
+                                                       }else{
+                                                           [formData appendPartWithFormData:[[url absoluteString]dataUsingEncoding:NSUTF8StringEncoding]
+                                                                                       name:key];
+                                                       }
+                                                   }else if([data isKindOfClass:[NSString class]]){
+                                                       [tempArray addObject:data];
+                                                   }else{
+                                                       if([data respondsToSelector:@selector(jsonString)]){
+                                                           [tempArray addObject:[data jsonString]];
+                                                       }
+                                                   }
+                                               }
+                                               if([tempArray count]){
+                                                   [formData appendPartWithFormData:[[tempArray componentsJoinedByString:@","] dataUsingEncoding:NSUTF8StringEncoding]
+                                                                               name:key];
+                                               }
+                                           }else if([parameters[key] isKindOfClass:[NSDictionary class]]){
                                                [formData appendPartWithFormData:[[parameters[key] jsonString] dataUsingEncoding:NSUTF8StringEncoding]
                                                                            name:key];
                                            }
