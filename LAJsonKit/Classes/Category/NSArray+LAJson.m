@@ -26,7 +26,7 @@
 - (id)__toDictionary{
     NSMutableArray *array = [NSMutableArray array];
     for (id object in self) {
-        if([object isKindOfClass:[NSString class]] || [object isKindOfClass:[NSNumber class]]){
+        if([object isKindOfClass:[NSString class]] || [object isKindOfClass:[NSNumber class]] || [object isKindOfClass:[NSDictionary class]]){
             [array addObject:object];
         }else if([object respondsToSelector:@selector(__toDictionary)]){
             id value = [object __toDictionary];
